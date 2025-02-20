@@ -1,0 +1,12 @@
+.env*
+!.env.example
+
+node_modules/
+.next/
+
+*.log*
+
+next-env.d.ts
+
+.idea/
+.vscode/

@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+@config '../tailwind.config.ts';
+
+@theme {
+  --color-accent-50: oklch(0.987 0.022 95.277);
+  --color-accent-100: oklch(0.962 0.059 95.617);
+  --color-accent-200: oklch(0.924 0.12 95.746);
+  --color-accent-300: oklch(0.879 0.169 91.605);
+  --color-accent-400: oklch(0.828 0.189 84.429);
+  --color-accent-500: oklch(0.769 0.188 70.08);
+  --color-accent-600: oklch(0.666 0.179 58.318);
+  --color-accent-700: oklch(0.555 0.163 48.998);
+  --color-accent-800: oklch(0.473 0.137 46.201);
+  --color-accent-900: oklch(0.414 0.112 45.904);
+  --color-accent-950: oklch(0.279 0.077 45.635);
+
+  --color-gray-50: oklch(0.985 0.002 247.839);
+  --color-gray-100: oklch(0.967 0.003 264.542);
+  --color-gray-200: oklch(0.928 0.006 264.531);
+  --color-gray-300: oklch(0.872 0.01 258.338);
+  --color-gray-400: oklch(0.707 0.022 261.325);
+  --color-gray-500: oklch(0.551 0.027 264.364);
+  --color-gray-600: oklch(0.446 0.03 256.802);
+  --color-gray-680: oklch(22.63% 0.0215 297.16);
+  --color-gray-690: oklch(20.68% 0.0179 294.98);
+  --color-gray-700: oklch(0.373 0.034 259.733);
+  --color-gray-700: oklch(18.22% 0.0143 291.46);
+  --color-gray-800: oklch(17.25% 0.0124 292.69);
+  --color-gray-900: oklch(14.8% 0.0087 296.76);
+
+  --color-background-primary: var(--background-primary);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-tertiary: var(--background-tertiary);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  --color-text-accent-primary: var(--text-accent-primary);
+  --color-text-accent-secondary: var(--text-accent-secondary);
+
+  --color-text-primary-reverse: var(--text-primary-reverse);
+  --color-text-secondary-reverse: var(--text-secondary-reverse);
+
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+}
+
+:root {
+  --background-primary: theme("colors.white");
+  --background-secondary: theme("colors.gray.50");
+  --background-tertiary: theme("colors.gray.100");
+
+  --text-primary: theme("colors.gray.900");
+  --text-secondary: theme("colors.gray.800");
+  --text-tertiary: theme("colors.gray.700");
+
+  --text-accent-primary: theme("colors.accent.600");
+  --text-accent-secondary: theme("colors.accent.900");
+
+  --text-primary-reverse: theme("colors.gray.50");
+  --text-secondary-reverse: theme("colors.gray.100");
+
+  --border: theme("colors.gray.200");
+  --border-hover: theme("colors.gray.300");
+}
+
+.dark {
+  --background-primary: theme("colors.gray.900");
+  --background-secondary: theme("colors.gray.800");
+  --background-tertiary: theme("colors.gray.700");
+
+  --text-primary: theme("colors.gray.50");
+  --text-secondary: theme("colors.gray.100");
+  --text-tertiary: theme("colors.gray.300");
+
+  --text-accent-primary: theme("colors.accent.500");
+  --text-accent-secondary: theme("colors.accent.300");
+
+  --text-primary-reverse: theme("colors.gray.900");
+  --text-secondary-reverse: theme("colors.gray.700");
+
+  --border: theme("colors.gray.690");
+  --border-hover: theme("colors.gray.680");
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+
+  @apply appearance-none scroll-smooth font-main antialiased outline-hidden selection:bg-accent-300/90 selection:text-black/90;
+}
+
+html {
+  padding: 0 !important;
+  overflow-y: scroll !important;
+}
+
+*::-webkit-scrollbar {
+  position: absolute;
+}
+
+.backdrop-h-screen {
+  height: calc(100vh - 4rem);
+}
+
+.page-min-h-screen {
+  min-height: calc(100vh - 4rem - 1rem);
+}
+
+.page-h-screen {
+  height: calc(100vh - 4rem - 1rem);
+}
+
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+}
+
+code {
+  counter-reset: step;
+  counter-increment: step 0;
+}
+
+code .line::before {
+  content: counter(step);
+  counter-increment: step;
+
+  width: 1rem;
+  margin-right: 1rem;
+
+  display: inline-block;
+
+  text-align: right;
+
+  @apply text-gray-500;
+}

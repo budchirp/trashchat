@@ -1,0 +1,20 @@
+{
+  "landing": {
+    "text": "Landing",
+    "description": "Chat with your fav AI model!",
+    "go-to-chat": "Go to chat"
+  },
+  "chat": {
+    "text": "Chat",
+    "description": "Chat with your fav AI model!",
+    "say-something": "Say something",
+    "start": "Don't be shy. Start a conversation."
+  },
+  "common": {
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "Error",
+    "not-found": "Page not found",
+    "footer": "Made by Can Kolay with ❤️"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "landing": {
+    "text": "Ana Sayfa",
+    "description": "Favori yapay zeka modelinle sohbet et!",
+    "go-to-chat": "Sohbete Git"
+  },
+  "chat": {
+    "text": "Sohbet",
+    "description": "Favori yapay zeka modelinle sohbet et!",
+    "say-something": "Bir şeyler söyle",
+    "start": "Çekinme, bir sohbet başlat."
+  },
+  "common": {
+    "submit": "Gönder",
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "not-found": "Sayfa bulunamadı",
+    "footer": "Can Kolay tarafından ❤️ ile yapıldı"
+  }
+}
