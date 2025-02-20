@@ -22,40 +22,41 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   input,
   handleInputChange
 }: ChatFormProps): React.ReactNode => {
-  const t = useTranslations('chat');
+  const t = useTranslations('chat')
 
   return (
-  <>
-    <div className='h-20 block relative opacity-0 select-none'>.</div>
+    <>
+      <div className='h-20 block relative opacity-0 select-none'>.</div>
 
-    <form onSubmit={handleSubmit}>
-      <div className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed justify-center w-full py-2 border-t border-border bottom-0'>
-        <Container className='flex items-center w-full justify-center gap-2'>
-          <Input
-            textarea
-            value={input}
-            placeholder={t("say-something")}
-            onChange={handleInputChange}
-            icon={<Search />}
-            size={16}
-          />
+      <form onSubmit={handleSubmit}>
+        <div className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed justify-center w-full py-2 border-t border-border bottom-0'>
+          <Container className='flex items-center w-full justify-center gap-2'>
+            <Input
+              textarea
+              value={input}
+              placeholder={t('say-something')}
+              onChange={handleInputChange}
+              icon={<Search />}
+              size={16}
+            />
 
-          <Button
-            type='submit'
-            variant='round'
-            onClick={async () => {
-              if (loading) {
-                stop()
-              } else {
-                await handleSubmit()
-              }
-            }}
-          >
-            {loading ? <Square /> : <Send size={16} />}
-          </Button>
-        </Container>
-      </div>
-    </form>
-  </>
-)}
+            <Button
+              type='submit'
+              variant='round'
+              onClick={async () => {
+                if (loading) {
+                  stop()
+                } else {
+                  await handleSubmit()
+                }
+              }}
+            >
+              {loading ? <Square /> : <Send size={16} />}
+            </Button>
+          </Container>
+        </div>
+      </form>
+    </>
+  )
+}
 ChatForm.displayName = 'ChatForm'

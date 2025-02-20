@@ -10,7 +10,9 @@ const Layout: React.FC<LayoutProps> = async ({ children }: LayoutProps) => {
       <Header />
 
       <div className='w-full page-min-h-screen'>
-        <main id="main" className='size-full'>{children}</main>
+        <main id='main' className='size-full'>
+          {children}
+        </main>
       </div>
     </div>
   )

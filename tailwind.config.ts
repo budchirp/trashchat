@@ -171,7 +171,7 @@ export default {
               borderWidth: '1px',
               borderColor: theme('colors.gray.200'),
               borderRadius: theme('borderRadius.2xl'),
-              padding: "0.5rem 1rem"
+              padding: '0.5rem 1rem'
             },
             code: {
               color: theme('colors.gray.800')
@@ -187,22 +187,22 @@ export default {
             },
             table: {
               width: '100%',
-              borderCollapse: 'collapse',
+              borderCollapse: 'collapse'
             },
             th: {
               backgroundColor: theme('colors.gray.50'),
               fontWeight: theme('fontWeight.bold'),
               textAlign: 'left',
               padding: '0.75rem 1.5rem',
-              color: theme('colors.gray.900'),
+              color: theme('colors.gray.900')
             },
             td: {
               padding: '0.75rem',
               color: theme('colors.gray.900')
             },
             'tbody tr:nth-child(even)': {
-              backgroundColor: theme('colors.gray.50'),
-            },
+              backgroundColor: theme('colors.gray.50')
+            }
           }
         },
         dark: {
@@ -266,14 +266,14 @@ export default {
             },
             th: {
               backgroundColor: theme('colors.gray.900'),
-              color: theme('colors.gray.50'),
+              color: theme('colors.gray.50')
             },
             td: {
               color: theme('colors.gray.50')
             },
             'tbody tr:nth-child(even)': {
-              backgroundColor: theme('colors.gray.900'),
-            },
+              backgroundColor: theme('colors.gray.900')
+            }
           }
         }
       })

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
-    "start": "next start --port 2999",
+    "start": "next start",
     "lint": "biome lint --write .",
     "format": "biome format --write ."
   },

@@ -12,10 +12,10 @@ import { useTranslations } from 'next-intl'
 export const ChatClientPage: React.FC = (): React.ReactNode => {
   const { messages, input, status, stop, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat',
-    onFinish: () => { }
+    onFinish: () => {}
   })
-  
-  const t = useTranslations('chat');
+
+  const t = useTranslations('chat')
 
   return (
     <div className='flex size-full flex-col mt-4'>
@@ -30,7 +30,7 @@ export const ChatClientPage: React.FC = (): React.ReactNode => {
 
         {messages.length < 1 && (
           <div className='size-full flex items-center justify-center'>
-            <h1 className='font-bold text-2xl'>{t("start")}</h1>
+            <h1 className='font-bold text-2xl'>{t('start')}</h1>
           </div>
         )}
       </Container>

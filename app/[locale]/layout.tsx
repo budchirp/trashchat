@@ -64,9 +64,7 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
           <div className='absolute z-0 top-[80%] right-[10%] size-96 opacity-25 bg-accent-700 rounded-full blur-[128px]' />
         </div>
 
-        <div className='grid gap-4 relative z-10 size-full'>
-          {children}
-        </div>
+        <div className='grid gap-4 relative z-10 size-full'>{children}</div>
 
         <Script
           defer

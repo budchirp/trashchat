@@ -49,8 +49,8 @@ const lexend = Lexend({
 })
 
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono"
+  subsets: ['latin'],
+  variable: '--font-mono'
 })
 
 const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNode => {

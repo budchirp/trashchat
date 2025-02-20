@@ -42,7 +42,8 @@ export const ThemeSwitcher: React.FC = (): React.ReactNode => {
 
         return (
           <div>
-            {mounted && createPortal(<Backdrop open={open} />, document.querySelector('#main') as Element)}
+            {mounted &&
+              createPortal(<Backdrop open={open} />, document.querySelector('#main') as Element)}
 
             <ListboxButton as={Fragment}>
               <Button

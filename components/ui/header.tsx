@@ -61,7 +61,11 @@ export const Header: React.FC = (): React.ReactNode => {
               </Container>
             </header>
 
-            {mounted && createPortal(<Backdrop open={open} onClose={close} />, document.querySelector('#main') as Element)}
+            {mounted &&
+              createPortal(
+                <Backdrop open={open} onClose={close} />,
+                document.querySelector('#main') as Element
+              )}
 
             <Transition
               show={open}
