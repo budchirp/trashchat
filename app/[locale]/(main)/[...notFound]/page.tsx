@@ -9,8 +9,6 @@ import { Container } from '@/components/container'
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
 
-export const runtime = 'edge'
-
 const NotFound: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
 
@@ -30,8 +28,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return MetadataManager.generate(t('not-found'), '404')
 }
 
-// export function generateStaticParams() {
-//   return routing.locales.map((locale) => ({ locale }))
-// }
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
 
 export default NotFound
