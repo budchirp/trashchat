@@ -4,12 +4,12 @@ import { appName, appUrl } from '@/data'
 import { routing } from '@/lib/i18n/routing'
 import { notFound } from 'next/navigation'
 import { ThemeProvider } from '@/providers/theme'
-import { getMessages, getTranslations } from 'next-intl/server'
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
+import Script from 'next/script'
 
 import type { Metadata } from 'next'
 import type { DynamicLayoutProps } from '@/types/layout'
-import Script from 'next/script'
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations('landing')
@@ -52,8 +52,9 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
     notFound()
   }
 
-  const messages = await getMessages()
+  setRequestLocale(locale)
 
+  const messages = await getMessages()
   return (
     <NextIntlClientProvider messages={messages}>
       <ThemeProvider>
@@ -74,6 +75,10 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
       </ThemeProvider>
     </NextIntlClientProvider>
   )
+}
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
 }
 
 export default Layout

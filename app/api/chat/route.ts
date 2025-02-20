@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { streamText } from 'ai'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 
+export const runtime = 'edge'
 export const maxDuration = 120
 
 export async function POST(request: NextRequest) {

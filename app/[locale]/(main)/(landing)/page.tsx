@@ -2,13 +2,17 @@ import type React from 'react'
 
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Link } from '@/lib/i18n/routing'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import type { Metadata } from 'next'
+import type { DynamicPageProps } from '@/types/page'
 
-const LandingPage: React.FC = async () => {
+const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
+  const { locale } = await params
+
+  setRequestLocale(locale)
+
   const t = await getTranslations('landing')
-
   return (
     <div className='flex size-full flex-col mt-4'>
       <div className='w-full page-h-screen flex items-center justify-center'>
@@ -23,9 +27,13 @@ const LandingPage: React.FC = async () => {
   )
 }
 
-export const generateMetadata = async (): Promise<Metadata> => {
-  const t = await getTranslations('landing')
+export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Metadata> => {
+  const { locale } = await params
 
+  const t = await getTranslations({
+    locale,
+    namespace: 'landing'
+  })
   return MetadataManager.generate(t('text'), t('description'))
 }
 
