@@ -8,6 +8,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
 
+export const runtime = "edge"
+
 const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
 
@@ -26,8 +28,8 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   return MetadataManager.generate(t('text'), t('description'))
 }
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
-}
+// export function generateStaticParams() {
+//   return routing.locales.map((locale) => ({ locale }))
+// }
 
 export default ChatPage
