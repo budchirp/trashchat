@@ -9,7 +9,7 @@ import { Container } from '@/components/container'
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
 
-export const runtime = "edge"
+// export const runtime = "edge"
 
 const NotFound: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
