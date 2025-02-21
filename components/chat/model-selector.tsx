@@ -22,7 +22,7 @@ export type ModelSelectorProps = {
   input: string
   model: ModelName
   onChange: (model: ModelName) => void
-  chatFormRef: Ref<HTMLDivElement | null> | null
+  chatFormRef: Ref<HTMLDivElement>
 }
 
 export const modelNames = {
@@ -41,7 +41,9 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 }: ModelSelectorProps): React.ReactNode => {
   const [height, setHeight] = useState<number>(0)
   const changeHeight = () => {
+    // @ts-ignore
     if (chatFormRef && chatFormRef.current) {
+    // @ts-ignore
       setHeight(chatFormRef.current.clientHeight)
     }
   }
