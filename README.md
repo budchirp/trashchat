@@ -15,3 +15,8 @@
 - [ ] Save messages
 - [ ] Add more models maybe
 - [ ] Landing page
+- [ ] Code highlighting
+- [ ] Find a way to render markdown at server maybe?
+- [ ] Translate API routes
+- [ ] SEO
+- [ ] Add stripe for payments

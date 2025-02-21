@@ -10,6 +10,7 @@
     "format": "biome format --write ."
   },
   "dependencies": {
+    "@ai-sdk/azure": "^1.1.13",
     "@ai-sdk/google": "^1.1.16",
     "@ai-sdk/react": "^1.1.17",
     "ai": "^4.1.45",

@@ -2,17 +2,21 @@ import type React from 'react'
 
 import { cn } from '@/lib/cn'
 import { Transition } from '@headlessui/react'
+import type { ComponentProps } from 'react'
 
 export type BackdropProps = {
   open: boolean
   onClose?: () => void
-}
+} & ComponentProps<'div'>
 
 export const Backdrop: React.FC<BackdropProps> = ({
   open,
-  onClose
+  onClose,
+  className,
+  ...props
 }: BackdropProps): React.ReactNode => (
   <Transition
+    {...props}
     show={open}
     as='div'
     onClick={onClose}
@@ -21,7 +25,8 @@ export const Backdrop: React.FC<BackdropProps> = ({
       'transition-all bg-background-primary/50 backdrop-blur-sm backdrop-h-screen top-16 fixed z-10 w-screen',
       'data-closed:bg-opacity-0! data-closed:backdrop-blur-none',
       'data-enter:ease-out data-enter:duration-400',
-      'data-leave:ease-in data-leave:duration-200'
+      'data-leave:ease-in data-leave:duration-200',
+      className
     )}
   />
 )
