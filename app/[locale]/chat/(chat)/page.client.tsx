@@ -53,7 +53,7 @@ export const ChatClientPage: React.FC = (): React.ReactNode => {
   }, [message])
 
   useEffect(() => {
-    if (status === "ready") {
+    if (status === 'ready') {
       if (ref.current) {
         ref.current.scrollIntoView()
       }
@@ -68,7 +68,6 @@ export const ChatClientPage: React.FC = (): React.ReactNode => {
             key={index}
             message={<MemoizedMarkdown content={message.content} />}
             role={message.role}
-            ref={ref}
           />
         ))}
 
@@ -81,6 +80,8 @@ export const ChatClientPage: React.FC = (): React.ReactNode => {
             <h1 className='font-bold text-2xl'>{t('start')}</h1>
           </div>
         )}
+
+        <div ref={ref} />
       </Container>
 
       <ChatForm

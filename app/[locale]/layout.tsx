@@ -11,9 +11,13 @@ import Script from 'next/script'
 import type { Metadata } from 'next'
 import type { DynamicLayoutProps } from '@/types/layout'
 
-export const generateMetadata = async (): Promise<Metadata> => {
-  const t = await getTranslations('landing')
+export const generateMetadata = async ({ params }: DynamicLayoutProps): Promise<Metadata> => {
+  const { locale } = await params
 
+  const t = await getTranslations({
+    locale,
+    namespace: 'landing'
+  })
   return {
     description: t('description'),
     keywords: [''],

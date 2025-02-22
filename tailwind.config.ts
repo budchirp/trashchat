@@ -171,7 +171,7 @@ export default {
               borderWidth: '1px',
               borderColor: theme('colors.gray.200'),
               borderRadius: theme('borderRadius.2xl'),
-              padding: '0.5rem 1rem'
+              padding: '0.75rem 1rem'
             },
             code: {
               color: theme('colors.gray.800')

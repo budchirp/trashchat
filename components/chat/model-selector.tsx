@@ -43,7 +43,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   const changeHeight = () => {
     // @ts-ignore
     if (chatFormRef && chatFormRef.current) {
-    // @ts-ignore
+      // @ts-ignore
       setHeight(chatFormRef.current.clientHeight)
     }
   }

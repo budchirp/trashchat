@@ -8,7 +8,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
 const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params

@@ -39,7 +39,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
       <form onSubmit={handleSubmit}>
         <div
           ref={ref}
-          className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed justify-center w-full py-2 border-t border-border bottom-0'
+          className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center w-full py-2 border-t border-border bottom-0'
         >
           <Container className='flex items-center w-full justify-center gap-2'>
             <ModelSelector

@@ -22,9 +22,13 @@ const NotFound: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
   )
 }
 
-export const generateMetadata = async (): Promise<Metadata> => {
-  const t = await getTranslations('common')
+export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Metadata> => {
+  const { locale } = await params
 
+  const t = await getTranslations({
+    locale,
+    namespace: 'common'
+  })
   return MetadataManager.generate(t('not-found'), '404')
 }
 

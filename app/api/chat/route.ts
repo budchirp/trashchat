@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         message: 'Error while generating content. Please try again',
-        details: (error as Error).message,
+        details: (error as Error).message
       },
       { status: 500 }
     )

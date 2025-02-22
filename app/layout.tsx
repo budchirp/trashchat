@@ -55,7 +55,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNode => {
   return (
-    <html suppressHydrationWarning lang='en'>
+    <html suppressHydrationWarning lang='en-US'>
       <body
         className={cn(
           'relative size-full text-text-primary bg-background-primary',

@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Trash Chat",
+  "short_name": "trashchat",
+  "start_url": "/",
+  "version": "0.1.0",
+  "display": "standalone",
+  "background_color": "#0e0d12",
+  "default_locale": "en",
+  "icons": [
+    {
+      "src": "/icon.jpg",
+      "sizes": "128x128",
+      "type": "image/jpeg"
+    }
+  ]
+}
