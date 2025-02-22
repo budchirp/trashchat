@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { smoothStream, streamText } from 'ai'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createAzure } from '@ai-sdk/azure'
+import { unstable_noStore as noStore } from 'next/cache'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
@@ -37,6 +38,8 @@ const models = {
 }
 
 export async function POST(request: NextRequest) {
+  noStore()
+
   try {
     const referer = request.headers.get('referer')
     if (!referer || !referer.startsWith(process.env.APP_URL || '')) {
@@ -57,10 +60,6 @@ export async function POST(request: NextRequest) {
         console.log(error)
 
         return 'Error while generating content. Please try again'
-      },
-      headers: {
-        'Transfer-Encoding': 'chunked',
-        Connection: 'keep-alive'
       }
     })
   } catch (error) {

@@ -81,8 +81,4 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
   )
 }
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
-}
-
 export default Layout
