@@ -25,7 +25,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
       {role === 'user' ? 'You' : role === 'assistant' ? 'AI' : 'System'}
     </h2>
 
-    <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-all text-text-primary'>
+    <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
       {message}
     </article>
   </Box>

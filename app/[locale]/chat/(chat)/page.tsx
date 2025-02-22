@@ -8,8 +8,6 @@ import { unstable_noStore as noStore } from 'next/cache'
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
 
-export const dynamic = 'force-dynamic'
-
 const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
 

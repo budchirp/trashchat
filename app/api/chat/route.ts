@@ -2,10 +2,9 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { smoothStream, streamText } from 'ai'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createAzure } from '@ai-sdk/azure'
-import { unstable_noStore as noStore } from 'next/cache'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 120
+export const maxDuration = 60
 
 const geminiApiKey = process.env.GEMINI_API_KEY
 if (!geminiApiKey) {
@@ -38,8 +37,6 @@ const models = {
 }
 
 export async function POST(request: NextRequest) {
-  noStore()
-
   try {
     const referer = request.headers.get('referer')
     if (!referer || !referer.startsWith(process.env.APP_URL || '')) {
