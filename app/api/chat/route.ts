@@ -3,7 +3,7 @@ import { smoothStream, streamText } from 'ai'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createAzure } from '@ai-sdk/azure'
 
-export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 export const maxDuration = 120
 
 const geminiApiKey = process.env.GEMINI_API_KEY

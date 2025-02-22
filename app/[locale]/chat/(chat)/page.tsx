@@ -3,17 +3,17 @@ import type React from 'react'
 import { ChatClientPage } from '@/app/[locale]/chat/(chat)/page.client'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { unstable_noStore as noStore } from 'next/cache'
 
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
-import { unstable_noStore } from 'next/cache'
 
 export const dynamic = 'force-dynamic'
 
 const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
 
-  unstable_noStore()
+  noStore()
   setRequestLocale(locale)
 
   return <ChatClientPage />
