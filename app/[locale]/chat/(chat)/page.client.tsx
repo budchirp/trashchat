@@ -11,6 +11,8 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { generateId } from 'ai'
 import type { modelNames } from '@/components/chat/model-selector'
+import { Button } from '@/components/button'
+import { toast } from '@/lib/toast'
 
 export const ChatClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations('chat')
@@ -76,13 +78,13 @@ export const ChatClientPage: React.FC = (): React.ReactNode => {
         )}
 
         {messages.length < 1 && (
-          <div className='size-full flex items-center text-center justify-center'>
+          <div className='size-full flex flex-col gap-4 items-center text-center justify-center'>
             <h1 className='font-bold text-2xl'>{t('start')}</h1>
           </div>
         )}
-
-        <div ref={ref} />
       </Container>
+
+      <div ref={ref} />
 
       <ChatForm
         loading={status === 'streaming'}

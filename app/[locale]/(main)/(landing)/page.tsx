@@ -8,6 +8,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
 import { Button } from '@/components/button'
+import { Logo } from '@/components/logo'
 
 const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
@@ -18,16 +19,14 @@ const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
   return (
     <div className='flex size-full flex-col mt-4'>
       <div className='w-full page-h-screen flex items-center justify-center'>
-        <div className='text-center flex flex-col gap-2 items-center justify-center'>
-          <h1 className='font-bold text-2xl'>{t('text')}</h1>
+        <div className='text-center flex flex-col gap-4 items-center justify-center'>
+          <Logo />
 
           <Button>
             <Link href='/chat'>{t('go-to-chat')}</Link>
           </Button>
         </div>
       </div>
-
-      <div>Item</div>
     </div>
   )
 }

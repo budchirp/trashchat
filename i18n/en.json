@@ -11,6 +11,7 @@
     "start": "Don't be shy. Start a conversation."
   },
   "common": {
+    "copied": "Copied",
     "submit": "Submit",
     "loading": "Loading...",
     "error": "Error",

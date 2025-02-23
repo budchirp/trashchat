@@ -159,22 +159,25 @@ export default {
               color: theme('colors.gray.800'),
               fontWeight: theme('fontWeight.semibold'),
               fontSize: theme('fontSize.sm'),
-              borderRadius: '0.75rem',
+              borderRadius: theme('borderRadius.full'),
               margin: '0 1px',
               boxShadow: theme('boxShadow.lg'),
               paddingLeft: '0.50rem',
               paddingRight: '0.50rem'
             },
             pre: {
-              fontFamily: theme('fontFamily.mono').join(', '),
-              backgroundColor: "theme('colors.gray.50') !important",
-              borderWidth: '1px',
-              borderColor: theme('colors.gray.200'),
               borderRadius: theme('borderRadius.2xl'),
-              padding: '0.75rem 1rem'
+              backgroundColor: 'transparent',
+              margin: 0,
+              padding: 0
+            },
+            'pre > div > div > pre': {
+              padding: '0.5rem 1rem '
             },
             code: {
-              color: theme('colors.gray.800')
+              color: theme('colors.gray.800'),
+              padding: 0,
+              margin: 0
             },
             'code *': {
               fontFamily: "theme('fontFamily.mono') !important"
