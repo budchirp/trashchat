@@ -71,7 +71,7 @@ const MemoizedMarkdownBlock: React.MemoExoticComponent<
                     <Button
                       variant='round'
                       color='secondary'
-                      disabled={checked}
+                      disabled={copied}
                       onClick={() => {
                         navigator.clipboard.writeText(code)
 
