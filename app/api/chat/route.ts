@@ -4,11 +4,6 @@ import { prisma } from '@/lib/prisma'
 
 export const DELETE = async (request: NextRequest) => {
   try {
-    const referer = request.headers.get('referer')
-    if (!referer || !referer.startsWith(process.env.APP_URL || '')) {
-      return NextResponse.json({ message: 'Forbidden', data: null }, { status: 403 })
-    }
-
     const [isTokenValid, payload] = await verifyToken(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
@@ -56,11 +51,6 @@ export const DELETE = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   try {
-    const referer = request.headers.get('referer')
-    if (!referer || !referer.startsWith(process.env.APP_URL || '')) {
-      return NextResponse.json({ message: 'Forbidden', data: null }, { status: 403 })
-    }
-
     const [isTokenValid, payload] = await verifyToken(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
@@ -104,11 +94,6 @@ export const POST = async (request: NextRequest) => {
 
 export const GET = async (request: NextRequest) => {
   try {
-    const referer = request.headers.get('referer')
-    if (!referer || !referer.startsWith(process.env.APP_URL || '')) {
-      return NextResponse.json({ message: 'Forbidden', data: null }, { status: 403 })
-    }
-
     const [isTokenValid, payload] = await verifyToken(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')

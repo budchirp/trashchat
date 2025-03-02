@@ -95,7 +95,7 @@ export const Sidebar: React.FC = (): React.ReactNode => {
       </div>
 
       <Container className='grid gap-2 size-full overflow-y-scroll my-2'>
-        {!loading || !mounted || !chats ? (
+        {!loading && mounted && chats ? (
           <>
             <Box className='h-min' padding='small'>
               <Link

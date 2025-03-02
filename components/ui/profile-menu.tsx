@@ -175,7 +175,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                             toast(t_common('success'))
                           }}
                         >
-                          {t('logout.text')}
+                          {t('logout')}
                         </button>
                       </ProfileMenuItem>
                     </>

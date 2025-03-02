@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { appendClientMessage, smoothStream, streamText, type AssistantContent } from 'ai'
+import { appendClientMessage, smoothStream, streamText } from 'ai'
 import { AIModels, type AIModelName } from '@/lib/ai/models'
 import { verifyToken } from '@/lib/auth/server/verify-token'
 import { prisma } from '@/lib/prisma'
@@ -9,11 +9,6 @@ export const maxDuration = 60
 
 export const POST = async (request: NextRequest) => {
   try {
-    const referer = request.headers.get('referer')
-    if (!referer || !referer.startsWith(process.env.APP_URL || '')) {
-      return NextResponse.json({ message: 'Forbidden', data: null }, { status: 403 })
-    }
-
     const [isTokenValid] = await verifyToken(request.headers)
     if (!isTokenValid) {
       throw new Error('Invalid token.')
@@ -81,8 +76,6 @@ export const POST = async (request: NextRequest) => {
       }
     })
   } catch (error) {
-    console.log(error)
-
     return NextResponse.json(
       {
         message: 'Error while generating content. Please try again',

@@ -14,6 +14,8 @@ import { Box } from '@/components/box'
 import { Fetch } from '@/lib/fetch'
 import { toast } from '@/lib/toast'
 import { useRouter } from '@/lib/i18n/routing'
+import { CookieMonster } from '@/lib/cookie-monster'
+import { CONSTANTS } from '@/lib/constants'
 
 const SignInClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations('auth')
@@ -33,13 +35,18 @@ const SignInClientPage: React.FC = (): React.ReactNode => {
 
       const response = await Fetch.post<{
         message: string
-        data: any
+        data: {
+          token: string
+        }
       }>('/api/session', values)
       const json = await response.json()
       if (response.status >= 400) {
         setError(json?.message || t_common('error'))
       } else {
         toast(t_common('success'))
+
+        const cookieMonster = new CookieMonster()
+        cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, json.data.token)
 
         router.push('/')
       }

@@ -5,11 +5,6 @@ import { prisma } from '@/lib/prisma'
 
 export const GET = async (request: NextRequest) => {
   try {
-    const referer = request.headers.get('referer')
-    if (!referer || !referer.startsWith(process.env.APP_URL || '')) {
-      return NextResponse.json({ message: 'Forbidden', data: null }, { status: 403 })
-    }
-
     const [isTokenValid, payload] = await verifyToken(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
@@ -52,11 +47,6 @@ export const GET = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   try {
-    const referer = request.headers.get('referer')
-    if (!referer || !referer.startsWith(process.env.APP_URL || '')) {
-      return NextResponse.json({ message: 'Forbidden', data: null }, { status: 403 })
-    }
-
     const { name, username, email, password } = await request.json()
     if (!name || !username || !email || !password) {
       throw new Error('Name, Username, Email or Password is null!')

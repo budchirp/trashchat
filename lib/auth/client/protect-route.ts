@@ -12,7 +12,7 @@ export const protectRoute = (
   if (isProtected) {
     if (!token) {
       redirect({
-        href: '/',
+        href: '/auth/signup',
         locale
       })
     }
