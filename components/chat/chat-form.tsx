@@ -42,7 +42,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
           ref={ref}
           className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center right-0 w-3/4 py-2 border-t border-border bottom-0'
         >
-          <Container className='flex items-center w-full justify-center gap-2'>
+          <Container className='flex items-center h-full justify-center gap-2'>
             <ModelSelector
               chatFormRef={ref}
               input={input}

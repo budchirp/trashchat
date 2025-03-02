@@ -29,7 +29,6 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
     }
   )
 
-  console.log(response)
   const json = await response.json()
   if (response.status < 400) {
     redirect({

@@ -109,7 +109,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     style={{
                       bottom: `calc(${height}px + 1rem)`
                     }}
-                    className='fixed w-full flex h-min justify-start items-center'
+                    className='fixed flex h-min justify-start items-center'
                   >
                     <ListboxOptions
                       static
