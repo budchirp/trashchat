@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:db.sqlite"
+}
+
+model User {
+  id Int @id @unique @default(autoincrement())
+
+  name     String
+  username String @unique
+
+  email String @unique
+
+  password String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  chats Chat[]
+
+  @@map(name: "users")
+}
+
+model Chat {
+  id String @id @unique @default(uuid())
+
+  title String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  messages Message[]
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map(name: "chats")
+}
+
+model Message {
+  id String @id @unique @default(uuid())
+
+  role    String
+  content String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@map(name: "messages")
+}

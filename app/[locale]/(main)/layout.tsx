@@ -11,11 +11,9 @@ const Layout: React.FC<LayoutProps> = async ({ children }: LayoutProps) => {
       <div className='flex flex-col size-full'>
         <Header />
 
-        <div className='w-full page-min-h-screen'>
-          <main id='main' className='size-full'>
-            {children}
-          </main>
-        </div>
+        <main id='main' className='w-full page-min-h-screen'>
+          {children}
+        </main>
       </div>
 
       <Footer />

@@ -1,20 +1,46 @@
 {
   "landing": {
     "text": "Ana Sayfa",
-    "description": "Favori yapay zeka modelinle sohbet et!",
-    "go-to-chat": "Sohbete Git"
+    "description": "Favori Yapay Zeka modelinizle sohbet edin!",
+    "go-to-chat": "Sohbete geç"
   },
   "chat": {
     "text": "Sohbet",
-    "description": "Favori yapay zeka modelinle sohbet et!",
+    "description": "Favori Yapay Zeka modelinizle sohbet edin!",
     "say-something": "Bir şeyler söyle",
-    "start": "Çekinme, bir sohbet başlat."
+    "start": "Çekinmeyin. Bir konuşma başlatın.",
+    "you": "Sen",
+    "ai": "AI",
+    "system": "Sistem"
   },
   "common": {
+    "copied": "Kopyalandı",
     "submit": "Gönder",
     "loading": "Yükleniyor...",
+    "success": "Başarılı",
     "error": "Hata",
     "not-found": "Sayfa bulunamadı",
     "footer": "Can Kolay tarafından ❤️ ile yapıldı"
+  },
+  "auth": {
+    "name": "İsim",
+    "username": "Kullanıcı adı",
+    "email": "E-Posta",
+    "password": "Şifre",
+    "signin": {
+      "text": "Giriş yap",
+      "description": "Giriş yap"
+    },
+    "signup": {
+      "text": "Kayıt ol",
+      "description": "Kayıt ol"
+    },
+    "logout": "Çıkış yap"
+  },
+  "profile": {
+    "text": "Profil",
+    "description": "Profil",
+    "delete": "Hesabı sil (çalışmıyor)"
   }
 }
+

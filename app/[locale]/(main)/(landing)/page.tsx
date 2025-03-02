@@ -1,18 +1,17 @@
 import type React from 'react'
 
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Link } from '@/lib/i18n/routing'
 import { routing } from '@/lib/i18n/routing'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
-
-import type { Metadata } from 'next'
-import type { DynamicPageProps } from '@/types/page'
 import { Button } from '@/components/button'
 import { Logo } from '@/components/logo'
 
+import type { Metadata } from 'next'
+import type { DynamicPageProps } from '@/types/page'
+
 const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
-
   setRequestLocale(locale)
 
   const t = await getTranslations('landing')

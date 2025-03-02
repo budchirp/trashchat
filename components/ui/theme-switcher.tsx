@@ -2,6 +2,7 @@
 
 import type React from 'react'
 import { Fragment, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import { Container } from '@/components/container'
 import { Button } from '@/components/button'
@@ -17,7 +18,6 @@ import {
 } from '@headlessui/react'
 import { useTheme } from 'next-themes'
 import { Backdrop } from '@/components/backdrop'
-import { createPortal } from 'react-dom'
 
 import type { Theme } from '@/types/theme'
 
@@ -27,7 +27,13 @@ export const themes: { [key in Theme]: [string, LucideIcon] } = {
   system: ['System', Laptop]
 }
 
-export const ThemeSwitcher: React.FC = (): React.ReactNode => {
+type ThemeSwitcherProps = {
+  sidebar?: boolean
+}
+
+export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
+  sidebar = false
+}: ThemeSwitcherProps): React.ReactNode => {
   const { theme, setTheme } = useTheme()
 
   const [mounted, setMounted] = useState<boolean>(false)
@@ -60,11 +66,12 @@ export const ThemeSwitcher: React.FC = (): React.ReactNode => {
               show={open}
               as='div'
               className={cn(
-                'w-screen h-screen_ flex justify-center items-center origin-[75%_0%] md:origin-[95%_0%] z-20 mx-auto inset-0 fixed',
+                'h-screen_ flex justify-center items-center origin-[75%_0%] md:origin-[95%_0%] z-20 mx-auto fixed',
                 'transition-all scale-100 opacity-100',
                 'data-closed:scale-90 data-closed:opacity-0',
                 'data-enter:ease-out data-enter:duration-400',
-                'data-leave:ease-in data-leave:duration-200'
+                'data-leave:ease-in data-leave:duration-200',
+                sidebar ? 'w-3/4 right-0 top-0' : 'w-screen inset-0'
               )}
             >
               <Container className='fixed top-20 flex h-min items-center justify-end'>

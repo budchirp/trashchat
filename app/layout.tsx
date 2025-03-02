@@ -1,7 +1,7 @@
 import type React from 'react'
 
 import { JetBrains_Mono, Lexend } from 'next/font/google'
-import { appName, appUrl } from '@/data'
+import { Env } from '@/lib/env'
 import { cn } from '@/lib/cn'
 
 import type { LayoutProps } from '@/types/layout'
@@ -10,13 +10,13 @@ import type { Metadata, Viewport } from 'next'
 import '@/styles/globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(appUrl),
+  metadataBase: new URL(Env.appUrl),
   generator: 'Next.js',
-  applicationName: appName,
+  applicationName: Env.appName,
   creator: 'Can Kolay',
   publisher: 'Can Kolay',
   authors: [{ name: 'Can Kolay', url: 'https://cankolay.com' }],
-  manifest: `${appUrl}/manifest.json`,
+  manifest: `${Env.appUrl}/manifest.json`,
   formatDetection: {
     email: false,
     address: false,

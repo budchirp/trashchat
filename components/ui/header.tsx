@@ -1,6 +1,7 @@
 'use client'
 
 import type React from 'react'
+import { createPortal } from 'react-dom'
 import { useState, useEffect } from 'react'
 
 import { Container } from '@/components/container'
@@ -8,20 +9,20 @@ import { Button } from '@/components/button'
 import { Logo } from '@/components/logo'
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
-import { Transition, Menu, MenuItems, MenuItem, MenuButton } from '@headlessui/react'
-import { usePathname } from 'next/navigation'
+import { Transition, Menu, MenuItems, MenuButton } from '@headlessui/react'
 import { Menu as MenuIcon, X } from 'lucide-react'
 import { Backdrop } from '@/components/backdrop'
-import { createPortal } from 'react-dom'
-import { ThemeSwitcher } from './theme-switcher'
+import { ThemeSwitcher } from '@/components/ui/theme-switcher'
+import { ProfileMenu } from '@/components/ui/profile-menu'
+import { usePathname } from '@/lib/i18n/routing'
 
-type HeaderLinkProps = {
-  pathname: string
-  label: string
-  url: string
+type HeaderProps = {
+  sidebar?: boolean
 }
 
-export const Header: React.FC = (): React.ReactNode => {
+export const Header: React.FC<HeaderProps> = ({
+  sidebar = false
+}: HeaderProps): React.ReactNode => {
   const pathname = usePathname()
 
   const [mounted, setMounted] = useState<boolean>(false)
@@ -40,12 +41,18 @@ export const Header: React.FC = (): React.ReactNode => {
 
         return (
           <div>
-            <header className='select-none bg-background-primary/50 border-b border-border fixed top-0 z-20 flex h-16 w-full items-center justify-center backdrop-blur-sm'>
-              <Container className='flex items-center justify-between gap-2'>
+            <header
+              className={cn(
+                'select-none bg-background-primary/50 border-b border-border fixed top-0 z-20 flex h-16 items-center justify-center backdrop-blur-sm',
+                sidebar ? 'right-0 w-3/4' : 'w-full'
+              )}
+            >
+              <Container className='flex items-center h-16 justify-between gap-2'>
                 <Logo />
 
                 <div className='flex h-full items-center gap-2'>
-                  <ThemeSwitcher />
+                  <ProfileMenu sidebar={sidebar} />
+                  <ThemeSwitcher sidebar={sidebar} />
 
                   <MenuButton
                     as={Button}

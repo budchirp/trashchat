@@ -30,16 +30,17 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   handleInputChange
 }: ChatFormProps): React.ReactNode => {
   const t = useTranslations('chat')
+  const t_common = useTranslations('common')
 
   const ref = useRef<HTMLDivElement>(null)
   return (
     <>
-      <div className='h-16 block relative opacity-0 select-none'>.</div>
+      <div className='h-20 block relative opacity-0 select-none'>.</div>
 
       <form onSubmit={handleSubmit}>
         <div
           ref={ref}
-          className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center w-full py-2 border-t border-border bottom-0'
+          className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center right-0 w-3/4 py-2 border-t border-border bottom-0'
         >
           <Container className='flex items-center w-full justify-center gap-2'>
             <ModelSelector
@@ -51,8 +52,9 @@ export const ChatForm: React.FC<ChatFormProps> = ({
 
             <Input
               textarea
+              disabled={loading}
               value={input}
-              placeholder={t('say-something')}
+              placeholder={loading ? t_common('loading') : t('say-something')}
               onChange={handleInputChange}
               icon={<Search />}
               size={16}

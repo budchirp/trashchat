@@ -1,8 +1,8 @@
 'use client'
 
 import type React from 'react'
-import { createPortal } from 'react-dom'
 import { Fragment, useEffect, useState, type Ref } from 'react'
+import { createPortal } from 'react-dom'
 
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
@@ -98,7 +98,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                   show={open}
                   as='div'
                   className={cn(
-                    'w-screen h-screen_ flex justify-center items-center origin-[25%_100%] md:origin-[5%_100%] z-20 mx-auto inset-0 fixed',
+                    'w-3/4 right-0 h-screen_ flex justify-center bottom-0 items-center origin-[25%_100%] md:origin-[5%_100%] z-20 mx-auto fixed',
                     'transition-all scale-100 opacity-100',
                     'data-closed:scale-90 data-closed:opacity-0',
                     'data-enter:ease-out data-enter:duration-400',
@@ -109,7 +109,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     style={{
                       bottom: `calc(${height}px + 1rem)`
                     }}
-                    className='fixed flex h-min justify-start items-center'
+                    className='fixed w-full flex h-min justify-start items-center'
                   >
                     <ListboxOptions
                       static

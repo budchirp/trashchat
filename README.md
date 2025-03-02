@@ -11,12 +11,17 @@
 
 ## TODO
 
-- [ ] Add Auth
-- [ ] Save messages
-- [ ] Add more models maybe
+- [ ] FIX MARKDOWN
+- [x] Add Auth
+- [x] Save messages
+- [x] Add more models maybe
 - [ ] Landing page
-- [ ] Code highlighting
-- [ ] Find a way to render markdown at server maybe?
+- [x] Code highlighting (laggy asf currntly)
 - [ ] Translate API routes
 - [ ] SEO
 - [ ] Add stripe for payments
+- [ ] Sidebar for chats
+- [ ] Ability to delete chats
+- [ ] Deleting account
+- [ ] Updating account details
+- [ ] Better profile page

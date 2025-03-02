@@ -3,6 +3,7 @@ import type React from 'react'
 import { Box } from '@/components/box'
 import type { Message } from 'ai'
 import type { Ref } from 'react'
+import { useTranslations } from 'next-intl'
 
 export type MessageBoxProps = {
   message: React.ReactNode
@@ -14,7 +15,10 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
   message,
   role,
   ref
-}: MessageBoxProps): React.ReactNode => (
+}: MessageBoxProps): React.ReactNode => {
+  const t = useTranslations('chat')
+
+  return (
   <Box
     variant='primary'
     padding='none'
@@ -22,12 +26,12 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
     ref={ref}
   >
     <h2 className='font-bold select-none text-text-tertiary'>
-      {role === 'user' ? 'You' : role === 'assistant' ? 'AI' : 'System'}
+      {role === 'user' ? t("you") : role === 'assistant' ? t("ai") : t("system")}
     </h2>
 
     <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
       {message}
     </article>
   </Box>
-)
+)}
 MessageBox.displayName = 'MessageBox'

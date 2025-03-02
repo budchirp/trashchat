@@ -1,21 +1,45 @@
 {
   "landing": {
     "text": "Landing",
-    "description": "Chat with your fav AI model!",
+    "description": "Chat with your favourite AI model!",
     "go-to-chat": "Go to chat"
   },
   "chat": {
     "text": "Chat",
-    "description": "Chat with your fav AI model!",
+    "description": "Chat with your favourite AI model!",
     "say-something": "Say something",
-    "start": "Don't be shy. Start a conversation."
+    "start": "Don't be shy. Start a conversation.",
+    "you": "You",
+    "ai": "AI",
+    "system": "System"
   },
   "common": {
     "copied": "Copied",
     "submit": "Submit",
     "loading": "Loading...",
+    "success": "Success",
     "error": "Error",
     "not-found": "Page not found",
     "footer": "Made by Can Kolay with ❤️"
+  },
+  "auth": {
+    "name": "Name",
+    "username": "Username",
+    "email": "E-Mail",
+    "password": "Password",
+    "signin": {
+      "text": "Sign in",
+      "description": "Sign in"
+    },
+    "signup": {
+      "text": "Sign up",
+      "description": "Sign up"
+    },
+    "logout": "Log out"
+  },
+  "profile": {
+    "text": "Profile",
+    "description": "Profile",
+    "delete": "Delete account (not working)"
   }
 }

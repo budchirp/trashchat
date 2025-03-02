@@ -1,4 +1,4 @@
-import { appUrl } from '@/data'
+import { Env } from '@/lib/env'
 import { routes, routing } from '@/lib/i18n/routing'
 
 import type { MetadataRoute } from 'next'
@@ -8,7 +8,7 @@ const sitemap = (): MetadataRoute.Sitemap =>
     routes.map(
       (route): MetadataRoute.Sitemap[0] =>
         ({
-          url: `${appUrl}/${locale}${route}`,
+          url: `${Env.appUrl}/${locale}${route}`,
           lastModified: new Date(),
           changeFrequency: 'monthly',
           priority: 1

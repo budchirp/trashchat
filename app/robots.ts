@@ -1,4 +1,4 @@
-import { appUrl } from '@/data'
+import { Env } from '@/lib/env'
 
 import type { MetadataRoute } from 'next'
 
@@ -8,7 +8,7 @@ const robots = (): MetadataRoute.Robots => {
       userAgent: '*',
       allow: '/'
     },
-    sitemap: `${appUrl}/sitemap.xml`
+    sitemap: `${Env.appUrl}/sitemap.xml`
   }
 }
 
