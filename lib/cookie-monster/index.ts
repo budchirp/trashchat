@@ -35,6 +35,10 @@ export class CookieMonster {
   }
 
   public delete = (key: string): void => {
+    this.set(key, '', {
+      maxAge: -1
+    })
+
     document.cookie = cookie.serialize(key, '', { maxAge: -1 })
   }
 

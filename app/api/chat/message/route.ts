@@ -69,10 +69,6 @@ export const POST = async (request: NextRequest) => {
         console.log(error)
 
         return 'Error while generating content. Please try again'
-      },
-      headers: {
-        'Transfer-Encoding': 'chunked',
-        Connection: 'keep-alive'
       }
     })
   } catch (error) {

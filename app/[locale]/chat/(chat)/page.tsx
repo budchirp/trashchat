@@ -38,7 +38,7 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
     })
   } else {
     redirect({
-      href: "/",
+      href: '/',
       locale
     })
   }

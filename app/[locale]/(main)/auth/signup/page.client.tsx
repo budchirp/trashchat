@@ -43,7 +43,7 @@ const SignUpClientPage: React.FC = (): React.ReactNode => {
       } else {
         toast(t_common('success'))
 
-        router.push('/')
+        router.push('/auth/signin')
       }
 
       setSubmitting(false)

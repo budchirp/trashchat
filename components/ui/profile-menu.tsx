@@ -16,9 +16,10 @@ import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
 import { useTranslations } from 'next-intl'
 import { Fetch } from '@/lib/fetch'
-import { Link, usePathname, useRouter } from '@/lib/i18n/routing'
+import { Link } from '@/lib/i18n/routing'
 
 import type { User } from '@/types/user'
+import { usePathname, useRouter } from 'next/navigation'
 
 export type ProfileMenuProps = {
   sidebar?: boolean
@@ -169,10 +170,10 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                             cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
 
                             setUser(null)
+                            close()
+                            toast(t_common('success'))
 
                             router.push('/')
-
-                            toast(t_common('success'))
                           }}
                         >
                           {t('logout')}

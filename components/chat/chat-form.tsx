@@ -35,7 +35,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   const ref = useRef<HTMLDivElement>(null)
   return (
     <>
-      <div className='h-20 block relative opacity-0 select-none'>.</div>
+      <div className='h-16' />
 
       <form onSubmit={handleSubmit}>
         <div

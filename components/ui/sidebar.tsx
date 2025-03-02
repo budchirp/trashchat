@@ -7,7 +7,7 @@ import { Container } from '@/components/container'
 import { useTranslations } from 'next-intl'
 import { Fetch } from '@/lib/fetch'
 import { Box } from '@/components/box'
-import { Link, usePathname, useRouter } from '@/lib/i18n/routing'
+import { Link } from '@/lib/i18n/routing'
 import { Plus, Trash } from 'lucide-react'
 import { Button } from '@/components/button'
 import { cn } from '@/lib/cn'
@@ -16,6 +16,7 @@ import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
 
 import type { Chat } from '@/types/chat'
+import { usePathname, useRouter } from 'next/navigation'
 
 export const Sidebar: React.FC = (): React.ReactNode => {
   const pathname = usePathname()
@@ -94,7 +95,7 @@ export const Sidebar: React.FC = (): React.ReactNode => {
         </Container>
       </div>
 
-      <Container className='grid gap-2 size-full overflow-y-scroll my-2'>
+      <Container className='grid gap-2 size-full overflow-y-scroll my-4'>
         {!loading && mounted && chats ? (
           <>
             <Box className='h-min' padding='small'>

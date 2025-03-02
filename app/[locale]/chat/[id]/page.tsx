@@ -3,22 +3,17 @@ import type React from 'react'
 import { ChatClientPage } from '@/app/[locale]/chat/[id]/page.client'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { unstable_noStore as noStore } from 'next/cache'
 import { cookies } from 'next/headers'
 import { protectRoute } from '@/lib/auth/client/protect-route'
+import { Env } from '@/lib/env'
+import { Fetch } from '@/lib/fetch'
+import { redirect } from '@/lib/i18n/routing'
 
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
-import { Fetch } from '@/lib/fetch'
 import type { Message } from 'ai'
-import { Env } from '@/lib/env'
-import { notFound } from 'next/navigation'
-
-export const dynamic = 'force-dynamic'
 
 const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
-  noStore()
-
   const { locale, id } = await params
   setRequestLocale(locale)
 
@@ -33,7 +28,10 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
   })
 
   if (response.status >= 400) {
-    notFound()
+    redirect({
+      href: "/",
+      locale
+    })
   }
 
   const json = await response.json()

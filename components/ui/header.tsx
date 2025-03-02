@@ -14,7 +14,7 @@ import { Menu as MenuIcon, X } from 'lucide-react'
 import { Backdrop } from '@/components/backdrop'
 import { ThemeSwitcher } from '@/components/ui/theme-switcher'
 import { ProfileMenu } from '@/components/ui/profile-menu'
-import { usePathname } from '@/lib/i18n/routing'
+import { usePathname } from 'next/navigation'
 
 type HeaderProps = {
   sidebar?: boolean
@@ -97,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({
               </Container>
             </Transition>
 
-            <div className='h-16' />
+      <div className='h-16' />
           </div>
         )
       }}

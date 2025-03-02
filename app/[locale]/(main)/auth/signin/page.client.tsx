@@ -48,7 +48,7 @@ const SignInClientPage: React.FC = (): React.ReactNode => {
         const cookieMonster = new CookieMonster()
         cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, json.data.token)
 
-        router.push('/')
+        router.push('/chat')
       }
 
       setSubmitting(false)
