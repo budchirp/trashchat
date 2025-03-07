@@ -7,6 +7,7 @@ import { marked } from 'marked'
 import { Button } from '@/components/button'
 import { Box } from '@/components/box'
 import { useTranslations } from 'next-intl'
+import { toast } from '@/lib/toast'
 import { Check, Clipboard } from 'lucide-react'
 import { bundledLanguages, createHighlighter } from 'shiki/bundle/web'
 import {
@@ -17,8 +18,7 @@ import {
 } from '@shikijs/transformers'
 
 import githubDarkDefault from '@shikijs/themes/github-dark-default'
-import githubLightDefault from '@shikijs/themes/github-dark-default'
-import { toast } from '@/lib/toast'
+import githubLightDefault from '@shikijs/themes/github-light-default'
 
 function parseMarkdownIntoBlocks(markdown: string): string[] {
   const tokens = marked.lexer(markdown)
@@ -49,8 +49,8 @@ const MemoizedMarkdownBlock: React.MemoExoticComponent<
               const html = shiki.codeToHtml(code, {
                 lang: !Object.keys(bundledLanguages).includes(lang) ? 'plaintext' : lang,
                 themes: {
-                  light: githubLightDefault,
-                  dark: githubDarkDefault
+                  light: 'github-light-default',
+                  dark: 'github-dark-default'
                 },
                 transformers: [
                   transformerNotationDiff(),

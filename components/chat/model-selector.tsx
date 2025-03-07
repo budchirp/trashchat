@@ -13,25 +13,21 @@ import {
   ListboxOptions,
   Transition
 } from '@headlessui/react'
-import { EllipsisVertical, type LucideIcon } from 'lucide-react'
+import { Crown, DollarSign, EllipsisVertical, type LucideIcon } from 'lucide-react'
 import { Backdrop } from '@/components/backdrop'
 import { Button } from '@/components/button'
 import { Container } from '@/components/container'
 
+import { AIModels, type AIModelName } from '@/lib/ai/models'
+
 export type ModelSelectorProps = {
   input: string
-  model: ModelName
-  onChange: (model: ModelName) => void
+  model: AIModelName
+  onChange: (model: AIModelName) => void
   chatFormRef: Ref<HTMLDivElement>
 }
 
-export const modelNames = {
-  'gemini-2.0-flash': 'Gemini 2.0 Flash',
-  'deepseek-r1': 'DeepSeek R1 (broken)',
-  'openai-4o-mini': 'OpenAI 4o-mini (disabled)'
-}
-
-export type ModelName = keyof typeof modelNames
+const models = AIModels.get(false)
 
 export const ModelSelector: React.FC<ModelSelectorProps> = ({
   input,
@@ -98,7 +94,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                   show={open}
                   as='div'
                   className={cn(
-                    'w-3/4 right-0 h-screen_ flex justify-center bottom-0 items-center origin-[25%_100%] md:origin-[5%_100%] z-20 mx-auto fixed',
+                    'w-full md:w-3/4 right-0 h-screen_ flex justify-center bottom-0 items-center origin-[25%_100%] md:origin-[5%_100%] z-20 mx-auto fixed',
                     'transition-all scale-100 opacity-100',
                     'data-closed:scale-90 data-closed:opacity-0',
                     'data-enter:ease-out data-enter:duration-400',
@@ -118,7 +114,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                       padding='none'
                       className='min-w-32 max-w-48 md:max-w-64 overflow-hidden'
                     >
-                      {(Object.keys(modelNames) as ModelName[]).map((modelId: ModelName) => {
+                      {(Object.keys(models) as AIModelName[]).map((modelId: AIModelName) => {
                         return (
                           <ListboxOption
                             key={modelId}
@@ -132,18 +128,40 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                             }
                             value={modelId}
                           >
-                            {({ selected }) => (
-                              <p
-                                className={cn(
-                                  'flex h-full w-full items-center font-medium transition duration-300',
-                                  selected
-                                    ? 'text-text-accent-primary'
-                                    : 'text-text-primary hover:text-text-secondary'
-                                )}
-                              >
-                                {modelNames[modelId]}
-                              </p>
-                            )}
+                            {({ selected }) => {
+                              const model = models[modelId]
+
+                              return (
+                                <div
+                                  className={cn('flex justify-between h-full w-full items-center')}
+                                >
+                                  <p
+                                    className={cn(
+                                      'font-medium transition duration-300',
+                                      selected
+                                        ? 'text-text-accent-primary'
+                                        : 'text-text-primary hover:text-text-secondary'
+                                    )}
+                                  >
+                                    {model.name}
+                                  </p>
+
+                                  <div className='flex gap-2'>
+                                    {model.plus && (
+                                      <div className='size-8 border border-border p-1 flex items-center justify-center rounded-lg'>
+                                        <Crown size={16} />
+                                      </div>
+                                    )}
+
+                                    {model.premium && (
+                                      <div className='size-8 border border-border p-1 flex items-center justify-center rounded-lg'>
+                                        <DollarSign size={16} />
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )
+                            }}
                           </ListboxOption>
                         )
                       })}

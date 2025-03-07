@@ -8,15 +8,16 @@ import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { Search, Send, Square } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { ModelSelector, type ModelName } from './model-selector'
+import { ModelSelector } from './model-selector'
+import type { AIModelName } from '@/lib/ai/models'
 
 export type ChatFormProps = {
   loading: boolean
   stop: () => void
   handleSubmit: any
   input: string
-  model: ModelName
-  handleModelChange: (model: ModelName) => void
+  model: AIModelName
+  handleModelChange: (model: AIModelName) => void
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -40,7 +41,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
       <form onSubmit={handleSubmit}>
         <div
           ref={ref}
-          className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center right-0 w-3/4 py-2 border-t border-border bottom-0'
+          className='flex min-h-16 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center z-20 right-0 w-full md:w-3/4 py-2 border-t border-border bottom-0'
         >
           <Container className='flex items-center h-full justify-center gap-2'>
             <ModelSelector
@@ -52,7 +53,6 @@ export const ChatForm: React.FC<ChatFormProps> = ({
 
             <Input
               textarea
-              disabled={loading}
               value={input}
               placeholder={loading ? t_common('loading') : t('say-something')}
               onChange={handleInputChange}

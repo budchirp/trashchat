@@ -1,20 +1,19 @@
 'use client'
 
 import type React from 'react'
-import { createPortal } from 'react-dom'
-import { useState, useEffect } from 'react'
 
 import { Container } from '@/components/container'
-import { Button } from '@/components/button'
 import { Logo } from '@/components/logo'
-import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
-import { Transition, Menu, MenuItems, MenuButton } from '@headlessui/react'
-import { Menu as MenuIcon, X } from 'lucide-react'
-import { Backdrop } from '@/components/backdrop'
 import { ThemeSwitcher } from '@/components/ui/theme-switcher'
 import { ProfileMenu } from '@/components/ui/profile-menu'
-import { usePathname } from 'next/navigation'
+import { Sidebar } from './sidebar'
+import { useEffect, useState } from 'react'
+import { Button } from '../button'
+import { MenuIcon, X } from 'lucide-react'
+import { createPortal } from 'react-dom'
+import { Backdrop } from '../backdrop'
+import { Transition } from '@headlessui/react'
 
 type HeaderProps = {
   sidebar?: boolean
@@ -23,7 +22,7 @@ type HeaderProps = {
 export const Header: React.FC<HeaderProps> = ({
   sidebar = false
 }: HeaderProps): React.ReactNode => {
-  const pathname = usePathname()
+  const [showSidebar, setShowSidebar] = useState<boolean>(false)
 
   const [mounted, setMounted] = useState<boolean>(false)
   useEffect(() => {
@@ -31,77 +30,64 @@ export const Header: React.FC<HeaderProps> = ({
   }, [])
 
   return (
-    <Menu>
-      {({ open, close }) => {
-        useEffect((): void => {
-          close()
+    <>
+      <header
+        className={cn(
+          'select-none bg-background-primary/50 border-b border-border fixed top-0 z-20 flex h-16 items-center justify-center backdrop-blur-sm',
+          sidebar ? 'right-0 w-full md:w-3/4' : 'w-full'
+        )}
+      >
+        <Container className='flex items-center h-16 justify-between gap-2'>
+          <Logo />
 
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }, [pathname])
+          <div className='flex h-full items-center gap-2'>
+            <ProfileMenu sidebar={sidebar} />
+            <ThemeSwitcher sidebar={sidebar} />
 
-        return (
-          <div>
-            <header
-              className={cn(
-                'select-none bg-background-primary/50 border-b border-border fixed top-0 z-20 flex h-16 items-center justify-center backdrop-blur-sm',
-                sidebar ? 'right-0 w-3/4' : 'w-full'
-              )}
-            >
-              <Container className='flex items-center h-16 justify-between gap-2'>
-                <Logo />
+            {sidebar && (
+              <Button
+                className='md:hidden'
+                aria-label='Open menu'
+                variant='round'
+                color='secondary'
+                onClick={() => setShowSidebar(true)}
+              >
+                <MenuIcon />
+              </Button>
+            )}
+          </div>
+        </Container>
+      </header>
 
-                <div className='flex h-full items-center gap-2'>
-                  <ProfileMenu sidebar={sidebar} />
-                  <ThemeSwitcher sidebar={sidebar} />
+      <Transition
+        show={showSidebar}
+        as='div'
+        onClick={() => setShowSidebar(false)}
+        className={cn(
+          'z-50 inset-0 fixed',
+          'transition-all opacity-100',
+          'data-closed:-translate-x-full data-closed:opacity-75',
+          'data-enter:ease-out data-enter:duration-400',
+          'data-leave:ease-in data-leave:duration-200'
+        )}
+      >
+        <div className='fixed left-0 top-0'>
+          <Sidebar onClose={() => setShowSidebar(false)} />
+        </div>
+      </Transition>
 
-                  <MenuButton
-                    as={Button}
-                    className='md:hidden'
-                    aria-label='Open menu'
-                    variant='round'
-                    color='secondary'
-                    onClick={close}
-                  >
-                    {open ? <X /> : <MenuIcon />}
-                  </MenuButton>
-                </div>
-              </Container>
-            </header>
-
-            {mounted &&
-              createPortal(
-                <Backdrop open={open} onClose={close} />,
-                document.querySelector('#main') as Element
-              )}
-
-            <Transition
-              show={open}
-              as='div'
-              className={cn(
-                'w-screen h-screen_ flex justify-center items-center origin-[90%_0%] z-20 mx-auto inset-0 fixed',
-                'transition-all scale-100 opacity-100',
-                'data-closed:scale-90 data-closed:opacity-0',
-                'data-enter:ease-out data-enter:duration-400',
-                'data-leave:ease-in data-leave:duration-200'
-              )}
-            >
-              <Container className='fixed top-20 flex h-min items-center justify-center'>
-                <MenuItems
-                  as={Box}
-                  static
-                  variant='primary'
-                  className='top-0 grid w-full gap-2 overflow-hidden sm:max-w-(--breakpoint-xs)'
-                >
-                  <h2 className='text-2xl font-bold'>Links</h2>
-                </MenuItems>
-              </Container>
-            </Transition>
+      {mounted &&
+        createPortal(
+          <Backdrop
+            className='!h-screen inset-0 z-40'
+            open={showSidebar}
+            onClose={() => setShowSidebar(false)}
+          />,
+          document.querySelector('#main') as Element
+        )}
 
       <div className='h-16' />
-          </div>
-        )
-      }}
-    </Menu>
+    </>
   )
 }
 Header.displayName = 'Header'

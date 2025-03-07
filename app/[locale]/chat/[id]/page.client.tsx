@@ -10,8 +10,7 @@ import { MemoizedMarkdown } from '@/components/markdown'
 import { useChat } from '@ai-sdk/react'
 import { useTranslations } from 'next-intl'
 import { generateId, type Message } from 'ai'
-
-import type { modelNames } from '@/components/chat/model-selector'
+import type { AIModelName } from '@/lib/ai/models'
 
 type ChatClientPageProps = {
   token: string
@@ -27,15 +26,15 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   const t = useTranslations('chat')
   const t_common = useTranslations('common')
 
-  const [model, setModel] = useState<keyof typeof modelNames>('gemini-2.0-flash')
+  const [model, setModel] = useState<AIModelName>('gemini-2.0-flash')
   const [error, setError] = useState<string | null>(null)
 
   const ref = useRef<HTMLDivElement | null>(null)
 
   const { messages, setMessages, input, status, stop, handleInputChange, handleSubmit } = useChat({
-    api: '/api/chat/message',
+    api: `/api/chat/${chatId}/message`,
     experimental_prepareRequestBody: ({ messages }) => {
-      return { message: messages[messages.length - 1], chatId, model }
+      return { message: messages[messages.length - 1], model }
     },
     initialMessages,
     headers: {

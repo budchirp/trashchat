@@ -71,7 +71,7 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
                 'data-closed:scale-90 data-closed:opacity-0',
                 'data-enter:ease-out data-enter:duration-400',
                 'data-leave:ease-in data-leave:duration-200',
-                sidebar ? 'w-3/4 right-0 top-0' : 'w-screen inset-0'
+                sidebar ? 'w-full md:w-3/4 right-0 top-0' : 'w-screen inset-0'
               )}
             >
               <Container className='fixed top-20 flex h-min items-center justify-end'>

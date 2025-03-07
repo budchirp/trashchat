@@ -17,17 +17,13 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
 
   const token = protectRoute(await cookies(), locale) as string
 
-  const response = await Fetch.post<{
+  const response = await Fetch.get<{
     data: {
       id: string
     }
-  }>(
-    `${Env.appUrl}/api/chat`,
-    {},
-    {
-      authorization: `Bearer ${token}`
-    }
-  )
+  }>(`${Env.appUrl}/api/chat/-1`, {
+    authorization: `Bearer ${token}`
+  })
 
   const json = await response.json()
   if (response.status < 400) {

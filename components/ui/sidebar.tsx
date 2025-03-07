@@ -7,18 +7,22 @@ import { Container } from '@/components/container'
 import { useTranslations } from 'next-intl'
 import { Fetch } from '@/lib/fetch'
 import { Box } from '@/components/box'
-import { Link } from '@/lib/i18n/routing'
-import { Plus, Trash } from 'lucide-react'
+import { Link, useRouter } from '@/lib/i18n/routing'
+import { X, Plus, Trash } from 'lucide-react'
 import { Button } from '@/components/button'
 import { cn } from '@/lib/cn'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
+import { usePathname } from 'next/navigation'
 
 import type { Chat } from '@/types/chat'
-import { usePathname, useRouter } from 'next/navigation'
 
-export const Sidebar: React.FC = (): React.ReactNode => {
+type SidebarProps = {
+  onClose?: () => void
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ onClose = () => {} }: SidebarProps): React.ReactNode => {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -40,7 +44,7 @@ export const Sidebar: React.FC = (): React.ReactNode => {
       try {
         const response = await Fetch.get<{
           data: Chat[]
-        }>('/api/chat', {
+        }>('/api/chats', {
           Authorization: `Bearer ${token}`
         })
 
@@ -58,23 +62,40 @@ export const Sidebar: React.FC = (): React.ReactNode => {
   const deleteChat = async (id: string) => {
     const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
-      try {
-        const response = await Fetch.delete<{
-          data: Chat[]
-        }>(`/api/chat?id=${id}`, {
+      const response = await Fetch.delete<{
+        data: Chat[]
+      }>(`/api/chat/${id}`, {
+        Authorization: `Bearer ${token}`
+      })
+
+      if (response.status >= 400) {
+        toast(t_common('error'))
+
+        fetchChats()
+      }
+    }
+  }
+
+  const newChat = async () => {
+    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+    if (token) {
+      const response = await Fetch.post<{
+        data: Chat
+      }>(
+        '/api/chats',
+        {},
+        {
           Authorization: `Bearer ${token}`
-        })
-
-        if (response.status < 400) {
-          toast(t_common('success'))
-        } else {
-          toast(t_common('error'))
-
-          fetchChats()
         }
-      } catch {
-      } finally {
-        setLoading(false)
+      )
+
+      if (response.status < 400) {
+        const json = await response.json()
+        router.push(`/chat/${json.data.id}`)
+      } else {
+        toast(t_common('error'))
+
+        fetchChats()
       }
     }
   }
@@ -88,22 +109,31 @@ export const Sidebar: React.FC = (): React.ReactNode => {
   }, [pathname])
 
   return (
-    <div className='w-1/4 bg-background-primary fixed top-0 left-0 flex flex-col h-screen border-r border-border'>
+    <div className='w-3/4 md:w-1/4 bg-background-primary fixed top-0 left-0 flex flex-col h-screen border-r border-border'>
       <div className='w-full h-16 bg-background-primary flex items-center justify-center border-b border-border'>
         <Container className='h-16 w-full flex items-center justify-between'>
           <h1 className='font-bold text-2xl'>Chats</h1>
+
+          <Button
+            className='md:hidden'
+            aria-label='Open menu'
+            variant='round'
+            color='secondary'
+            onClick={onClose}
+          >
+            <X />
+          </Button>
         </Container>
       </div>
 
-      <Container className='grid gap-2 size-full overflow-y-scroll my-4'>
+      <Container className='grid gap-2 size-full overflow-y-auto my-4'>
         {!loading && mounted && chats ? (
           <>
             <Box className='h-min' padding='small'>
-              <Link
-                className='text-text-primary items-center font-medium flex gap-2 hover:text-text-secondary'
-                href='/chat'
+              <div
+                className='text-text-primary items-center font-medium flex gap-2 hover:text-text-secondary cursor-pointer'
                 onClick={() => {
-                  fetchChats()
+                  newChat()
                 }}
               >
                 <Button variant='round' color='secondary'>
@@ -111,7 +141,7 @@ export const Sidebar: React.FC = (): React.ReactNode => {
                 </Button>
 
                 <span>New chat</span>
-              </Link>
+              </div>
             </Box>
 
             <div className='flex flex-col-reverse gap-2'>
@@ -143,7 +173,7 @@ export const Sidebar: React.FC = (): React.ReactNode => {
                         deleteChat(chat.id)
 
                         if (selected) {
-                          router.push('/')
+                          router.push('/chat')
                         }
                       }}
                       variant='round'

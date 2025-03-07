@@ -17,6 +17,13 @@ model User {
 
   password String
 
+  profilePicture String?
+
+  plus Boolean @default(false)
+
+  credits        Int @default(50)
+  premiumCredits Int @default(0)
+
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
 

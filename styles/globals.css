@@ -2,6 +2,8 @@
 
 @config '../tailwind.config.ts';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-accent-50: oklch(0.962 0.018 272.314);
   --color-accent-100: oklch(0.93 0.034 272.788);
@@ -97,7 +99,7 @@ html {
 }
 
 *::-webkit-scrollbar {
-  position: absolute;
+  position: absolute !important;
 }
 
 .backdrop-h-screen {

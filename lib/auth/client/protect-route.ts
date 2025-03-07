@@ -16,13 +16,6 @@ export const protectRoute = (
         locale
       })
     }
-  } else {
-    if (token) {
-      redirect({
-        href: '/',
-        locale
-      })
-    }
   }
 
   return token

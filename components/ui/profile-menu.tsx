@@ -139,7 +139,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                 'data-closed:scale-90 data-closed:opacity-0',
                 'data-enter:ease-out data-enter:duration-400',
                 'data-leave:ease-in data-leave:duration-200',
-                sidebar ? 'w-3/4 right-0 top-0' : 'w-screen inset-0'
+                sidebar ? 'w-full md:w-3/4 right-0 top-0' : 'w-screen inset-0'
               )}
             >
               <Container className='fixed top-20 flex h-min items-center justify-end'>
@@ -157,7 +157,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                   ) : user ? (
                     <>
                       <ProfileMenuItem icon={<UserIcon />}>
-                        <Link href='/profile'>
+                        <Link href='/user'>
                           <h2 className='font-bold text-text-accent-primary'>{user.name}</h2>
                           <h3 className='text-text-tertiary'>{user.username}</h3>
                         </Link>

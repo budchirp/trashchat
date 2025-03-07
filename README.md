@@ -20,8 +20,8 @@
 - [ ] Translate API routes
 - [ ] SEO
 - [ ] Add stripe for payments
-- [ ] Sidebar for chats
-- [ ] Ability to delete chats
+- [x Sidebar for chats
+- [x] Ability to delete chats
 - [ ] Deleting account
 - [ ] Updating account details
 - [ ] Better profile page

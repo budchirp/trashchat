@@ -1,25 +1,62 @@
 'use client'
 
-import type React from 'react'
-import { useState } from 'react'
-
-import { Input } from '@/components/input'
-import { Lock, Mail, User } from 'lucide-react'
-import { Button } from '@/components/button'
-import { useTranslations } from 'next-intl'
-import { useFormik } from 'formik'
-import { toFormikValidationSchema } from 'zod-formik-adapter'
-import { signUpValidator } from '@/lib/validators/signup'
 import { Box } from '@/components/box'
+import { Button } from '@/components/button'
+import { Input } from '@/components/input'
+import { CONSTANTS } from '@/lib/constants'
+import { CookieMonster } from '@/lib/cookie-monster'
 import { Fetch } from '@/lib/fetch'
-import { toast } from '@/lib/toast'
 import { useRouter } from '@/lib/i18n/routing'
+import { toast } from '@/lib/toast'
+import { updateProfileValidator } from '@/lib/validators/profile'
+import type { User } from '@/types/user'
+import { useFormik } from 'formik'
+import { Lock, Mail, UserIcon } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
 
-export const SignUpClientPage: React.FC = (): React.ReactNode => {
+export const ProfileClientPage: React.FC = (): React.ReactNode => {
+  const [loading, setLoading] = useState<boolean>(true)
+  const [user, setUser] = useState<User | null>(null)
+
+  const [error, setError] = useState<string | null>(null)
+
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
-  const [error, setError] = useState<string | null>(null)
+  const cookieMonster = new CookieMonster()
+
+  const fetchUser = async () => {
+    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+    if (token) {
+      setLoading(true)
+
+      try {
+        const response = await Fetch.get<{
+          data: User
+          message: string
+        }>('/api/user', {
+          Authorization: `Bearer ${token}`
+        })
+
+        const json = await response.json()
+        if (response.status < 400) {
+          setUser(json.data)
+        } else {
+          setError(json.message)
+        }
+      } catch {
+        setError(t_common('error'))
+      }
+    }
+
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchUser()
+  }, [])
 
   const router = useRouter()
 
@@ -33,9 +70,8 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const response = await Fetch.post<{
+      const response = await Fetch.patch<{
         message: string
-        data: any
       }>('/api/user', values)
       const json = await response.json()
       if (response.status >= 400) {
@@ -43,15 +79,28 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
       } else {
         toast(t_common('success'))
 
-        router.push('/auth/signin')
+        router.push('/user')
       }
 
       setSubmitting(false)
     },
-    validationSchema: toFormikValidationSchema(signUpValidator)
+    validationSchema: toFormikValidationSchema(updateProfileValidator)
   })
 
-  return (
+  useEffect(() => {
+    if (user) {
+      formik.setValues({
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        password: ''
+      })
+    }
+  }, [user])
+
+  return !user || loading ? (
+    <div>loading</div>
+  ) : (
     <form className='grid text-start gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
       {error && (
         <Box variant='primary'>
@@ -66,7 +115,7 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
             name='name'
             type='text'
             autoComplete='name'
-            icon={<User size={16} />}
+            icon={<UserIcon size={16} />}
             placeholder={t('name')}
             value={formik.values.name}
             onChange={formik.handleChange}
@@ -84,7 +133,7 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
             name='username'
             type='text'
             autoComplete='off'
-            icon={<User size={16} />}
+            icon={<UserIcon size={16} />}
             placeholder={t('username')}
             value={formik.values.username}
             onChange={formik.handleChange}
@@ -98,6 +147,7 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
 
         <div>
           <Input
+            readOnly
             id='email'
             name='email'
             type='email'
@@ -135,7 +185,7 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
 
       <div>
         <Button loading={formik.isSubmitting} type='submit'>
-          {t_common('submit')}
+          {t('update')}
         </Button>
       </div>
     </form>

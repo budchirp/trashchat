@@ -23,11 +23,7 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json(
       {
         message: 'Success',
-        data: {
-          name: user.name,
-          username: user.username,
-          email: user.email
-        }
+        data: user
       },
       {
         status: 201
@@ -81,6 +77,69 @@ export const POST = async (request: NextRequest) => {
         status: 201
       }
     )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: (error as Error).message,
+        details: (error as Error).message,
+        data: {}
+      },
+      { status: 500 }
+    )
+  }
+}
+
+export const PATCH = async (request: NextRequest) => {
+  try {
+    const { name, username, email, password } = await request.json()
+    if ((!name || !username || !email) && !password) {
+      throw new Error('Name, Username, Email or Password is null!')
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email
+      }
+    })
+
+    if (!user) {
+      throw new Error('User not found!')
+    }
+
+    if (user.username !== username) {
+      if (
+        await prisma.user.findUnique({
+          where: {
+            username
+          }
+        })
+      ) {
+        throw new Error('User with that username exists!')
+      }
+    }
+
+    const passwordMatch = await Encrypt.compare(password, user.password)
+    if (!passwordMatch) {
+      throw new Error('Invalid password!')
+    }
+
+    await prisma.user.update({
+      where: {
+        username,
+        email,
+        id: user.id
+      },
+      data: {
+        name,
+        username,
+        email
+      }
+    })
+
+    return NextResponse.json({
+      message: 'Success',
+      data: {}
+    })
   } catch (error) {
     return NextResponse.json(
       {

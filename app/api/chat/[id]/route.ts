@@ -2,7 +2,16 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { verifyToken } from '@/lib/auth/server/verify-token'
 import { prisma } from '@/lib/prisma'
 
-export const DELETE = async (request: NextRequest) => {
+export const DELETE = async (
+  request: NextRequest,
+  {
+    params
+  }: {
+    params: Promise<{
+      id: string
+    }>
+  }
+) => {
   try {
     const [isTokenValid, payload] = await verifyToken(request.headers)
     if (!isTokenValid || !payload) {
@@ -19,11 +28,7 @@ export const DELETE = async (request: NextRequest) => {
       throw new Error('User not found!')
     }
 
-    const searchParams = request.nextUrl.searchParams
-    const id = searchParams.get('id')
-    if (!id) {
-      throw new Error('ID is null.')
-    }
+    const { id } = await params
 
     await prisma.chat.delete({
       where: {
@@ -49,50 +54,16 @@ export const DELETE = async (request: NextRequest) => {
   }
 }
 
-export const POST = async (request: NextRequest) => {
-  try {
-    const [isTokenValid, payload] = await verifyToken(request.headers)
-    if (!isTokenValid || !payload) {
-      throw new Error('Invalid token.')
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: payload.id
-      }
-    })
-
-    if (!user) {
-      throw new Error('User not found!')
-    }
-
-    const chat = await prisma.chat.create({
-      data: {
-        title: 'New chat',
-
-        userId: user.id
-      }
-    })
-
-    return NextResponse.json({
-      message: 'Success',
-      data: {
-        id: chat.id
-      }
-    })
-  } catch (error) {
-    return NextResponse.json(
-      {
-        message: (error as Error).message,
-        details: (error as Error).message,
-        data: {}
-      },
-      { status: 500 }
-    )
+export const GET = async (
+  request: NextRequest,
+  {
+    params
+  }: {
+    params: Promise<{
+      id: string
+    }>
   }
-}
-
-export const GET = async (request: NextRequest) => {
+) => {
   try {
     const [isTokenValid, payload] = await verifyToken(request.headers)
     if (!isTokenValid || !payload) {
@@ -109,18 +80,43 @@ export const GET = async (request: NextRequest) => {
       throw new Error('User not found!')
     }
 
-    const searchParams = request.nextUrl.searchParams
-    const id = searchParams.get('id')
-    if (!id) {
+    const { id } = await params
+
+    if (id === '-1') {
       const chats = await prisma.chat.findMany({
-        where: {
-          userId: user.id
+        take: 1,
+        orderBy: {
+          updatedAt: 'desc'
+        },
+        include: {
+          messages: true
         }
       })
 
+      let chat: any
+      if (chats.length < 1) {
+        chat = await prisma.chat.create({
+          data: {
+            title: 'New chat',
+
+            userId: user.id
+          },
+          include: {
+            messages: true
+          }
+        })
+      } else {
+        chat = chats[0]
+      }
+
       return NextResponse.json({
         message: 'Success',
-        data: chats
+        data: {
+          id: chat.id,
+
+          title: chat.title,
+          messages: chat.messages
+        }
       })
     }
 
@@ -142,6 +138,9 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({
       message: 'Success',
       data: {
+        id: chat.id,
+
+        title: chat.title,
         messages: chat.messages
       }
     })

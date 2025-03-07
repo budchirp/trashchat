@@ -23,13 +23,13 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
     data: {
       messages: Message[]
     }
-  }>(`${Env.appUrl}/api/chat?id=${id}`, {
+  }>(`${Env.appUrl}/api/chat/${id}`, {
     Authorization: `Bearer ${token}`
   })
 
   if (response.status >= 400) {
     redirect({
-      href: "/",
+      href: '/',
       locale
     })
   }

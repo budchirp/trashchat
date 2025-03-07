@@ -23,6 +23,7 @@
     "footer": "Made by Can Kolay with ❤️"
   },
   "auth": {
+    "update": "Update",
     "name": "Name",
     "username": "Username",
     "email": "E-Mail",
@@ -40,6 +41,13 @@
   "profile": {
     "text": "Profile",
     "description": "Profile",
-    "delete": "Delete account (not working)"
+    "delete": "Delete account (not working)",
+    "profile-picture": "Profile Picture"
+  },
+  "usages": {
+    "text": "Usages",
+    "description": "Usages",
+    "credits": "Credits",
+    "premium-credits": "Premium credits"
   }
 }

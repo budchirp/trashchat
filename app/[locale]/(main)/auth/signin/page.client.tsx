@@ -17,7 +17,7 @@ import { useRouter } from '@/lib/i18n/routing'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { CONSTANTS } from '@/lib/constants'
 
-const SignInClientPage: React.FC = (): React.ReactNode => {
+export const SignInClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
@@ -70,6 +70,7 @@ const SignInClientPage: React.FC = (): React.ReactNode => {
             id='email'
             name='email'
             type='email'
+            autoComplete='email'
             icon={<Mail size={16} />}
             placeholder={t('email')}
             value={formik.values.email}
@@ -87,6 +88,7 @@ const SignInClientPage: React.FC = (): React.ReactNode => {
             id='password'
             name='password'
             type='password'
+            autoComplete='current-password'
             icon={<Lock size={16} />}
             placeholder={t('password')}
             value={formik.values.password}
@@ -100,11 +102,11 @@ const SignInClientPage: React.FC = (): React.ReactNode => {
         </div>
       </div>
 
-      <Button loading={formik.isSubmitting} type='submit'>
-        {t_common('submit')}
-      </Button>
+      <div>
+        <Button loading={formik.isSubmitting} type='submit'>
+          {t_common('submit')}
+        </Button>
+      </div>
     </form>
   )
 }
-
-export default SignInClientPage

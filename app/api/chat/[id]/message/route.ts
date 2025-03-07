@@ -7,18 +7,39 @@ import { prisma } from '@/lib/prisma'
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
 
-export const POST = async (request: NextRequest) => {
+export const POST = async (
+  request: NextRequest,
+  {
+    params
+  }: {
+    params: Promise<{
+      id: string
+    }>
+  }
+) => {
   try {
-    const [isTokenValid] = await verifyToken(request.headers)
-    if (!isTokenValid) {
+    const [isTokenValid, payload] = await verifyToken(request.headers)
+    if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
     }
 
-    const { message, chatId /* model */ } = await request.json()
+    const user = await prisma.user.findUnique({
+      where: {
+        id: payload.id
+      }
+    })
+
+    if (!user) {
+      throw new Error('User not found!')
+    }
+
+    const { id } = await params
+
+    const { message, model: modelName } = await request.json()
 
     const chat = await prisma.chat.findUnique({
       where: {
-        id: chatId
+        id
       },
       include: {
         messages: true
@@ -34,7 +55,7 @@ export const POST = async (request: NextRequest) => {
         role: message.role,
         content: message.content,
 
-        chatId
+        chatId: id
       }
     })
 
@@ -43,11 +64,25 @@ export const POST = async (request: NextRequest) => {
       message
     })
 
-    const model = null
-
     const models = AIModels.get()
+
+    const model = modelName ? models[modelName as AIModelName] : models['gemini-2.0-flash']
+    if (model.plus && !user.plus) {
+      throw new Error('This model is for plus users!')
+    }
+
+    if (model.premium) {
+      if (user.premiumCredits < 1) {
+        throw new Error('Not enough credits!')
+      }
+    } else {
+      if (user.credits < 1) {
+        throw new Error('Not enough credits!')
+      }
+    }
+
     const result = streamText({
-      model: model ? models[model as AIModelName] : models['gemini-2.0-flash'],
+      model: model.provider,
       messages,
       experimental_transform: smoothStream(),
       onFinish: async ({ response }) => {
@@ -61,6 +96,15 @@ export const POST = async (request: NextRequest) => {
             chatId: chat.id
           }
         })
+
+        await prisma.user.update({
+          where: {
+            id: user.id
+          },
+          data: {
+            credits: user.credits - 1
+          }
+        })
       }
     })
 
@@ -68,13 +112,13 @@ export const POST = async (request: NextRequest) => {
       getErrorMessage: (error: unknown) => {
         console.log(error)
 
-        return 'Error while generating content. Please try again'
+        return (error as any).message || 'Error while generating content. Please try again'
       }
     })
   } catch (error) {
     return NextResponse.json(
       {
-        message: 'Error while generating content. Please try again',
+        message: (error as any).message || 'Error while generating content. Please try again',
         details: (error as Error).message,
         data: {}
       },

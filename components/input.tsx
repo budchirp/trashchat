@@ -82,7 +82,7 @@ export const Input: React.FC<InputProps> = ({
           ref={textarea && (textareaRef as any)}
           onKeyDown={handleKeyDown}
           className={cn(
-            'bg-background-primary min-h-10 max-h-48 text-text-primary placeholder-text-tertiary border-border focus:border-border-hover hover:border-border-hover flex h-10 w-full items-center rounded-3xl border py-2 pl-11 pr-4 transition duration-300 resize-none overflow-auto',
+            'bg-background-primary read-only:opacity-50 min-h-10 max-h-48 text-text-primary placeholder-text-tertiary border-border focus:border-border-hover hover:border-border-hover flex h-10 w-full items-center rounded-3xl border py-2 pl-11 pr-4 transition duration-300 resize-none overflow-auto',
             className
           )}
         />
