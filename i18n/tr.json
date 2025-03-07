@@ -1,14 +1,14 @@
 {
   "landing": {
-    "text": "Ana Sayfa",
-    "description": "Favori Yapay Zeka modelinizle sohbet edin!",
-    "go-to-chat": "Sohbete geç"
+    "text": "Giriş",
+    "description": "En sevdiğin yapay zeka modeliyle sohbet et!",
+    "go-to-chat": "Sohbete git"
   },
   "chat": {
     "text": "Sohbet",
-    "description": "Favori Yapay Zeka modelinizle sohbet edin!",
+    "description": "En sevdiğin yapay zeka modeliyle sohbet et!",
     "say-something": "Bir şeyler söyle",
-    "start": "Çekinmeyin. Bir konuşma başlatın.",
+    "start": "Çekinme. Bir konuşma başlat.",
     "you": "Sen",
     "ai": "AI",
     "system": "Sistem"
@@ -23,7 +23,8 @@
     "footer": "Can Kolay tarafından ❤️ ile yapıldı"
   },
   "auth": {
-    "name": "İsim",
+    "update": "Güncelle",
+    "name": "Ad",
     "username": "Kullanıcı adı",
     "email": "E-Posta",
     "password": "Şifre",
@@ -40,6 +41,13 @@
   "profile": {
     "text": "Profil",
     "description": "Profil",
-    "delete": "Hesabı sil (çalışmıyor)"
+    "delete": "Hesabı sil (çalışmıyor)",
+    "profile-picture": "Profil Resmi"
+  },
+  "usages": {
+    "text": "Kullanımlar",
+    "description": "Kullanımlar",
+    "credits": "Krediler",
+    "premium-credits": "Premium krediler"
   }
 }
