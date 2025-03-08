@@ -8,12 +8,11 @@ import { protectRoute } from '@/lib/auth/client/protect-route'
 import { cookies } from 'next/headers'
 import { Env } from '@/lib/env'
 import { Fetch } from '@/lib/fetch'
-import { Link } from '@/lib/i18n/routing'
 import { Crown } from 'lucide-react'
 import Image from 'next/image'
 
 import type { User } from '@/types/user'
-import type { RouteMap } from '@/types/route-map'
+import { SettingsSection } from './layout.client'
 
 const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: DynamicLayoutProps) => {
   const { locale } = await params
@@ -30,28 +29,13 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
 
   const t = await getTranslations({
     locale,
-    namespace: 'profile'
+    namespace: 'account'
   })
-
-  const t_all = await getTranslations({
-    locale
-  })
-
-  const routes: RouteMap = [
-    {
-      location: '/',
-      title: t_all('profile.text')
-    },
-    {
-      location: '/usages',
-      title: t_all('usages.text')
-    }
-  ]
 
   return (
     <Container>
       <div className='flex flex-col md:flex-row w-full'>
-        <div className='md:w-1/4 w-full md:border-b-0 md:border-r-4 mt-16 border-border md:mr-4 md:pr-4 mb-4 md:mb-0 grid h-min gap-4'>
+        <div className='md:w-1/4 w-full md:border-b-0 md:border-r-4 mt-16 border-border-hover md:mr-4 md:pr-4 mb-4 md:mb-0 grid h-min gap-4'>
           <div className='size-32 mx-auto p-2 rounded-full border border-border-hover flex items-center justify-center'>
             <Image
               height={128}
@@ -63,28 +47,16 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
           </div>
 
           <div>
-            <h1 className='font-bold text-lg flex gap-1 items-center'>
-              {user.plus && <Crown size={16} className='text-amber-500' />}
+            <h1 className='font-bold text-xl flex gap-2 items-center'>
+              {user.plus && <Crown size={16} className='text-text-accent-primary' />}
 
               <span>{user.name}</span>
             </h1>
 
-            <h2 className='font-medium'>{user.username}</h2>
+            <h2 className='font-medium text-text-tertiary'>{user.username}</h2>
           </div>
 
-          <div className='grid'>
-            {routes.map((route) => {
-              return (
-                <Link
-                  href={`/user${route.location}`}
-                  className='font-bold text-text-primary text-lg'
-                  key={route.location}
-                >
-                  {route.title}
-                </Link>
-              )
-            })}
-          </div>
+          <SettingsSection />
         </div>
 
         <div className='flex flex-col grow w-full'>{children}</div>

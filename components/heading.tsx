@@ -22,7 +22,7 @@ export const Heading: React.FC<HeadingProps> = ({
     {cover}
 
     <div className='grid gap-2'>
-      <h2 className='break-all text-3xl font-bold'>{children}</h2>
+      <h2 className={cn('break-all text-3xl font-bold', className)}>{children}</h2>
 
       {description}
     </div>

@@ -19,30 +19,38 @@
     "loading": "Loading...",
     "success": "Success",
     "error": "Error",
+    "update": "Update",
     "not-found": "Page not found",
     "footer": "Made by Can Kolay with ❤️"
   },
   "auth": {
-    "update": "Update",
     "name": "Name",
     "username": "Username",
     "email": "E-Mail",
     "password": "Password",
     "signin": {
       "text": "Sign in",
-      "description": "Sign in"
+      "description": "Sign in",
+      "signup": "Click here to sign up"
     },
     "signup": {
       "text": "Sign up",
-      "description": "Sign up"
+      "description": "Sign up",
+      "signin": "Click here to sign in"
     },
     "logout": "Log out"
   },
-  "profile": {
-    "text": "Profile",
-    "description": "Profile",
+  "account": {
+    "text": "Account",
+    "description": "Account",
     "delete": "Delete account (not working)",
     "profile-picture": "Profile Picture"
+  },
+  "customization": {
+    "text": "Customization",
+    "description": "Customization",
+    "prompt": "System prompt",
+    "share-info": "Share info with ai"
   },
   "usages": {
     "text": "Usages",

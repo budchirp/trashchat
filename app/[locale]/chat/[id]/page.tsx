@@ -13,6 +13,8 @@ import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
 import type { Message } from 'ai'
 
+export const dynamic = 'force-dynamic'
+
 const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale, id } = await params
   setRequestLocale(locale)

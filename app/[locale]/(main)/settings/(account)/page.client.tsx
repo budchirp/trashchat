@@ -8,15 +8,16 @@ import { CookieMonster } from '@/lib/cookie-monster'
 import { Fetch } from '@/lib/fetch'
 import { useRouter } from '@/lib/i18n/routing'
 import { toast } from '@/lib/toast'
-import { updateProfileValidator } from '@/lib/validators/profile'
-import type { User } from '@/types/user'
+import { updateAccountValidator } from '@/lib/validators/update-account'
 import { useFormik } from 'formik'
-import { Lock, Mail, UserIcon } from 'lucide-react'
+import { Mail, UserIcon } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 
-export const ProfileClientPage: React.FC = (): React.ReactNode => {
+import type { User } from '@/types/user'
+
+export const AccountClientPage: React.FC = (): React.ReactNode => {
   const [loading, setLoading] = useState<boolean>(true)
   const [user, setUser] = useState<User | null>(null)
 
@@ -42,6 +43,7 @@ export const ProfileClientPage: React.FC = (): React.ReactNode => {
 
         const json = await response.json()
         if (response.status < 400) {
+          setError(null)
           setUser(json.data)
         } else {
           setError(json.message)
@@ -64,27 +66,34 @@ export const ProfileClientPage: React.FC = (): React.ReactNode => {
     initialValues: {
       name: '',
       username: '',
-      email: '',
-      password: ''
+      email: ''
     },
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const response = await Fetch.patch<{
-        message: string
-      }>('/api/user', values)
-      const json = await response.json()
-      if (response.status >= 400) {
-        setError(json?.message || t_common('error'))
-      } else {
-        toast(t_common('success'))
+      const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+      if (token) {
+        const response = await Fetch.patch<{
+          message: string
+        }>('/api/user', values, {
+          Authorization: `Bearer ${token}`
+        })
 
-        router.push('/user')
+        const json = await response.json()
+        if (response.status < 400) {
+          setError(null)
+
+          toast(t_common('success'))
+
+          router.push('/settings')
+        } else {
+          setError(json?.message || t_common('error'))
+        }
+
+        setSubmitting(false)
       }
-
-      setSubmitting(false)
     },
-    validationSchema: toFormikValidationSchema(updateProfileValidator)
+    validationSchema: toFormikValidationSchema(updateAccountValidator)
   })
 
   useEffect(() => {
@@ -92,15 +101,12 @@ export const ProfileClientPage: React.FC = (): React.ReactNode => {
       formik.setValues({
         name: user.name,
         username: user.username,
-        email: user.email,
-        password: ''
+        email: user.email
       })
     }
   }, [user])
 
-  return !user || loading ? (
-    <div>loading</div>
-  ) : (
+  return (
     <form className='grid text-start gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
       {error && (
         <Box variant='primary'>
@@ -163,29 +169,11 @@ export const ProfileClientPage: React.FC = (): React.ReactNode => {
             <p className='text-red-500 ms-2'>{formik.errors.email}</p>
           )}
         </div>
-
-        <div>
-          <Input
-            id='password'
-            name='password'
-            type='password'
-            autoComplete='current-password'
-            icon={<Lock size={16} />}
-            placeholder={t('password')}
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-
-          {formik.errors.password && formik.touched.password && (
-            <p className='text-red-500 ms-2'>{formik.errors.password}</p>
-          )}
-        </div>
       </div>
 
       <div>
-        <Button loading={formik.isSubmitting} type='submit'>
-          {t('update')}
+        <Button loading={formik.isSubmitting || loading} type='submit'>
+          {t_common('update')}
         </Button>
       </div>
     </form>

@@ -6,10 +6,16 @@ export type User = {
 
   email: string
 
+  password: string
+
   profilePicure?: string
 
   plus: boolean
 
   credits: number
   premiumCredits: number
+
+  systemPrompt: string
+
+  shareInfoWithAI: boolean
 }

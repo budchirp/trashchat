@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { appendClientMessage, smoothStream, streamText } from 'ai'
-import { AIModels, type AIModelName } from '@/lib/ai/models'
 import { verifyToken } from '@/lib/auth/server/verify-token'
+import { AIModels, type AIModelName } from '@/lib/ai/models'
+import { constructSystemPrompt } from '@/lib/ai/prompt'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
@@ -85,6 +86,7 @@ export const POST = async (
       model: model.provider,
       messages,
       experimental_transform: smoothStream(),
+      system: constructSystemPrompt(model, user),
       onFinish: async ({ response }) => {
         const message = response.messages[response.messages.length - 1]
 

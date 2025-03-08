@@ -80,7 +80,7 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
                   as={Box}
                   variant='primary'
                   padding='none'
-                  className='top-0 w-36 overflow-hidden'
+                  className='top-0 min-w-32 w-min max-w-48 overflow-hidden'
                 >
                   {(Object.keys(themes) as Theme[]).map((theme) => {
                     const [label, Icon] = themes[theme]

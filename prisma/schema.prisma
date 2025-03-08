@@ -8,57 +8,44 @@ datasource db {
 }
 
 model User {
-  id Int @id @unique @default(autoincrement())
+  id              Int      @id @unique @default(autoincrement())
+  name            String
+  username        String   @unique
+  email           String   @unique
+  password        String
+  profilePicture  String?
+  plus            Boolean  @default(false)
+  credits         Int      @default(50)
+  premiumCredits  Int      @default(0)
+  systemPrompt    String   @default("")
+  shareInfoWithAI Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  chats           Chat[]
 
-  name     String
-  username String @unique
-
-  email String @unique
-
-  password String
-
-  profilePicture String?
-
-  plus Boolean @default(false)
-
-  credits        Int @default(50)
-  premiumCredits Int @default(0)
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  chats Chat[]
-
-  @@map(name: "users")
+  @@map("users")
 }
 
 model Chat {
-  id String @id @unique @default(uuid())
+  id        String    @id @unique @default(uuid())
+  title     String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
 
-  title String
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  messages Message[]
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map(name: "chats")
+  @@map("chats")
 }
 
 model Message {
-  id String @id @unique @default(uuid())
+  id        String   @id @unique @default(uuid())
+  role      String
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
-  role    String
-  content String
-
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-
-  chatId String
-  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
-
-  @@map(name: "messages")
+  @@map("messages")
 }

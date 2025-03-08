@@ -35,19 +35,19 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({ children, icon }): Re
     <MenuItem>
       <div
         className={cn(
-          'border-border flex h-min w-full cursor-pointer items-center border-b px-4 py-2 transition duration-300 last:border-none',
+          'border-border flex h-min w-full items-center border-b px-4 py-2 transition duration-300 last:border-none',
           'bg-background-primary hover:bg-background-secondary'
         )}
       >
         <div
           className={cn(
-            'flex h-full w-full items-center gap-2 font-medium transition duration-300',
+            'flex w-max items-center gap-4 font-medium transition duration-300',
             'text-text-primary hover:text-text-secondary'
           )}
         >
-          {icon}
+          <div className='aspect-square flex items-center justify-center size-6'>{icon}</div>
 
-          <span>{children}</span>
+          <div className='size-full flex items-center grow'>{children}</div>
         </div>
       </div>
     </MenuItem>
@@ -148,7 +148,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                   as={Box}
                   variant='primary'
                   padding='none'
-                  className='top-0 min-w-24 max-w-48 overflow-hidden'
+                  className='top-0 min-w-48 w-min max-w-64 overflow-hidden'
                 >
                   {loading ? (
                     <div className='px-4 py-3'>
@@ -157,7 +157,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                   ) : user ? (
                     <>
                       <ProfileMenuItem icon={<UserIcon />}>
-                        <Link href='/user'>
+                        <Link className='size-full' href='/settings'>
                           <h2 className='font-bold text-text-accent-primary'>{user.name}</h2>
                           <h3 className='text-text-tertiary'>{user.username}</h3>
                         </Link>

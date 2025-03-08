@@ -3,6 +3,8 @@ import { verifyToken } from '@/lib/auth/server/verify-token'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
 
+import type { User } from '@/types/user'
+
 export const GET = async (request: NextRequest) => {
   try {
     const [isTokenValid, payload] = await verifyToken(request.headers)
@@ -91,13 +93,17 @@ export const POST = async (request: NextRequest) => {
 
 export const PATCH = async (request: NextRequest) => {
   try {
-    const { name, username, email, password } = await request.json()
-    if ((!name || !username || !email) && !password) {
-      throw new Error('Name, Username, Email or Password is null!')
+    const [isTokenValid, payload] = await verifyToken(request.headers)
+    if (!isTokenValid || !payload) {
+      throw new Error('Invalid token.')
     }
+
+    const { name, username, email, systemPrompt, shareInfoWithAI } = (await request.json()) as User
 
     const user = await prisma.user.findUnique({
       where: {
+        id: payload.id,
+
         email
       }
     })
@@ -106,7 +112,7 @@ export const PATCH = async (request: NextRequest) => {
       throw new Error('User not found!')
     }
 
-    if (user.username !== username) {
+    if (username && user.username !== username) {
       if (
         await prisma.user.findUnique({
           where: {
@@ -118,11 +124,6 @@ export const PATCH = async (request: NextRequest) => {
       }
     }
 
-    const passwordMatch = await Encrypt.compare(password, user.password)
-    if (!passwordMatch) {
-      throw new Error('Invalid password!')
-    }
-
     await prisma.user.update({
       where: {
         username,
@@ -132,7 +133,9 @@ export const PATCH = async (request: NextRequest) => {
       data: {
         name,
         username,
-        email
+        email,
+        systemPrompt,
+        shareInfoWithAI
       }
     })
 

@@ -22,7 +22,9 @@ type SidebarProps = {
   onClose?: () => void
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ onClose = () => {} }: SidebarProps): React.ReactNode => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  onClose = () => {}
+}: SidebarProps): React.ReactNode => {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -111,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose = () => {} }: SidebarP
   return (
     <div className='w-3/4 md:w-1/4 bg-background-primary fixed top-0 left-0 flex flex-col h-screen border-r border-border'>
       <div className='w-full h-16 bg-background-primary flex items-center justify-center border-b border-border'>
-        <Container className='h-16 w-full flex items-center justify-between'>
+        <Container className='h-16 w-full max-md:px-4 flex items-center justify-between'>
           <h1 className='font-bold text-2xl'>Chats</h1>
 
           <Button
@@ -126,7 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose = () => {} }: SidebarP
         </Container>
       </div>
 
-      <Container className='grid gap-2 size-full overflow-y-auto my-4'>
+      <Container className='grid gap-2 size-full max-md:px-4 overflow-y-auto my-4'>
         {!loading && mounted && chats ? (
           <>
             <Box className='h-min' padding='small'>
@@ -156,10 +158,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose = () => {} }: SidebarP
                   >
                     <Link
                       className={cn(
-                        'transition-all ms-2 duration-300 text-ellipsis',
+                        'transition-all ms-2 duration-300 hover:font-bold hover:text-text-primary text-ellipsis',
                         selected
                           ? 'text-text-accent-primary font-bold'
-                          : 'text-text-primary font-medium hover:font-bold hover:text-text-secondary'
+                          : 'text-text-tertiary font-medium'
                       )}
                       href={`/chat/${chat.id}`}
                     >

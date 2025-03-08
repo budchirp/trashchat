@@ -12,6 +12,7 @@ import { ModelSelector } from './model-selector'
 import type { AIModelName } from '@/lib/ai/models'
 
 export type ChatFormProps = {
+  placeholder?: boolean
   loading: boolean
   stop: () => void
   handleSubmit: any
@@ -22,6 +23,7 @@ export type ChatFormProps = {
 }
 
 export const ChatForm: React.FC<ChatFormProps> = ({
+  placeholder = false,
   loading,
   stop,
   handleSubmit,
@@ -56,12 +58,10 @@ export const ChatForm: React.FC<ChatFormProps> = ({
               value={input}
               placeholder={loading ? t_common('loading') : t('say-something')}
               onChange={handleInputChange}
-              icon={<Search />}
-              size={16}
+              icon={<Search size={16} />}
             />
 
             <Button
-              type='submit'
               variant='round'
               onClick={async () => {
                 if (loading) {
@@ -71,7 +71,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                 }
               }}
             >
-              {loading ? <Square /> : <Send size={16} />}
+              {loading && !placeholder ? <Square /> : <Send size={16} />}
             </Button>
           </Container>
         </div>

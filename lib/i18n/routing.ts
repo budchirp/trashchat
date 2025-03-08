@@ -1,7 +1,15 @@
 import { defineRouting } from 'next-intl/routing'
 import { createNavigation } from 'next-intl/navigation'
 
-export const routes = ['/', '/chat', '/auth/signin', '/auth/signup', '/profile']
+export const routes = [
+  '/',
+  '/chat',
+  '/auth/signin',
+  '/auth/signup',
+  '/settings',
+  '/settings/usages',
+  '/settings/customization'
+]
 
 export const routing = defineRouting({
   locales: ['en', 'tr'],

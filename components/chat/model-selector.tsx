@@ -120,7 +120,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                             key={modelId}
                             className={({ selected }) =>
                               cn(
-                                'border-border flex h-min w-full cursor-pointer items-center border-b px-4 py-2 transition duration-300 last:border-none',
+                                'border-border h-12 flex w-full cursor-pointer items-center border-b px-4 py-2 transition duration-300 last:border-none',
                                 selected
                                   ? 'bg-background-secondary'
                                   : 'bg-background-primary hover:bg-background-secondary'
@@ -133,7 +133,9 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
                               return (
                                 <div
-                                  className={cn('flex justify-between h-full w-full items-center')}
+                                  className={cn(
+                                    'flex justify-between gap-4 h-full w-full items-center'
+                                  )}
                                 >
                                   <p
                                     className={cn(
@@ -148,14 +150,14 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
                                   <div className='flex gap-2'>
                                     {model.plus && (
-                                      <div className='size-8 border border-border p-1 flex items-center justify-center rounded-lg'>
-                                        <Crown size={16} />
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <Crown />
                                       </div>
                                     )}
 
                                     {model.premium && (
-                                      <div className='size-8 border border-border p-1 flex items-center justify-center rounded-lg'>
-                                        <DollarSign size={16} />
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <DollarSign />
                                       </div>
                                     )}
                                   </div>

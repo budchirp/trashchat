@@ -1,31 +1,24 @@
 import type React from 'react'
 
-import { ProfileClientPage } from '@/app/[locale]/(main)/user/(profile)/page.client'
+import { CustomizationClientPage } from '@/app/[locale]/(main)/settings/customization/page.client'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Heading } from '@/components/heading'
-import { Button } from '@/components/button'
 import { routing } from '@/lib/i18n/routing'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
 
-const ProfilePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
+const CustomizationPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations('profile')
+  const t = await getTranslations('customization')
   return (
     <div className='flex size-full flex-col mt-4'>
       <Heading className='max-md:mt-0'>{t('text')}</Heading>
 
-      <div>
-        <ProfileClientPage />
-
-        <div className='border-t-4 border-border-hover mt-4 pt-4'>
-          <Button>{t('delete')}</Button>
-        </div>
-      </div>
+      <CustomizationClientPage />
     </div>
   )
 }
@@ -35,7 +28,7 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
 
   const t = await getTranslations({
     locale,
-    namespace: 'profile'
+    namespace: 'customization'
   })
   return MetadataManager.generate(t('text'), t('description'))
 }
@@ -44,4 +37,4 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
 
-export default ProfilePage
+export default CustomizationPage

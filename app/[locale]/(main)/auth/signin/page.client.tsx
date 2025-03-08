@@ -57,7 +57,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
   })
 
   return (
-    <form className='grid text-start gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
+    <form className='grid gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
       {error && (
         <Box variant='primary'>
           <p className='text-red-500'>{error}</p>

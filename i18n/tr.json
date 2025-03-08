@@ -1,16 +1,16 @@
 {
   "landing": {
     "text": "Giriş",
-    "description": "En sevdiğin yapay zeka modeliyle sohbet et!",
+    "description": "Favori yapay zeka modelinle sohbet et!",
     "go-to-chat": "Sohbete git"
   },
   "chat": {
     "text": "Sohbet",
-    "description": "En sevdiğin yapay zeka modeliyle sohbet et!",
+    "description": "Favori yapay zeka modelinle sohbet et!",
     "say-something": "Bir şeyler söyle",
     "start": "Çekinme. Bir konuşma başlat.",
     "you": "Sen",
-    "ai": "AI",
+    "ai": "YZ",
     "system": "Sistem"
   },
   "common": {
@@ -19,35 +19,43 @@
     "loading": "Yükleniyor...",
     "success": "Başarılı",
     "error": "Hata",
+    "update": "Güncelle",
     "not-found": "Sayfa bulunamadı",
     "footer": "Can Kolay tarafından ❤️ ile yapıldı"
   },
   "auth": {
-    "update": "Güncelle",
     "name": "Ad",
     "username": "Kullanıcı adı",
     "email": "E-Posta",
     "password": "Şifre",
     "signin": {
       "text": "Giriş yap",
-      "description": "Giriş yap"
+      "description": "Giriş yap",
+      "signup": "Kayıt olmak için buraya tıklayın"
     },
     "signup": {
       "text": "Kayıt ol",
-      "description": "Kayıt ol"
+      "description": "Kayıt ol",
+      "signin": "Giriş yapmak için buraya tıklayın"
     },
     "logout": "Çıkış yap"
   },
-  "profile": {
-    "text": "Profil",
-    "description": "Profil",
+  "account": {
+    "text": "Hesap",
+    "description": "Hesap",
     "delete": "Hesabı sil (çalışmıyor)",
     "profile-picture": "Profil Resmi"
+  },
+  "customization": {
+    "text": "Özelleştirme",
+    "description": "Özelleştirme",
+    "prompt": "Sistem istemi",
+    "share-info": "AI ile bilgilerini paylaş"
   },
   "usages": {
     "text": "Kullanımlar",
     "description": "Kullanımlar",
-    "credits": "Krediler",
-    "premium-credits": "Premium krediler"
+    "credits": "Kredi",
+    "premium-credits": "Premium kredi"
   }
 }

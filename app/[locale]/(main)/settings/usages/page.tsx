@@ -37,17 +37,17 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
     <div className='flex size-full flex-col mt-4'>
       <Heading className='max-md:mt-0'>{t('text')}</Heading>
 
-      <div className='grid gap-2'>
+      <div className='grid gap-4'>
         <div className='grid gap-1'>
           <div className='flex items-center justify-between w-full'>
-            <h1 className='font-bold text-lg'>{t('credits')}</h1>
+            <h1 className='font-bold text-md'>{t('credits')}</h1>
 
             <span>
               {user.credits} / {credits}
             </span>
           </div>
 
-          <div className='w-full h-4 bg-background-secondary rounded-full'>
+          <div className='w-full border border-border h-4 bg-background-secondary rounded-full'>
             <div
               className='bg-accent-700 h-full rounded-full'
               style={{
@@ -59,14 +59,14 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
 
         <div className='grid gap-1'>
           <div className='flex items-center justify-between w-full'>
-            <h1 className='font-bold text-lg'>{t('premium-credits')}</h1>
+            <h1 className='font-bold text-md'>{t('premium-credits')}</h1>
 
             <span>
               {user.premiumCredits} / {premium_credits}
             </span>
           </div>
 
-          <div className='w-full h-4 bg-background-secondary rounded-full'>
+          <div className='w-full border border-border h-4 bg-background-secondary rounded-full'>
             <div
               className='bg-accent-700 h-full rounded-full'
               style={{
