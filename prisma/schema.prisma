@@ -29,6 +29,7 @@ model User {
 model Chat {
   id        String    @id @unique @default(uuid())
   title     String
+  model     String?
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
   userId    Int

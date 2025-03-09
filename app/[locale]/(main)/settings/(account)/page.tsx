@@ -14,7 +14,10 @@ const AccountPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
   const { locale } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations('account')
+  const t = await getTranslations({
+    namespace: 'account',
+    locale
+  })
   return (
     <div className='flex size-full flex-col mt-4'>
       <Heading className='max-md:mt-0'>{t('text')}</Heading>
@@ -34,8 +37,8 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   const { locale } = await params
 
   const t = await getTranslations({
-    locale,
-    namespace: 'account'
+    namespace: 'account',
+    locale
   })
   return MetadataManager.generate(t('text'), t('description'))
 }

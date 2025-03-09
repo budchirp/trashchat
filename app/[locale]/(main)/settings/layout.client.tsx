@@ -28,11 +28,10 @@ export const SettingsSection: React.FC = (): React.ReactNode => {
   ]
 
   const pathname = usePathname()
-  console.log(pathname)
 
   return (
     <div className='grid'>
-      <Heading className='text-lg mt-0'> Settings </Heading>
+      <Heading className='text-lg mt-0'>{t('settings.text')}</Heading>
 
       {routes.map((route) => {
         const location = `/settings${route.location}`

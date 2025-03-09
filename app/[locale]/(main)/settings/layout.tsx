@@ -16,7 +16,6 @@ import { SettingsSection } from './layout.client'
 
 const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: DynamicLayoutProps) => {
   const { locale } = await params
-  setRequestLocale(locale)
 
   const token = protectRoute(await cookies(), locale) as string
 
@@ -28,8 +27,8 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
   const user = json.data
 
   const t = await getTranslations({
-    locale,
-    namespace: 'account'
+    namespace: 'account',
+    locale
   })
 
   return (

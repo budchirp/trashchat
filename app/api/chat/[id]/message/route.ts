@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { appendClientMessage, smoothStream, streamText } from 'ai'
 import { verifyToken } from '@/lib/auth/server/verify-token'
-import { AIModels, type AIModelName } from '@/lib/ai/models'
+import { AIModels, type AIModelID } from '@/lib/ai/models'
 import { constructSystemPrompt } from '@/lib/ai/prompt'
 import { prisma } from '@/lib/prisma'
 
@@ -67,7 +67,7 @@ export const POST = async (
 
     const models = AIModels.get()
 
-    const model = modelName ? models[modelName as AIModelName] : models['gemini-2.0-flash']
+    const model = modelName ? models[modelName as AIModelID] : models['gemini-2.0-flash']
     if (model.plus && !user.plus) {
       throw new Error('This model is for plus users!')
     }
@@ -81,6 +81,15 @@ export const POST = async (
         throw new Error('Not enough credits!')
       }
     }
+
+    await prisma.chat.update({
+      where: {
+        id: chat.id
+      },
+      data: {
+        model: model.id
+      }
+    })
 
     const result = streamText({
       model: model.provider,
@@ -104,7 +113,8 @@ export const POST = async (
             id: user.id
           },
           data: {
-            credits: user.credits - 1
+            credits: !model.premium ? user.credits - 1 : undefined,
+            premiumCredits: model.premium ? user.premiumCredits - 1 : undefined
           }
         })
       }

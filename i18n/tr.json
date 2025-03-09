@@ -10,8 +10,9 @@
     "say-something": "Bir şeyler söyle",
     "start": "Çekinme. Bir konuşma başlat.",
     "you": "Sen",
-    "ai": "YZ",
-    "system": "Sistem"
+    "ai": "AI",
+    "system": "Sistem",
+    "not-found": "Sohbet bulunamadı"
   },
   "common": {
     "copied": "Kopyalandı",
@@ -40,6 +41,9 @@
     },
     "logout": "Çıkış yap"
   },
+  "settings": {
+    "text": "Ayarlar"
+  },
   "account": {
     "text": "Hesap",
     "description": "Hesap",
@@ -57,5 +61,12 @@
     "description": "Kullanımlar",
     "credits": "Kredi",
     "premium-credits": "Premium kredi"
+  },
+  "legal": {
+    "privacy-policy": {
+      "text": "Gizlilik Sözleşmesi",
+      "description": "Gizlilik Sözleşmesi",
+      "policy": "# Trash Chat için Gizlilik Politikası\n**Effective Date:** 09 / 03 / 2025\nTrash Chat'a hoş geldiniz! Bu Gizlilik Politikası, web sitemizi kullandığınızda verilerinizi nasıl topladığımızı, kullandığımızı ve koruduğumuzu açıklamaktadır. Gizliliğiniz bizim için önemlidir ve bilgilerinizi sorumlu bir şekilde ele alma taahhüdünde bulunuyoruz. Trash Chat'ı kullanarak, aşağıda belirtilen şartları kabul etmiş olursunuz.\n## Topladığımız Bilgiler\nTopladığımız bilgiler şunlardır:\n* **Kişisel Bilgiler:** Bu, adınızı (varsa), kullanıcı adınızı, e-posta adresinizi ve şifrenizi içerir.\n* **Etkileşim Verileri:** Platformumuzda AI ile yaptığınız etkileşimlerin içeriğini saklıyoruz. Bu veriler, AI'nın performansını ve kullanıcı deneyimini geliştirmemize yardımcı olur.\n* **Teknik Veriler:** Web sitemizin düzgün çalışmasını sağlamak ve analitik amaçlar için IP adresinizi, tarayıcı türünüzü, işletim sisteminizi ve diğer teknik bilgileri toplayabiliriz.\n* **Analitik Veriler:** Trash Chat kullanımınıza dair sayfa ziyaretleri, sitede geçirilen süre ve diğer etkileşim metrikleri gibi bilgileri toplamak için web analitik araçları kullanıyoruz.\n* **Çerezler:** Tarayıcı deneyiminizi geliştirmek, içeriği kişiselleştirmek ve web sitesi trafiğini analiz etmek için çerezler kullanıyoruz. Trash Chat'ı kullanarak, bu Gizlilik Politikasına uygun olarak çerez kullanımımızı kabul ediyorsunuz. Ayrıca, çok fazla çerez yiyoruz.\n## Bilgilerinizi Nasıl Kullanıyoruz\nBilgilerinizi şu amaçlarla kullanıyoruz:\n* **Web Sitesi İşlevselliği:** Trash Chat hizmetini sağlamak ve sürdürmek için.\n* **AI Geliştirme:** Kullanıcı etkileşimlerini analiz etmek ve AI'nın performansını ve doğruluğunu geliştirmek için.\n* **Kişiselleştirme:** Trash Chat'taki deneyiminizi kişiselleştirmek, ilginizi çekebilecek içerik veya özellikler önermek için.\n* **Yasal Uyum:** Yasal yükümlülüklere uymak ve yasal amaçlar için kullanıcıları tanımlamaya yardımcı olmak için.\n* **İletişim:** Hesabınız, güncellemeler ve diğer ilgili bilgiler hakkında sizinle iletişim kurmak için.\n* **Araştırma:** Anonimleştirilmiş ve toplanmış verileri araştırma amaçları için kullanabiliriz.\n## Veri Paylaşımı\nGizliliğinizi korumaya kararlıyız ve verilerinizi yalnızca aşağıdaki sınırlı durumlarda paylaşacağız:\n* **AI Hizmet Sağlayıcısı:** Etkileşim verilerinizi, AI'mızı güçlendiren AI hizmet sağlayıcısı (model sağlayıcı) ile paylaşıyoruz. Bu, Trash Chat hizmetini sağlamak için gereklidir.\n* **Yasal Uyum:** Yasa, yasal süreç veya hükümet talebi gereği.\n* **Hizmet Sağlayıcıları:** Web sitemizi işletmemize ve hizmetlerimizi sağlamamıza yardımcı olan güvenilir hizmet sağlayıcılarıyla veri paylaşabiliriz. Bu sağlayıcılar, verilerinizi koruma yükümlülüğüne sahiptir.\n## Veri Güvenliği\nBilgilerinizi yetkisiz erişim, kullanım veya ifşadan korumak için makul güvenlik önlemleri uyguluyoruz. Ancak, İnternet üzerinden iletim veya elektronik depolama yöntemi tamamen güvenli değildir ve mutlak güvenlik garantisi veremeyiz. Verilerinizi korumaya çalışırken, bilgilerinizi kendi riskinizle sağladığınızı kabul edersiniz.\n## Haklarınız\nVerilerinizle ilgili aşağıdaki haklara sahipsiniz:\n* **Veri Silme:** Hesabınızı ve tüm ilişkili verileri istediğiniz zaman silme hakkına sahipsiniz. Talebiniz üzerine, bilgilerinizi sistemlerimizden derhal kaldıracağız.\n* **Erişim ve Düzeltme:** Kişisel bilgilerinizdeki yanlışlıkları erişme ve düzeltme hakkına sahipsiniz.\n* **Veri Taşınabilirliği:** Kişisel verilerinizin yapılandırılmış, yaygın olarak kullanılan ve makine tarafından okunabilir bir formatta bir kopyasını talep etme hakkına sahipsiniz.\n* **İtiraz:** Belirli koşullar altında kişisel verilerinizin işlenmesine itiraz etme hakkına sahipsiniz.\n## Bu Gizlilik Politikasındaki Değişiklikler\nBu Gizlilik Politikasını herhangi bir zamanda güncelleme hakkını saklı tutuyoruz. Güncellenmiş versiyonu web sitemizde yayınlayacak ve size önemli değişiklikler hakkında bildirimde bulunacağız. Bu Gizlilik Politikasını periyodik olarak gözden geçirmeniz sizin sorumluluğunuzdur.\n## Bize Ulaşın\nBu Gizlilik Politikası hakkında herhangi bir sorunuz veya endişeniz varsa, lütfen bizimle budchirp@gmail.com üzerinden iletişime geçin."
+    }
   }
 }

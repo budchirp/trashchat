@@ -13,6 +13,7 @@
     "@ai-sdk/azure": "^1.2.1",
     "@ai-sdk/google": "^1.1.20",
     "@ai-sdk/react": "^1.1.21",
+    "@marsidev/react-turnstile": "^1.1.0",
     "@prisma/client": "^6.4.1",
     "@shikijs/transformers": "^3.1.0",
     "ai": "^4.1.54",

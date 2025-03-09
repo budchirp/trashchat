@@ -6,11 +6,15 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { ChatForm } from '@/components/chat/chat-form'
 import { MessageBox } from '@/components/chat/message-box'
 import { Container } from '@/components/container'
-import { MemoizedMarkdown } from '@/components/markdown'
 import { useChat } from '@ai-sdk/react'
 import { useTranslations } from 'next-intl'
 import { generateId, type Message } from 'ai'
-import type { AIModelName } from '@/lib/ai/models'
+import type { AIModelID } from '@/lib/ai/models'
+import { MemoizedMarkdown } from '@/components/markdown/memoized'
+import { CookieMonster } from '@/lib/cookie-monster'
+import type { Chat } from '@/types/chat'
+import { CONSTANTS } from '@/lib/constants'
+import { Fetch } from '@/lib/fetch'
 
 type ChatClientPageProps = {
   token: string
@@ -26,7 +30,8 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   const t = useTranslations('chat')
   const t_common = useTranslations('common')
 
-  const [model, setModel] = useState<AIModelName>('gemini-2.0-flash')
+  const [chat, setChat] = useState<Chat | null>(null)
+  const [model, setModel] = useState<AIModelID>(chat?.model || 'gemini-2.0-flash')
   const [error, setError] = useState<string | null>(null)
 
   const ref = useRef<HTMLDivElement | null>(null)
@@ -54,6 +59,24 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
     }
   })
 
+  const cookieMonster = new CookieMonster()
+  const fetchChat = async () => {
+    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+    if (token) {
+      const response = await Fetch.get<{
+        data: Chat
+      }>(`/api/chat/${chatId}`, {
+        Authorization: `Bearer ${token}`
+      })
+
+      const json = await response.json()
+      if (response.status < 400) {
+        setChat(json.data)
+        setModel(chat?.model || 'gemini-2.0-flash')
+      }
+    }
+  }
+
   useEffect(() => {
     if (error)
       setMessages([
@@ -75,10 +98,12 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   }, [status])
 
   useEffect(() => {
+    fetchChat()
+
     if (ref.current) {
       ref.current.scrollIntoView()
     }
-  })
+  }, [])
 
   return (
     <div className='flex size-full flex-col mt-4'>

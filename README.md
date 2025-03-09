@@ -11,7 +11,6 @@
 
 ## TODO
 
-- [ ] FIX MARKDOWN
 - [x] Add Auth
 - [x] Save messages
 - [x] Add more models maybe
@@ -19,9 +18,10 @@
 - [x] Code highlighting (laggy asf currntly)
 - [ ] Translate API routes
 - [ ] SEO
-- [ ] Add stripe for payments
-- [x Sidebar for chats
+- [x] Sidebar for chats
 - [x] Ability to delete chats
 - [ ] Deleting account
-- [ ] Updating account details
-- [ ] Better profile page
+- [x] Updating account details
+- [x] Better profile page
+- [ ] Payments
+- [ ] Add capctha

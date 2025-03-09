@@ -11,7 +11,8 @@
     "start": "Don't be shy. Start a conversation.",
     "you": "You",
     "ai": "AI",
-    "system": "System"
+    "system": "System",
+    "not-found": "Chat not found"
   },
   "common": {
     "copied": "Copied",
@@ -40,6 +41,9 @@
     },
     "logout": "Log out"
   },
+  "settings": {
+    "text": "Settings"
+  },
   "account": {
     "text": "Account",
     "description": "Account",
@@ -57,5 +61,12 @@
     "description": "Usages",
     "credits": "Credits",
     "premium-credits": "Premium credits"
+  },
+  "legal": {
+    "privacy-policy": {
+      "text": "Privacy policy",
+      "description": "Privacy policy",
+      "policy": "# Privacy Policy for Trash Chat\n**Effective Date:** 09 / 03 / 2025\nWelcome to Trash Chat! This Privacy Policy outlines how we collect, use, and protect your data when you use our website. Your privacy is important to us, and we are committed to handling your information responsibly. By using Trash Chat, you agree to the terms outlined below.\n## Information We Collect\nWe collect the following types of information:\n* **Personal Information:** This includes your name (if provided), username, email address, and password.\n* **Interaction Data:** We store the content of your interactions with the AI on our platform. This data helps us improve the AI's performance and user experience.\n* **Technical Data:** We may collect your IP address, browser type, operating system, and other technical information to ensure the proper functioning of our website and for analytical purposes.\n* **Analytics Data:** We use website analytics tools to collect information about your usage of Trash Chat, such as pages visited, time spent on the site, and other engagement metrics.\n* **Cookies:** We use cookies to enhance your browsing experience, personalize content, and analyze website traffic. By using Trash Chat, you consent to our use of cookies in accordance with this Privacy Policy. We also eat a lot of cookies.\n## How We Use Your Information\nWe use your information for the following purposes:\n* **Website Functionality:** To provide and maintain the Trash Chat service.\n* **AI Improvement:** To analyze user interactions and improve the performance and accuracy of our AI.\n* **Personalization:** To personalize your experience on Trash Chat, such as recommending content or features that may be of interest to you.\n* **Legal Compliance:** To comply with legal obligations and assist in identifying users for legal purposes.\n* **Communication:** To communicate with you regarding your account, updates, and other relevant information.\n* **Research:** We may use anonymized and aggregated data for research purposes.\n## Data Sharing\nWe are committed to protecting your privacy and will only share your data in the following limited circumstances:\n* **AI Service Provider:** We share your interaction data with the AI service provider (model provider) that powers our AI. This is necessary to provide the Trash Chat service.\n* **Legal Compliance:** If required by law, legal process, or government request.\n* **Service Providers:** We may share data with trusted service providers who assist us in operating our website and providing our services. These providers are contractually obligated to protect your data.\n## Data Security\nWe implement reasonable security measures to protect your information from unauthorized access, use, or disclosure. However, no method of transmission over the Internet or method of electronic storage is completely secure, and we cannot guarantee absolute security. While we strive to protect your data, you acknowledge that you provide your information at your own risk.\n## Your Rights\nYou have the following rights regarding your data:\n* **Data Deletion:** You have the right to delete your account and all associated data at any time. Upon your request, we will promptly remove your information from our systems.\n* **Access and Correction:** You have the right to access and correct any inaccuracies in your personal information.\n* **Data Portability:** You have the right to request a copy of your personal data in a structured, commonly used, and machine-readable format.\n* **Objection:** You have the right to object to the processing of your personal data under certain circumstances.\n## Changes to This Privacy Policy\nWe reserve the right to update this Privacy Policy at any time. We will post the updated version on our website and notify you of any material changes. It is your responsibility to review this Privacy Policy periodically for any updates or changes.\n## Contact Us\nIf you have any questions or concerns about this Privacy Policy, please contact us at budchirp@gmail.com."
+    }
   }
 }

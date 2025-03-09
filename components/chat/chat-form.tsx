@@ -9,7 +9,7 @@ import { Button } from '@/components/button'
 import { Search, Send, Square } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { ModelSelector } from './model-selector'
-import type { AIModelName } from '@/lib/ai/models'
+import type { AIModelID } from '@/lib/ai/models'
 
 export type ChatFormProps = {
   placeholder?: boolean
@@ -17,8 +17,8 @@ export type ChatFormProps = {
   stop: () => void
   handleSubmit: any
   input: string
-  model: AIModelName
-  handleModelChange: (model: AIModelName) => void
+  model: AIModelID
+  handleModelChange: (model: AIModelID) => void
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 

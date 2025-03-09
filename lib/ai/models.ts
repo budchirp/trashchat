@@ -4,9 +4,11 @@ import { Env } from '@/lib/env'
 import type { LanguageModelV1 } from 'ai'
 
 export type AIProvider = 'google' | 'azure'
-export type AIModelName = 'gemini-2.0-flash' | 'deepseek-r1' | 'openai-4o-mini' | 'openai-o3-mini'
+export type AIModelID = 'gemini-2.0-flash' | 'deepseek-r1' | 'openai-gpt-4o-mini' | 'openai-o3-mini'
 
 export type AIModel = {
+  id: AIModelID
+
   name: string
 
   plus: boolean
@@ -16,7 +18,7 @@ export type AIModel = {
 }
 
 export type AIModelMap = {
-  [key in AIModelName]: AIModel
+  [key in AIModelID]: AIModel
 }
 
 export class AIModels {
@@ -37,6 +39,8 @@ export class AIModels {
 
     return {
       'gemini-2.0-flash': {
+        id: 'gemini-2.0-flash',
+
         name: 'Gemini 2.0 Flash',
 
         plus: false,
@@ -71,6 +75,8 @@ export class AIModels {
 
     return {
       'deepseek-r1': {
+        id: 'deepseek-r1',
+
         name: 'DeepSeek R1',
 
         plus: true,
@@ -78,7 +84,9 @@ export class AIModels {
 
         provider: provider('DeepSeek-R1')
       },
-      'openai-4o-mini': {
+      'openai-gpt-4o-mini': {
+        id: 'openai-gpt-4o-mini',
+
         name: 'OpenAI GPT-4o mini',
 
         plus: true,
@@ -87,6 +95,8 @@ export class AIModels {
         provider: provider('gpt-4o-mini')
       },
       'openai-o3-mini': {
+        id: 'openai-o3-mini',
+
         name: 'OpenAI o3 mini',
 
         plus: true,

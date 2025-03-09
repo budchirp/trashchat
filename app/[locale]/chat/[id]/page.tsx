@@ -7,11 +7,11 @@ import { cookies } from 'next/headers'
 import { protectRoute } from '@/lib/auth/client/protect-route'
 import { Env } from '@/lib/env'
 import { Fetch } from '@/lib/fetch'
-import { redirect } from '@/lib/i18n/routing'
+import { notFound } from 'next/navigation'
 
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
-import type { Message } from 'ai'
+import type { Chat } from '@/types/chat'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,32 +22,47 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
   const token = protectRoute(await cookies(), locale) as string
 
   const response = await Fetch.get<{
-    data: {
-      messages: Message[]
-    }
+    data: Chat
   }>(`${Env.appUrl}/api/chat/${id}`, {
     Authorization: `Bearer ${token}`
   })
 
   if (response.status >= 400) {
-    redirect({
-      href: '/',
-      locale
-    })
+    notFound()
   }
 
   const json = await response.json()
-  return <ChatClientPage token={token} chatId={id} initialMessages={json?.data?.messages || []} />
+  return (
+    <ChatClientPage
+      token={token}
+      chatId={id}
+      initialMessages={(json?.data?.messages as any) || []}
+    />
+  )
 }
 
 export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Metadata> => {
-  const { locale } = await params
+  const { locale, id } = await params
 
   const t = await getTranslations({
-    locale,
-    namespace: 'chat'
+    namespace: 'chat',
+    locale
   })
-  return MetadataManager.generate(t('text'), t('description'))
+
+  const token = protectRoute(await cookies(), locale) as string
+
+  const response = await Fetch.get<{
+    data: Chat
+  }>(`${Env.appUrl}/api/chat/${id}`, {
+    Authorization: `Bearer ${token}`
+  })
+
+  if (response.status >= 400) {
+    notFound()
+  }
+
+  const json = await response.json()
+  return MetadataManager.generate(json.data.title, t('description'))
 }
 
 export default ChatPage

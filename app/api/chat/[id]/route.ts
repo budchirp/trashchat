@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { verifyToken } from '@/lib/auth/server/verify-token'
 import { prisma } from '@/lib/prisma'
+import type { Chat } from '@/types/chat'
 
 export const DELETE = async (
   request: NextRequest,
@@ -115,8 +116,10 @@ export const GET = async (
           id: chat.id,
 
           title: chat.title,
+          model: chat.model,
+
           messages: chat.messages
-        }
+        } as Chat
       })
     }
 

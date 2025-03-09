@@ -1,4 +1,6 @@
-export type User = {
+import type { User as PrismaUser } from '@prisma/client'
+
+export type User = PrismaUser & {
   id: number
 
   name: string

@@ -45,10 +45,9 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   const { locale } = await params
 
   const t = await getTranslations({
-    locale,
-    namespace: 'chat'
+    locale
   })
-  return MetadataManager.generate(t('text'), t('description'))
+  return MetadataManager.generate(t('common.loading'), t('chat.description'))
 }
 
 export function generateStaticParams() {

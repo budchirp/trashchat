@@ -14,7 +14,10 @@ const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
   const { locale } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations('landing')
+  const t = await getTranslations({
+    namespace: 'landing',
+    locale
+  })
   return (
     <div className='flex size-full flex-col mt-4'>
       <div className='w-full page-h-screen flex items-center justify-center'>
@@ -34,8 +37,8 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   const { locale } = await params
 
   const t = await getTranslations({
-    locale,
-    namespace: 'landing'
+    namespace: 'landing',
+    locale
   })
   return MetadataManager.generate(t('text'), t('description'))
 }

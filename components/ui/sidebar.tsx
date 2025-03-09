@@ -169,13 +169,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     </Link>
 
                     <Button
-                      onClick={() => {
+                      onClick={async () => {
                         setChats(chats.filter((_chat) => _chat.id !== chat.id))
 
                         deleteChat(chat.id)
 
                         if (selected) {
-                          router.push('/chat')
+                          const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+                          const response = await Fetch.get<{
+                            data: {
+                              id: string
+                            }
+                          }>('/api/chat/-1', {
+                            authorization: `Bearer ${token}`
+                          })
+
+                          const json = await response.json()
+                          if (response.status < 400) {
+                            router.push(`/chat/${json.data.id}`)
+                          } else {
+                            router.push('/')
+                          }
                         }
                       }}
                       variant='round'

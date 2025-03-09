@@ -4,15 +4,15 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Heading } from '@/components/heading'
 import { routing } from '@/lib/i18n/routing'
-
-import type { Metadata } from 'next'
-import type { DynamicPageProps } from '@/types/page'
 import { Fetch } from '@/lib/fetch'
 import { Env } from '@/lib/env'
 import { protectRoute } from '@/lib/auth/client/protect-route'
 import { cookies } from 'next/headers'
-import type { User } from '@/types/user'
 import { CONSTANTS } from '@/lib/constants'
+
+import type { Metadata } from 'next'
+import type { DynamicPageProps } from '@/types/page'
+import type { User } from '@/types/user'
 
 const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
@@ -32,7 +32,10 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
   const credits = CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS
   const premium_credits = CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
 
-  const t = await getTranslations('usages')
+  const t = await getTranslations({
+    namespace: 'usages',
+    locale
+  })
   return (
     <div className='flex size-full flex-col mt-4'>
       <Heading className='max-md:mt-0'>{t('text')}</Heading>
@@ -84,8 +87,8 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   const { locale } = await params
 
   const t = await getTranslations({
-    locale,
-    namespace: 'usages'
+    namespace: 'usages',
+    locale
   })
   return MetadataManager.generate(t('text'), t('description'))
 }

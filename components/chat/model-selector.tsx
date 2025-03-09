@@ -18,12 +18,12 @@ import { Backdrop } from '@/components/backdrop'
 import { Button } from '@/components/button'
 import { Container } from '@/components/container'
 
-import { AIModels, type AIModelName } from '@/lib/ai/models'
+import { AIModels, type AIModelID } from '@/lib/ai/models'
 
 export type ModelSelectorProps = {
   input: string
-  model: AIModelName
-  onChange: (model: AIModelName) => void
+  model: AIModelID
+  onChange: (model: AIModelID) => void
   chatFormRef: Ref<HTMLDivElement>
 }
 
@@ -114,7 +114,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                       padding='none'
                       className='min-w-32 max-w-48 md:max-w-64 overflow-hidden'
                     >
-                      {(Object.keys(models) as AIModelName[]).map((modelId: AIModelName) => {
+                      {(Object.keys(models) as AIModelID[]).map((modelId: AIModelID) => {
                         return (
                           <ListboxOption
                             key={modelId}
