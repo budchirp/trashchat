@@ -7,8 +7,7 @@ export type VerticalPageProps = {
   title: any
   items: any[]
   children?: React.ReactNode
-} & ComponentProps<'div'> &
-  any
+} & ComponentProps<'div'>
 
 export const VerticalPage: React.FC<VerticalPageProps> = ({
   className,

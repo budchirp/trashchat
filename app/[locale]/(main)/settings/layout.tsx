@@ -34,7 +34,7 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
   return (
     <Container>
       <div className='flex flex-col md:flex-row w-full'>
-        <div className='md:w-1/4 w-full md:border-b-0 md:border-r-4 mt-16 border-border-hover md:mr-4 md:pr-4 mb-4 md:mb-0 grid h-min gap-4'>
+        <div className='md:w-1/4 w-full md:border-b-0 md:border-r-4 mt-16 border-border md:mr-4 md:pr-4 mb-4 md:mb-0 grid h-min gap-4'>
           <div className='size-32 mx-auto p-2 rounded-full border border-border-hover flex items-center justify-center'>
             <Image
               height={128}

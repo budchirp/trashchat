@@ -9,12 +9,13 @@ import { Container } from '@/components/container'
 import { useChat } from '@ai-sdk/react'
 import { useTranslations } from 'next-intl'
 import { generateId, type Message } from 'ai'
-import type { AIModelID } from '@/lib/ai/models'
 import { MemoizedMarkdown } from '@/components/markdown/memoized'
 import { CookieMonster } from '@/lib/cookie-monster'
-import type { Chat } from '@/types/chat'
 import { CONSTANTS } from '@/lib/constants'
 import { Fetch } from '@/lib/fetch'
+
+import type { Chat } from '@/types/chat'
+import type { AIModelID } from '@/lib/ai/models'
 
 type ChatClientPageProps = {
   token: string
@@ -31,7 +32,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   const t_common = useTranslations('common')
 
   const [chat, setChat] = useState<Chat | null>(null)
-  const [model, setModel] = useState<AIModelID>(chat?.model || 'gemini-2.0-flash')
+  const [model, setModel] = useState<AIModelID>('gemini-2.0-flash')
   const [error, setError] = useState<string | null>(null)
 
   const ref = useRef<HTMLDivElement | null>(null)
@@ -72,10 +73,15 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
       const json = await response.json()
       if (response.status < 400) {
         setChat(json.data)
-        setModel(chat?.model || 'gemini-2.0-flash')
       }
     }
   }
+
+  useEffect(() => {
+    if (chat) {
+      setModel(chat.model || 'gemini-2.0-flash')
+    }
+  }, [chat])
 
   useEffect(() => {
     if (error)
@@ -92,7 +98,9 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   useEffect(() => {
     if (status === 'ready') {
       if (ref.current) {
-        ref.current.scrollIntoView()
+        ref.current.scrollIntoView({
+          behavior: 'smooth'
+        })
       }
     }
   }, [status])
@@ -101,7 +109,9 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
     fetchChat()
 
     if (ref.current) {
-      ref.current.scrollIntoView()
+      ref.current.scrollIntoView({
+        behavior: 'smooth'
+      })
     }
   }, [])
 

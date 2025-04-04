@@ -47,7 +47,7 @@
   "account": {
     "text": "Account",
     "description": "Account",
-    "delete": "Delete account (not working)",
+    "delete": "Delete account",
     "profile-picture": "Profile Picture"
   },
   "customization": {

@@ -8,6 +8,7 @@ import { Box } from '@/components/box'
 import { useTranslations } from 'next-intl'
 import { toast } from '@/lib/toast'
 import { Check, Clipboard } from 'lucide-react'
+import { createJavaScriptRegexEngine } from 'shiki'
 import { bundledLanguages, createHighlighter } from 'shiki/bundle/web'
 import {
   transformerNotationDiff,
@@ -18,7 +19,6 @@ import {
 
 import githubDarkDefault from '@shikijs/themes/github-dark-default'
 import githubLightDefault from '@shikijs/themes/github-light-default'
-import { createJavaScriptRegexEngine } from 'shiki'
 
 const engine = createJavaScriptRegexEngine()
 

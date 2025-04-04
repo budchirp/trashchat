@@ -7,6 +7,7 @@ import { CONSTANTS } from '@/lib/constants'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { Fetch } from '@/lib/fetch'
 import { useRouter } from '@/lib/i18n/routing'
+import { AccountDeleteDialog } from '@/app/[locale]/(main)/settings/(account)/delete-dialog'
 import { toast } from '@/lib/toast'
 import { updateAccountValidator } from '@/lib/validators/update-account'
 import { useFormik } from 'formik'
@@ -24,6 +25,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
   const [error, setError] = useState<string | null>(null)
 
   const t = useTranslations('auth')
+  const t_account = useTranslations('account')
   const t_common = useTranslations('common')
 
   const cookieMonster = new CookieMonster()
@@ -106,76 +108,86 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
     }
   }, [user])
 
+  const [showDialog, setShowDialog] = useState<boolean>(false)
+
   return (
-    <form className='grid text-start gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
-      {error && (
-        <Box variant='primary'>
-          <p className='text-red-500'>{error}</p>
-        </Box>
-      )}
+    <>
+      <form className='grid text-start gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
+        {error && (
+          <Box variant='primary'>
+            <p className='text-red-500'>{error}</p>
+          </Box>
+        )}
 
-      <div className='grid gap-2 w-full'>
-        <div>
-          <Input
-            id='name'
-            name='name'
-            type='text'
-            autoComplete='name'
-            icon={<UserIcon size={16} />}
-            placeholder={t('name')}
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+        <div className='grid gap-2 w-full'>
+          <div>
+            <Input
+              id='name'
+              name='name'
+              type='text'
+              autoComplete='name'
+              icon={<UserIcon size={16} />}
+              placeholder={t('name')}
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
 
-          {formik.errors.name && formik.touched.name && (
-            <p className='text-red-500 ms-2'>{formik.errors.name}</p>
-          )}
+            {formik.errors.name && formik.touched.name && (
+              <p className='text-red-500 ms-2'>{formik.errors.name}</p>
+            )}
+          </div>
+
+          <div>
+            <Input
+              id='username'
+              name='username'
+              type='text'
+              autoComplete='off'
+              icon={<UserIcon size={16} />}
+              placeholder={t('username')}
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+
+            {formik.errors.username && formik.touched.username && (
+              <p className='text-red-500 ms-2'>{formik.errors.username}</p>
+            )}
+          </div>
+
+          <div>
+            <Input
+              readOnly
+              id='email'
+              name='email'
+              type='email'
+              autoComplete='email'
+              icon={<Mail size={16} />}
+              placeholder={t('email')}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+
+            {formik.errors.email && formik.touched.email && (
+              <p className='text-red-500 ms-2'>{formik.errors.email}</p>
+            )}
+          </div>
         </div>
 
         <div>
-          <Input
-            id='username'
-            name='username'
-            type='text'
-            autoComplete='off'
-            icon={<UserIcon size={16} />}
-            placeholder={t('username')}
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-
-          {formik.errors.username && formik.touched.username && (
-            <p className='text-red-500 ms-2'>{formik.errors.username}</p>
-          )}
+          <Button loading={formik.isSubmitting || loading} type='submit'>
+            {t_common('update')}
+          </Button>
         </div>
+      </form>
 
-        <div>
-          <Input
-            readOnly
-            id='email'
-            name='email'
-            type='email'
-            autoComplete='email'
-            icon={<Mail size={16} />}
-            placeholder={t('email')}
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
+      <AccountDeleteDialog open={showDialog} onClose={() => setShowDialog(false)} />
 
-          {formik.errors.email && formik.touched.email && (
-            <p className='text-red-500 ms-2'>{formik.errors.email}</p>
-          )}
-        </div>
+      <div className='border-t-4 border-border-hover mt-4 pt-4'>
+        <Button onClick={() => setShowDialog(true)}>{t_account('delete')}</Button>
       </div>
-
-      <div>
-        <Button loading={formik.isSubmitting || loading} type='submit'>
-          {t_common('update')}
-        </Button>
-      </div>
-    </form>
+    </>
   )
 }

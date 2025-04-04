@@ -59,24 +59,27 @@ export const Header: React.FC<HeaderProps> = ({
         </Container>
       </header>
 
-      <Transition
-        show={showSidebar}
-        as='div'
-        onClick={() => setShowSidebar(false)}
-        className={cn(
-          'z-50 inset-0 fixed',
-          'transition-all opacity-100',
-          'data-closed:-translate-x-full data-closed:opacity-75',
-          'data-enter:ease-out data-enter:duration-400',
-          'data-leave:ease-in data-leave:duration-200'
-        )}
-      >
-        <div className='fixed left-0 top-0'>
-          <Sidebar onClose={() => setShowSidebar(false)} />
-        </div>
-      </Transition>
+      {sidebar && (
+        <Transition
+          show={showSidebar}
+          as='div'
+          onClick={() => setShowSidebar(false)}
+          className={cn(
+            'z-50 inset-0 fixed',
+            'transition-all opacity-100',
+            'data-closed:-translate-x-full data-closed:opacity-75',
+            'data-enter:ease-out data-enter:duration-400',
+            'data-leave:ease-in data-leave:duration-200'
+          )}
+        >
+          <div className='fixed left-0 top-0'>
+            <Sidebar onClose={() => setShowSidebar(false)} />
+          </div>
+        </Transition>
+      )}
 
       {mounted &&
+        sidebar &&
         createPortal(
           <Backdrop
             className='!h-screen inset-0 z-40'

@@ -2,8 +2,6 @@
 
 @config '../tailwind.config.ts';
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
   --color-accent-50: oklch(0.962 0.018 272.314);
   --color-accent-100: oklch(0.93 0.034 272.788);
@@ -35,6 +33,9 @@
   --color-background-secondary: var(--background-secondary);
   --color-background-tertiary: var(--background-tertiary);
 
+  --color-background-accent-primary: theme("colors.accent.700");
+  --color-background-accent-secondary: theme("colors.accent.600");
+
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
@@ -47,6 +48,7 @@
 
   --color-border: var(--border);
   --color-border-hover: var(--border-hover);
+  --color-border-accent: theme("colors.accent.500");
 }
 
 :root {
@@ -119,12 +121,12 @@ html.dark .shiki span {
   color: var(--shiki-dark) !important;
 }
 
-code {
+pre {
   counter-reset: step;
   counter-increment: step 0;
 }
 
-code .line::before {
+pre .line::before {
   content: counter(step);
   counter-increment: step;
 

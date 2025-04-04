@@ -3,6 +3,7 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 import type { Config } from 'tailwindcss'
 
 export default {
+  darkMode: 'class',
   content: [
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,6 +11,12 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '475px'
+      },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite'
+      },
       typography: (theme: any) => ({
         DEFAULT: {
           css: {

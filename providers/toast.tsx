@@ -8,7 +8,7 @@ type ToastProviderProps = {
   children: React.ReactNode
 }
 
-const ToastProvider: React.FC<ToastProviderProps> = ({
+export const ToastProvider: React.FC<ToastProviderProps> = ({
   children
 }: ToastProviderProps): React.ReactNode => {
   const { theme } = useTheme()
@@ -21,5 +21,3 @@ const ToastProvider: React.FC<ToastProviderProps> = ({
     </>
   )
 }
-
-export { ToastProvider }

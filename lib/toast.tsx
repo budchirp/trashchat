@@ -1,8 +1,9 @@
 'use client'
 
-import { Box } from '@/components/box'
 import React from 'react'
+
 import { toast as sonnerToast } from 'sonner'
+import { Box } from '@/components/box'
 
 export const toast = (title: string) => {
   return sonnerToast.custom((id) => (

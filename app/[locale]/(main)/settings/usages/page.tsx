@@ -52,7 +52,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
 
           <div className='w-full border border-border h-4 bg-background-secondary rounded-full'>
             <div
-              className='bg-accent-700 h-full rounded-full'
+              className='bg-background-accent-primary h-full rounded-full'
               style={{
                 width: `${(user.credits / credits) * 100}%`
               }}
@@ -73,7 +73,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
             <div
               className='bg-accent-700 h-full rounded-full'
               style={{
-                width: `${(user.premiumCredits / premium_credits) * 100}%`
+                width: `${premium_credits === 0 ? 0 : (user.premiumCredits / premium_credits) * 100}%`
               }}
             />
           </div>

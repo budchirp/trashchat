@@ -47,7 +47,7 @@
   "account": {
     "text": "Hesap",
     "description": "Hesap",
-    "delete": "Hesabı sil (çalışmıyor)",
+    "delete": "Hesabı sil",
     "profile-picture": "Profil Resmi"
   },
   "customization": {

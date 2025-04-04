@@ -128,7 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </Container>
       </div>
 
-      <Container className='grid gap-2 size-full max-md:px-4 overflow-y-auto my-4'>
+      <Container className='grid gap-2 size-full max-md:px-4 overflow-y-auto py-4'>
         {!loading && mounted && chats ? (
           <>
             <Box className='h-min' padding='small'>
@@ -153,7 +153,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 return (
                   <Box
                     padding='small'
-                    className='group flex items-center justify-between gap-2'
+                    variant='primary'
+                    className={cn(
+                      'group flex items-center justify-between gap-2',
+                      selected && 'bg-background-secondary'
+                    )}
                     key={chat.id}
                   >
                     <Link

@@ -3,6 +3,7 @@ import type { Message, Chat as PrismaChat } from '@prisma/client'
 
 export type Chat = PrismaChat & {
   id: string
+
   title: string
   model?: AIModelID
 

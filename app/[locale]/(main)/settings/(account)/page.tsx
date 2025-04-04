@@ -4,7 +4,6 @@ import { AccountClientPage } from '@/app/[locale]/(main)/settings/(account)/page
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Heading } from '@/components/heading'
-import { Button } from '@/components/button'
 import { routing } from '@/lib/i18n/routing'
 
 import type { Metadata } from 'next'
@@ -24,10 +23,6 @@ const AccountPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
 
       <div>
         <AccountClientPage />
-
-        <div className='border-t-4 border-border-hover mt-4 pt-4'>
-          <Button>{t('delete')}</Button>
-        </div>
       </div>
     </div>
   )

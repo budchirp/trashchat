@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 
 import type { User } from '@/types/user'
+import { Checkbox } from '@/components/checkbox'
 
 export const CustomizationClientPage: React.FC = (): React.ReactNode => {
   const [loading, setLoading] = useState<boolean>(true)
@@ -131,18 +132,14 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
         </div>
 
         <div>
-          <label className='flex items-center gap-2' htmlFor='shareInfoWithAI'>
-            <input
-              className='size-8 bg-background-secondary border border-border rounded-xl checked:bg-accent-700'
-              id='shareInfoWithAI'
-              name='shareInfoWithAI'
-              type='checkbox'
-              checked={formik.values.shareInfoWithAI}
-              onChange={formik.handleChange}
-            />
-
-            {t('share-info')}
-          </label>
+          <Checkbox
+            id='shareInfoWithAI'
+            name='shareInfoWithAI'
+            type='checkbox'
+            checked={formik.values.shareInfoWithAI}
+            onChange={formik.handleChange}
+            label={t('share-info')}
+          />
         </div>
       </div>
 

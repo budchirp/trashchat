@@ -20,14 +20,14 @@ export const Footer: React.FC = async () => {
 
   return (
     <footer className='bg-background-primary/50 backdrop-blur-xs border-t border-border flex w-full items-center relative justify-center'>
-      <Container className='grid gap-2'>
-        <div className='min-h-16 flex flex-col border-b border-border md:flex-row md:items-center justify-between gap-2'>
+      <Container>
+        <div className='flex border-b border-border min-h-16 py-4 flex-col md:flex-row md:items-center md:justify-between gap-1'>
           <Logo />
 
           <Link href='https://cankolay.com'>{t('footer')}</Link>
         </div>
 
-        <div className='flex items-center pb-2 justify-between gap-2'>
+        <div className='items-center h-16 flex justify-between gap-2'>
           <div />
 
           <div className='justify-end flex flex-col text-end'>

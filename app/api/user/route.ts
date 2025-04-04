@@ -43,6 +43,41 @@ export const GET = async (request: NextRequest) => {
   }
 }
 
+export const DELETE = async (request: NextRequest) => {
+  try {
+    const [isTokenValid, payload] = await verifyToken(request.headers)
+    if (!isTokenValid || !payload) {
+      throw new Error('Invalid token.')
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: payload.id
+      }
+    })
+
+    if (!user) {
+      throw new Error('User not found!')
+    }
+
+    await prisma.user.delete({ where: user })
+
+    return NextResponse.json({
+      message: 'Success',
+      data: {}
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: (error as Error).message,
+        details: (error as Error).message,
+        data: {}
+      },
+      { status: 500 }
+    )
+  }
+}
+
 export const POST = async (request: NextRequest) => {
   try {
     const { name, username, email, password } = await request.json()
