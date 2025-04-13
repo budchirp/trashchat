@@ -1,7 +1,7 @@
 'use client'
 
 import type React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ComponentProps } from 'react'
 
 import { Container } from '@/components/container'
 import { useTranslations } from 'next-intl'
@@ -20,10 +20,11 @@ import type { Chat } from '@/types/chat'
 
 type SidebarProps = {
   onClose?: () => void
-}
+} & ComponentProps<'div'>
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  onClose = () => { }
+  onClose = () => {},
+  ...props
 }: SidebarProps): React.ReactNode => {
   const pathname = usePathname()
   const router = useRouter()
@@ -112,7 +113,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }, [pathname])
 
   return (
-    <div className='w-3/4 md:w-1/4 bg-background-primary fixed top-0 left-0 flex flex-col h-screen border-r border-border'>
+    <div
+      {...props}
+      className={cn(
+        'w-3/4 md:w-1/4 bg-background-primary fixed z-40 top-0 left-0 flex flex-col h-screen border-r border-border',
+        'transition-all opacity-100',
+        'data-closed:-translate-x-full data-closed:opacity-75',
+        'data-enter:ease-out data-enter:duration-400',
+        'data-leave:ease-in data-leave:duration-200'
+      )}
+    >
       <div className='w-full h-16 bg-background-primary flex items-center justify-center border-b border-border'>
         <Container className='h-16 w-full max-md:px-4 flex items-center justify-between'>
           <h1 className='font-bold text-2xl'>Chats</h1>

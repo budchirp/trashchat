@@ -20,7 +20,7 @@
 - [ ] SEO
 - [x] Sidebar for chats
 - [x] Ability to delete chats
-- [ ] Deleting account
+- [x] Deleting account
 - [x] Updating account details
 - [x] Better profile page
 - [ ] Payments

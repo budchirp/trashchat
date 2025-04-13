@@ -7,7 +7,7 @@ import { ChatForm } from '@/components/chat/chat-form'
 import { MessageBox } from '@/components/chat/message-box'
 import { Container } from '@/components/container'
 import { useChat } from '@ai-sdk/react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { generateId, type Message } from 'ai'
 import { MemoizedMarkdown } from '@/components/markdown/memoized'
 import { CookieMonster } from '@/lib/cookie-monster'
@@ -37,6 +37,8 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
   const ref = useRef<HTMLDivElement | null>(null)
 
+  const locale = useLocale()
+
   const { messages, setMessages, input, status, stop, handleInputChange, handleSubmit } = useChat({
     api: `/api/chat/${chatId}/message`,
     experimental_prepareRequestBody: ({ messages }) => {
@@ -44,7 +46,8 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
     },
     initialMessages,
     headers: {
-      authorization: `Bearer ${token}`
+      authorization: `Bearer ${token}`,
+      'accept-language': locale
     },
     onFinish: () => {},
     onError: async (error) => {

@@ -5,6 +5,9 @@
     "go-to-chat": "Go to chat"
   },
   "chat": {
+    "plus-error": "This model is for plus users!",
+    "credit-error": "Not enough credits!",
+    "error": "Error while generating content. Please try again",
     "text": "Chat",
     "description": "Chat with your favourite AI model!",
     "say-something": "Say something",
@@ -16,6 +19,7 @@
     "new-chat": "New chat"
   },
   "common": {
+    "invalid-token": "Invalid token",
     "copied": "Copied",
     "submit": "Submit",
     "loading": "Loading...",
@@ -26,6 +30,7 @@
     "footer": "Made by Can Kolay with ❤️"
   },
   "auth": {
+    "not-found": "User not found",
     "name": "Name",
     "username": "Username",
     "email": "E-Mail",

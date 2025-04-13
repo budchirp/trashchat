@@ -138,8 +138,6 @@ export const GET = async (
       throw new Error('Chat with this id not found!')
     }
 
-    console.log(chat)
-
     return NextResponse.json({
       message: 'Success',
       data: {

@@ -1,9 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { appendClientMessage, smoothStream, streamText } from 'ai'
+import { appendClientMessage, generateText, smoothStream, streamText } from 'ai'
 import { verifyToken } from '@/lib/auth/server/verify-token'
 import { AIModels, type AIModelID } from '@/lib/ai/models'
 import { constructSystemPrompt } from '@/lib/ai/prompt'
 import { prisma } from '@/lib/prisma'
+import { getTranslations } from 'next-intl/server'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -19,9 +20,14 @@ export const POST = async (
   }
 ) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale, namespace: 'chat' })
+    const t_common = await getTranslations({ locale, namespace: 'common' })
+    const t_auth = await getTranslations({ locale, namespace: 'auth' })
+
     const [isTokenValid, payload] = await verifyToken(request.headers)
     if (!isTokenValid || !payload) {
-      throw new Error('Invalid token.')
+      throw new Error(t_common('invalid-token'))
     }
 
     const user = await prisma.user.findUnique({
@@ -31,7 +37,7 @@ export const POST = async (
     })
 
     if (!user) {
-      throw new Error('User not found!')
+      throw new Error(t_auth('not-found'))
     }
 
     const { id } = await params
@@ -48,7 +54,7 @@ export const POST = async (
     })
 
     if (!chat) {
-      throw new Error('Chat not found')
+      throw new Error(t('not-found'))
     }
 
     await prisma.message.create({
@@ -67,18 +73,36 @@ export const POST = async (
 
     const models = AIModels.get()
 
+    if (chat.messages.length < 2) {
+      const { text: title } = await generateText({
+        model: models['gemini-2.0-flash'].provider,
+        system:
+          'Generate a ONE title thats max of 40 characters. Just reply with the title nothing else.',
+        prompt: message.content
+      })
+
+      await prisma.chat.update({
+        where: {
+          id
+        },
+        data: {
+          title
+        }
+      })
+    }
+
     const model = modelName ? models[modelName as AIModelID] : models['gemini-2.0-flash']
     if (model.plus && !user.plus) {
-      throw new Error('This model is for plus users!')
+      throw new Error(t('plus-error'))
     }
 
     if (model.premium) {
       if (user.premiumCredits < 1) {
-        throw new Error('Not enough credits!')
+        throw new Error(t('credit-error'))
       }
     } else {
       if (user.credits < 1) {
-        throw new Error('Not enough credits!')
+        throw new Error(t('credit-error'))
       }
     }
 
@@ -124,7 +148,7 @@ export const POST = async (
       getErrorMessage: (error: unknown) => {
         console.log(error)
 
-        return (error as any).message || 'Error while generating content. Please try again'
+        return (error as any).message || t('error')
       }
     })
   } catch (error) {

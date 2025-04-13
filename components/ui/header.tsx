@@ -14,6 +14,7 @@ import { MenuIcon } from 'lucide-react'
 import { createPortal } from 'react-dom'
 import { Backdrop } from '@/components/backdrop'
 import { Transition } from '@headlessui/react'
+import { usePathname } from 'next/navigation'
 
 type HeaderProps = {
   sidebar?: boolean
@@ -28,6 +29,11 @@ export const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const pathname = usePathname()
+  useEffect(() => {
+    setShowSidebar(false)
+  }, [pathname])
 
   return (
     <>
@@ -60,21 +66,8 @@ export const Header: React.FC<HeaderProps> = ({
       </header>
 
       {sidebar && (
-        <Transition
-          show={showSidebar}
-          as='div'
-          onClick={() => setShowSidebar(false)}
-          className={cn(
-            'z-50 inset-0 fixed',
-            'transition-all opacity-100',
-            'data-closed:-translate-x-full data-closed:opacity-75',
-            'data-enter:ease-out data-enter:duration-400',
-            'data-leave:ease-in data-leave:duration-200'
-          )}
-        >
-          <div className='fixed left-0 top-0'>
-            <Sidebar onClose={() => setShowSidebar(false)} />
-          </div>
+        <Transition show={showSidebar}>
+          <Sidebar onClose={() => setShowSidebar(false)} />
         </Transition>
       )}
 
@@ -82,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({
         sidebar &&
         createPortal(
           <Backdrop
-            className='!h-screen inset-0 z-40'
+            className='!h-screen !z-30 inset-0'
             open={showSidebar}
             onClose={() => setShowSidebar(false)}
           />,

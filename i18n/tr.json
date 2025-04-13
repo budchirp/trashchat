@@ -5,17 +5,21 @@
     "go-to-chat": "Sohbete git"
   },
   "chat": {
+    "plus-error": "Bu model plus kullanıcılar içindir!",
+    "credit-error": "Yetersiz kredi!",
+    "error": "İçerik oluşturulurken hata oluştu. Lütfen tekrar deneyin.",
     "text": "Sohbet",
     "description": "Favori yapay zeka modelin ile sohbet et!",
     "say-something": "Bir şeyler yaz",
-    "start": "Çekinme. Bir konuşma başlat.",
+    "start": "Çekinme. Bir sohbet başlat.",
     "you": "Sen",
-    "ai": "AI",
+    "ai": "Yapay Zeka",
     "system": "Sistem",
     "not-found": "Sohbet bulunamadı",
     "new-chat": "Yeni sohbet"
   },
   "common": {
+    "invalid-token": "Geçersiz anahtar",
     "copied": "Kopyalandı",
     "submit": "Gönder",
     "loading": "Yükleniyor...",
@@ -26,6 +30,7 @@
     "footer": "Can Kolay tarafından ❤️ ile yapıldı"
   },
   "auth": {
+    "not-found": "Kullanıcı bulunamadı",
     "name": "Ad",
     "username": "Kullanıcı adı",
     "email": "E-Posta",
