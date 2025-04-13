@@ -24,7 +24,9 @@ export const Footer: React.FC = async () => {
         <div className='flex border-b border-border min-h-16 py-4 flex-col md:flex-row md:items-center md:justify-between gap-1'>
           <Logo />
 
-          <Link href='https://cankolay.com'>{t('footer')}</Link>
+          <Link className='font-medium text-text-accent-secondary' href='https://cankolay.com'>
+            {t('footer')}
+          </Link>
         </div>
 
         <div className='items-center h-16 flex justify-between gap-2'>

@@ -12,7 +12,8 @@
     "you": "You",
     "ai": "AI",
     "system": "System",
-    "not-found": "Chat not found"
+    "not-found": "Chat not found",
+    "new-chat": "New chat"
   },
   "common": {
     "copied": "Copied",

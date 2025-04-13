@@ -1,18 +1,19 @@
 {
   "landing": {
     "text": "Giriş",
-    "description": "Favori yapay zeka modelinle sohbet et!",
+    "description": "Favori yapay zeka modelin ile sohbet et!",
     "go-to-chat": "Sohbete git"
   },
   "chat": {
     "text": "Sohbet",
-    "description": "Favori yapay zeka modelinle sohbet et!",
-    "say-something": "Bir şeyler söyle",
+    "description": "Favori yapay zeka modelin ile sohbet et!",
+    "say-something": "Bir şeyler yaz",
     "start": "Çekinme. Bir konuşma başlat.",
     "you": "Sen",
     "ai": "AI",
     "system": "Sistem",
-    "not-found": "Sohbet bulunamadı"
+    "not-found": "Sohbet bulunamadı",
+    "new-chat": "Yeni sohbet"
   },
   "common": {
     "copied": "Kopyalandı",
@@ -53,8 +54,8 @@
   "customization": {
     "text": "Özelleştirme",
     "description": "Özelleştirme",
-    "prompt": "Sistem istemi",
-    "share-info": "AI ile bilgilerini paylaş"
+    "prompt": "Yapay zeka özelleştirme",
+    "share-info": "Yapay zeka ile bilgilerimi paylaş"
   },
   "usages": {
     "text": "Kullanımlar",

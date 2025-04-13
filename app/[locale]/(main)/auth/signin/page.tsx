@@ -26,7 +26,7 @@ const SignInPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
         <div className='flex flex-col gap-1 text-center items-center'>
           <h1 className='font-bold text-2xl'>{t('text')}</h1>
 
-          <Link href='/auth/signup' className='text-sm text-text-tertiary'>
+          <Link href='/auth/signup' className='text-sm underline text-text-tertiary'>
             {t('signup')}
           </Link>
         </div>

@@ -24,12 +24,12 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       className={cn(
         'size-8 flex items-center justify-center bg-background-secondary hover:bg-background-tertiary relative transition-all duration-150 border border-border rounded-xl',
         checked &&
-          'bg-background-accent-primary hover:bg-background-accent-secondary border-border-accent'
+        'bg-background-accent-primary hover:bg-background-accent-secondary border-border-accent'
       )}
     >
       <Check
         className={cn(
-          'size-4 text-text-tertiary transition-all duration-150 opacity-0 invisible',
+          'size-4 text-text-primary transition-all duration-150 opacity-0 invisible',
           checked && 'opacity-100 visible'
         )}
       />

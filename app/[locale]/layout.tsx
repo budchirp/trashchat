@@ -11,6 +11,7 @@ import Script from 'next/script'
 
 import type { Metadata } from 'next'
 import type { DynamicLayoutProps } from '@/types/layout'
+import { Container } from '@/components/container'
 
 export const generateMetadata = async ({ params }: DynamicLayoutProps): Promise<Metadata> => {
   const { locale } = await params
@@ -64,11 +65,11 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
     <NextIntlClientProvider messages={messages}>
       <ThemeProvider>
         <ToastProvider>
-          <div className='absolute inset-0 select-none overflow-hidden'>
-            <div className='absolute z-0 top-[10%] left-[15%] size-96 opacity-25 bg-accent-500 rounded-full blur-[128px]' />
-            <div className='absolute z-0 top-[35%] right-[20%] size-96 opacity-25 bg-accent-600 rounded-full blur-[128px]' />
-            <div className='absolute z-0 top-[50%] left-[25%] size-96 opacity-25 bg-accent-800 rounded-full blur-[128px]' />
-            <div className='absolute z-0 top-[80%] right-[10%] size-96 opacity-25 bg-accent-700 rounded-full blur-[128px]' />
+          <div className='absolute z-0 inset-0 overflow-hidden'>
+            <Container className='absolute inset-0'>
+              <div className='absolute top-[10%] left-[15%] size-96 opacity-25 bg-accent-500 rounded-full blur-[128px]' />
+              <div className='absolute top-[50%] left-[55%] size-96 opacity-25 bg-accent-800 rounded-full blur-[128px]' />
+            </Container>
           </div>
 
           <div className='grid gap-4 relative z-10 size-full'>{children}</div>

@@ -23,7 +23,7 @@ type SidebarProps = {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  onClose = () => {}
+  onClose = () => { }
 }: SidebarProps): React.ReactNode => {
   const pathname = usePathname()
   const router = useRouter()
@@ -37,6 +37,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [chats, setChats] = useState<Chat[]>([])
 
   const t_common = useTranslations('common')
+  const t_chat = useTranslations('chat')
 
   const cookieMonster = new CookieMonster()
 
@@ -142,7 +143,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <Plus size={16} />
                 </Button>
 
-                <span>New chat</span>
+                <span>{t_chat('new-chat')}</span>
               </div>
             </Box>
 
@@ -155,17 +156,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     padding='small'
                     variant='primary'
                     className={cn(
-                      'group flex items-center justify-between gap-2',
+                      'group flex items-center hover:bg-background-secondary justify-between gap-2',
                       selected && 'bg-background-secondary'
                     )}
                     key={chat.id}
                   >
                     <Link
                       className={cn(
-                        'transition-all ms-2 duration-300 hover:font-bold hover:text-text-primary text-ellipsis',
+                        'transition-all ms-2 duration-300 group-hover:font-bold text-ellipsis',
                         selected
                           ? 'text-text-accent-primary font-bold'
-                          : 'text-text-tertiary font-medium'
+                          : 'text-text-tertiary font-medium group-hover:text-text-primary'
                       )}
                       href={`/chat/${chat.id}`}
                     >

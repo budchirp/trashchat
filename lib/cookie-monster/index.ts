@@ -29,9 +29,10 @@ export class CookieMonster {
   }
 
   public set = (key: string, value: unknown, options?: cookie.SerializeOptions): void => {
-    const stringifiedValue = this.stringfy(value)
-
-    document.cookie = cookie.serialize(key, stringifiedValue, options)
+    document.cookie = cookie.serialize(key, this.stringfy(value), {
+      ...options,
+      expires: new Date(2147483647000)
+    })
   }
 
   public delete = (key: string): void => {
@@ -39,7 +40,10 @@ export class CookieMonster {
       maxAge: -1
     })
 
-    document.cookie = cookie.serialize(key, '', { maxAge: -1 })
+    document.cookie = cookie.serialize(key, '', {
+      maxAge: -1,
+      expires: new Date(0)
+    })
   }
 
   public has = (key: string): boolean => {

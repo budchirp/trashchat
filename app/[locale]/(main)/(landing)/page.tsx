@@ -18,11 +18,16 @@ const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
     namespace: 'landing',
     locale
   })
+
   return (
     <div className='flex size-full flex-col mt-4'>
       <div className='w-full page-h-screen flex items-center justify-center'>
         <div className='text-center flex flex-col gap-4 items-center justify-center'>
-          <Logo />
+          <div className='text-lg flex items-center justify-center text-center gap-1 flex-col font-medium'>
+            <Logo />
+
+            <p className=''>{t('description')}</p>
+          </div>
 
           <Button>
             <Link href='/chat'>{t('go-to-chat')}</Link>
