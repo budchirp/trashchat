@@ -163,58 +163,58 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 const selected = pathname.includes(chat.id)
 
                 return (
-                  <Box
-                    padding='small'
-                    variant='primary'
-                    className={cn(
-                      'group flex items-center hover:bg-background-secondary justify-between gap-2',
-                      selected && 'bg-background-secondary'
-                    )}
-                    key={chat.id}
-                  >
-                    <Link
+                  <Link href={`/chat/${chat.id}`} key={chat.id}>
+                    <Box
+                      padding='small'
+                      variant='primary'
                       className={cn(
-                        'transition-all ms-2 duration-300 group-hover:font-bold text-ellipsis',
-                        selected
-                          ? 'text-text-accent-primary font-bold'
-                          : 'text-text-tertiary font-medium group-hover:text-text-primary'
+                        'group flex items-center hover:bg-background-secondary justify-between gap-2',
+                        selected && 'bg-background-secondary'
                       )}
-                      href={`/chat/${chat.id}`}
                     >
-                      {chat.title}
-                    </Link>
+                      <span
+                        className={cn(
+                          'transition-all ms-2 duration-300 group-hover:font-bold text-ellipsis',
+                          selected
+                            ? 'text-text-accent-primary font-bold'
+                            : 'text-text-tertiary font-medium group-hover:text-text-primary'
+                        )}
+                      >
+                        {chat.title}
+                      </span>
 
-                    <Button
-                      onClick={async () => {
-                        setChats(chats.filter((_chat) => _chat.id !== chat.id))
+                      <Button
+                        onClick={async () => {
+                          setChats(chats.filter((_chat) => _chat.id !== chat.id))
 
-                        deleteChat(chat.id)
+                          deleteChat(chat.id)
 
-                        if (selected) {
-                          const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-                          const response = await Fetch.get<{
-                            data: {
-                              id: string
+                          if (selected) {
+                            const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+                            const response = await Fetch.get<{
+                              data: {
+                                id: string
+                              }
+                            }>('/api/chat/-1', {
+                              authorization: `Bearer ${token}`
+                            })
+
+                            const json = await response.json()
+                            if (response.status < 400) {
+                              router.push(`/chat/${json.data.id}`)
+                            } else {
+                              router.push('/')
                             }
-                          }>('/api/chat/-1', {
-                            authorization: `Bearer ${token}`
-                          })
-
-                          const json = await response.json()
-                          if (response.status < 400) {
-                            router.push(`/chat/${json.data.id}`)
-                          } else {
-                            router.push('/')
                           }
-                        }
-                      }}
-                      variant='round'
-                      className='invisible opacity-0 group-hover:opacity-100 group-hover:visible transition-all duration-300'
-                      type='button'
-                    >
-                      <Trash size={16} />
-                    </Button>
-                  </Box>
+                        }}
+                        variant='round'
+                        className='invisible opacity-0 group-hover:opacity-100 group-hover:visible transition-all duration-300'
+                        type='button'
+                      >
+                        <Trash size={16} />
+                      </Button>
+                    </Box>
+                  </Link>
                 )
               })}
             </div>
