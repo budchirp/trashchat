@@ -91,6 +91,9 @@ export const GET = async (
         },
         include: {
           messages: true
+        },
+        where: {
+          userId: user.id
         }
       })
 
