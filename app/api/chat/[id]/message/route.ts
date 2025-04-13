@@ -77,7 +77,7 @@ export const POST = async (
       const { text: title } = await generateText({
         model: models['gemini-2.0-flash'].provider,
         system:
-          'Generate a ONE title thats max of 40 characters. Just reply with the title nothing else.',
+          'Generate a ONE title thats max of 40 characters according to what user asking or talking. Just reply with the title nothing else. MAKE IT RELATED TO USERS REQUEST.',
         prompt: message.content
       })
 

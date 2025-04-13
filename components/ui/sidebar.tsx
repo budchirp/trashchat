@@ -23,7 +23,7 @@ type SidebarProps = {
 } & ComponentProps<'div'>
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  onClose = () => {},
+  onClose = () => { },
   ...props
 }: SidebarProps): React.ReactNode => {
   const pathname = usePathname()
@@ -142,13 +142,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <Container className='grid gap-2 size-full max-md:px-4 overflow-y-auto py-4'>
         {!loading && mounted && chats ? (
           <>
-            <Box className='h-min' padding='small'>
-              <div
-                className='text-text-primary items-center font-medium flex gap-2 hover:text-text-secondary cursor-pointer'
-                onClick={() => {
-                  newChat()
-                }}
-              >
+            <Box
+              className='h-min cursor-pointer'
+              padding='small'
+              onClick={() => {
+                newChat()
+              }}
+            >
+              <div className='text-text-primary items-center font-medium flex gap-2 hover:text-text-secondary'>
                 <Button variant='round' color='secondary'>
                   <Plus size={16} />
                 </Button>

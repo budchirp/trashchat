@@ -35,7 +35,7 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({ children, icon }): Re
     <MenuItem>
       <div
         className={cn(
-          'border-border flex h-min w-full items-center border-b px-4 py-2 transition duration-300 last:border-none',
+          'border-border flex cursor-pointer h-min w-full items-center border-b px-4 py-2 transition duration-300',
           'bg-background-primary hover:bg-background-secondary'
         )}
       >
@@ -47,7 +47,7 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({ children, icon }): Re
         >
           <div className='aspect-square flex items-center justify-center size-6'>{icon}</div>
 
-          <div className='size-full flex items-center grow'>{children}</div>
+          <div>{children}</div>
         </div>
       </div>
     </MenuItem>
@@ -89,7 +89,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
         if (response.status < 400) {
           setUser(json.data)
         }
-      } catch {}
+      } catch { }
     }
 
     setLoading(false)
@@ -156,39 +156,37 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                     </div>
                   ) : user ? (
                     <>
-                      <ProfileMenuItem icon={<UserIcon />}>
-                        <Link className='size-full' href='/settings'>
+                      <Link href='/settings'>
+                        <ProfileMenuItem icon={<UserIcon />}>
                           <h2 className='font-bold text-text-accent-primary'>{user.name}</h2>
                           <h3 className='text-text-tertiary'>{user.username}</h3>
-                        </Link>
-                      </ProfileMenuItem>
+                        </ProfileMenuItem>
+                      </Link>
 
-                      <ProfileMenuItem icon={<LogOut />}>
-                        <button
-                          type='button'
-                          onClick={() => {
-                            cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
+                      <button
+                        className='w-full'
+                        type='button'
+                        onClick={() => {
+                          cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
 
-                            setUser(null)
-                            close()
-                            toast(t_common('success'))
+                          setUser(null)
+                          close()
+                          toast(t_common('success'))
 
-                            router.push('/')
-                          }}
-                        >
-                          {t('logout')}
-                        </button>
-                      </ProfileMenuItem>
+                          router.push('/')
+                        }}
+                      >
+                        <ProfileMenuItem icon={<LogOut />}>{t('logout')}</ProfileMenuItem>
+                      </button>
                     </>
                   ) : (
                     <>
-                      <ProfileMenuItem icon={<LogIn />}>
-                        <Link href='/auth/signin'>{t('signin.text')}</Link>
-                      </ProfileMenuItem>
-
-                      <ProfileMenuItem icon={<UserPlus />}>
-                        <Link href='/auth/signup'>{t('signup.text')}</Link>
-                      </ProfileMenuItem>
+                      <Link href='/auth/signin'>
+                        <ProfileMenuItem icon={<LogIn />}>{t('signin.text')}</ProfileMenuItem>
+                      </Link>
+                      <Link href='/auth/signup'>
+                        <ProfileMenuItem icon={<UserPlus />}>{t('signup.text')}</ProfileMenuItem>
+                      </Link>
                     </>
                   )}
                 </MenuItems>
