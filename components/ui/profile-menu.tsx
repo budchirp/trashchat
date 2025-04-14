@@ -64,17 +64,16 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
     setMounted(true)
   }, [])
 
+  const [loading, setLoading] = useState<boolean>(true)
   const [user, setUser] = useState<User | null>(null)
 
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
   const cookieMonster = new CookieMonster()
-  const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-
-  const [loading, setLoading] = useState<boolean>(token !== null && token !== undefined)
 
   const fetchUser = async () => {
+    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
       setLoading(true)
 
