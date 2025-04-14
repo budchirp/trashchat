@@ -25,3 +25,4 @@
 - [x] Better profile page
 - [ ] Payments
 - [ ] Add capctha
+- [ ] Add an option to disable/enable blur

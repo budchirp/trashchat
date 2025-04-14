@@ -2,13 +2,15 @@ import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
-import { Link } from '@/lib/i18n/routing'
+import { Link, redirect } from '@/lib/i18n/routing'
 import { routing } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
 import { Logo } from '@/components/logo'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
+import { protectRoute } from '@/lib/auth/client/protect-route'
+import { cookies } from 'next/headers'
 
 const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
@@ -18,6 +20,14 @@ const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
     namespace: 'landing',
     locale
   })
+
+  const token = protectRoute(await cookies(), locale, false) as string
+  if (token) {
+    redirect({
+      href: '/chat',
+      locale
+    })
+  }
 
   return (
     <div className='flex size-full flex-col mt-4'>

@@ -115,14 +115,7 @@ export const GET = async (
 
       return NextResponse.json({
         message: 'Success',
-        data: {
-          id: chat.id,
-
-          title: chat.title,
-          model: chat.model,
-
-          messages: chat.messages
-        } as Chat
+        data: chat
       })
     }
 
@@ -143,14 +136,7 @@ export const GET = async (
 
     return NextResponse.json({
       message: 'Success',
-      data: {
-        id: chat.id,
-
-        title: chat.title,
-        model: chat.model,
-
-        messages: chat.messages
-      }
+      data: chat
     })
   } catch (error) {
     return NextResponse.json(

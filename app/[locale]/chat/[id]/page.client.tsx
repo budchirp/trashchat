@@ -8,31 +8,25 @@ import { MessageBox } from '@/components/chat/message-box'
 import { Container } from '@/components/container'
 import { useChat } from '@ai-sdk/react'
 import { useLocale, useTranslations } from 'next-intl'
-import { generateId, type Message } from 'ai'
+import { generateId } from 'ai'
 import { MemoizedMarkdown } from '@/components/markdown/memoized'
-import { CookieMonster } from '@/lib/cookie-monster'
-import { CONSTANTS } from '@/lib/constants'
-import { Fetch } from '@/lib/fetch'
 
 import type { Chat } from '@/types/chat'
 import type { AIModelID } from '@/lib/ai/models'
 
 type ChatClientPageProps = {
   token: string
-  chatId: string
-  initialMessages: Message[]
+  chat: Chat
 }
 
 export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   token,
-  chatId,
-  initialMessages
+  chat
 }: ChatClientPageProps): React.ReactNode => {
   const t = useTranslations('chat')
   const t_common = useTranslations('common')
 
-  const [chat, setChat] = useState<Chat | null>(null)
-  const [model, setModel] = useState<AIModelID>('gemini-2.0-flash')
+  const [model, setModel] = useState<AIModelID>(chat.model || 'gemini-2.0-flash')
   const [error, setError] = useState<string | null>(null)
 
   const ref = useRef<HTMLDivElement | null>(null)
@@ -40,11 +34,11 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   const locale = useLocale()
 
   const { messages, setMessages, input, status, stop, handleInputChange, handleSubmit } = useChat({
-    api: `/api/chat/${chatId}/message`,
+    api: `/api/chat/${chat.id}/message`,
     experimental_prepareRequestBody: ({ messages }) => {
       return { message: messages[messages.length - 1], model }
     },
-    initialMessages,
+    initialMessages: (chat.messages as any) || [],
     headers: {
       authorization: `Bearer ${token}`,
       'accept-language': locale
@@ -63,29 +57,6 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
     }
   })
 
-  const cookieMonster = new CookieMonster()
-  const fetchChat = async () => {
-    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-    if (token) {
-      const response = await Fetch.get<{
-        data: Chat
-      }>(`/api/chat/${chatId}`, {
-        Authorization: `Bearer ${token}`
-      })
-
-      const json = await response.json()
-      if (response.status < 400) {
-        setChat(json.data)
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (chat) {
-      setModel(chat.model || 'gemini-2.0-flash')
-    }
-  }, [chat])
-
   useEffect(() => {
     if (error)
       setMessages([
@@ -99,18 +70,14 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   }, [error])
 
   useEffect(() => {
-    if (status === 'ready') {
-      if (ref.current) {
-        ref.current.scrollIntoView({
-          behavior: 'smooth'
-        })
-      }
+    if (status === 'ready' && ref.current) {
+      ref.current.scrollIntoView({
+        behavior: 'smooth'
+      })
     }
   }, [status])
 
   useEffect(() => {
-    fetchChat()
-
     if (ref.current) {
       ref.current.scrollIntoView({
         behavior: 'smooth'

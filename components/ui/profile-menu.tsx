@@ -8,7 +8,7 @@ import { Container } from '@/components/container'
 import { Button } from '@/components/button'
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
-import { LogIn, LogOut, type LucideIcon, UserIcon, UserPlus } from 'lucide-react'
+import { LoaderCircle, LogIn, LogOut, type LucideIcon, UserIcon, UserPlus } from 'lucide-react'
 import { Menu, Transition, MenuButton, MenuItems, MenuItem } from '@headlessui/react'
 import { Backdrop } from '@/components/backdrop'
 import { CookieMonster } from '@/lib/cookie-monster'
@@ -32,23 +32,22 @@ export type ProfileMenuItemProps = {
 
 const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({ children, icon }): React.ReactNode => {
   return (
-    <MenuItem>
+    <MenuItem
+      as='div'
+      className={cn(
+        'border-border flex cursor-pointer h-min w-full items-center border-b px-4 py-2 transition duration-300',
+        'bg-background-primary hover:bg-background-secondary'
+      )}
+    >
       <div
         className={cn(
-          'border-border flex cursor-pointer h-min w-full items-center border-b px-4 py-2 transition duration-300',
-          'bg-background-primary hover:bg-background-secondary'
+          'flex w-full items-center gap-4 font-medium transition duration-300',
+          'text-text-primary hover:text-text-secondary'
         )}
       >
-        <div
-          className={cn(
-            'flex w-max items-center gap-4 font-medium transition duration-300',
-            'text-text-primary hover:text-text-secondary'
-          )}
-        >
-          <div className='aspect-square flex items-center justify-center size-6'>{icon}</div>
+        <div className='aspect-square flex items-center justify-center size-6'>{icon}</div>
 
-          <div>{children}</div>
-        </div>
+        <div className='size-full text-start'>{children}</div>
       </div>
     </MenuItem>
   )
@@ -65,16 +64,17 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
     setMounted(true)
   }, [])
 
-  const [loading, setLoading] = useState<boolean>(true)
   const [user, setUser] = useState<User | null>(null)
 
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
   const cookieMonster = new CookieMonster()
+  const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+
+  const [loading, setLoading] = useState<boolean>(token !== null && token !== undefined)
 
   const fetchUser = async () => {
-    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
       setLoading(true)
 
@@ -89,10 +89,11 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
         if (response.status < 400) {
           setUser(json.data)
         }
-      } catch { }
+      } catch {
+      } finally {
+        setLoading(false)
+      }
     }
-
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -151,9 +152,11 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                   className='top-0 min-w-48 w-min max-w-64 overflow-hidden'
                 >
                   {loading ? (
-                    <div className='px-4 py-3'>
-                      <p>{t_common('loading')}</p>
-                    </div>
+                    [...Array(2)].map((_, index) => (
+                      <ProfileMenuItem key={index} icon={<LoaderCircle className='animate-spin' />}>
+                        <div className='bg-background-tertiary h-2 w-full animate-pulse rounded-sm' />
+                      </ProfileMenuItem>
+                    ))
                   ) : user ? (
                     <>
                       <Link href='/settings'>

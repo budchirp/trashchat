@@ -46,7 +46,9 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
         toast(t_common('success'))
 
         const cookieMonster = new CookieMonster()
-        cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, json.data.token)
+        cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, json.data.token, {
+          expires: new Date(2147483647000)
+        })
 
         router.push('/chat')
       }

@@ -11,7 +11,8 @@ export class Fetch {
         ...(body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
         ...headers
       },
-      body: body instanceof FormData ? body : JSON.stringify(body)
+      body: body instanceof FormData ? body : JSON.stringify(body),
+      cache: 'no-cache'
     }) as Promise<
       {
         json: () => Promise<T>

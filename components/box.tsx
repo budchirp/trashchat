@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react'
 import { cn } from '@/lib/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
 
-const boxVariants = cva(['w-full rounded-3xl'], {
+const boxVariants = cva(['w-full rounded-3xl transition-all duration-300'], {
   variants: {
     variant: {
       primary: 'bg-background-primary border border-border',
@@ -14,6 +14,10 @@ const boxVariants = cva(['w-full rounded-3xl'], {
       default: 'px-4 py-3',
       small: 'p-2',
       none: ''
+    },
+    hover: {
+      true: 'cursor-pointer hover:bg-background-tertiary',
+      false: ''
     }
   },
   defaultVariants: {
@@ -29,9 +33,10 @@ export const Box: React.FC<BoxProps> = ({
   className,
   padding,
   variant,
+  hover,
   ...props
 }: BoxProps): React.ReactNode => (
-  <div {...props} className={cn(boxVariants({ className, padding, variant }))}>
+  <div {...props} className={cn(boxVariants({ className, padding, variant, hover }))}>
     {children}
   </div>
 )

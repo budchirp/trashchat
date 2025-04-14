@@ -24,14 +24,15 @@ export const POST = async (request: NextRequest) => {
         title: 'New chat',
 
         userId: user.id
+      },
+      include: {
+        messages: true
       }
     })
 
     return NextResponse.json({
       message: 'Success',
-      data: {
-        id: chat.id
-      }
+      data: chat
     })
   } catch (error) {
     return NextResponse.json(

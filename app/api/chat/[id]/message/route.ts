@@ -46,7 +46,9 @@ export const POST = async (
 
     const chat = await prisma.chat.findUnique({
       where: {
-        id
+        id,
+
+        userId: user.id
       },
       include: {
         messages: true
@@ -62,7 +64,7 @@ export const POST = async (
         role: message.role,
         content: message.content,
 
-        chatId: id
+        chatId: chat.id
       }
     })
 
@@ -83,7 +85,9 @@ export const POST = async (
 
       await prisma.chat.update({
         where: {
-          id
+          id: chat.id,
+
+          userId: user.id
         },
         data: {
           title
@@ -108,7 +112,9 @@ export const POST = async (
 
     await prisma.chat.update({
       where: {
-        id: chat.id
+        id: chat.id,
+
+        userId: user.id
       },
       data: {
         model: model.id

@@ -27,7 +27,10 @@
     "error": "Error",
     "update": "Update",
     "not-found": "Page not found",
-    "footer": "Made by Can Kolay with ❤️"
+    "footer": "Made by Can Kolay with ❤️",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
   },
   "auth": {
     "not-found": "User not found",

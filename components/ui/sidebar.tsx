@@ -5,13 +5,13 @@ import { useEffect, useState, type ComponentProps } from 'react'
 
 import { Container } from '@/components/container'
 import { useTranslations } from 'next-intl'
-import { Fetch } from '@/lib/fetch'
 import { Box } from '@/components/box'
 import { Link, useRouter } from '@/lib/i18n/routing'
 import { X, Plus, Trash } from 'lucide-react'
 import { Button } from '@/components/button'
 import { cn } from '@/lib/cn'
 import { CookieMonster } from '@/lib/cookie-monster'
+import { ChatManager } from '@/lib/chat'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
 import { usePathname } from 'next/navigation'
@@ -22,11 +22,73 @@ type SidebarProps = {
   onClose?: () => void
 } & ComponentProps<'div'>
 
+type ChatChipProps = {
+  chat?: Chat
+  onDelete?: any
+}
+
+const ChatChip: React.FC<ChatChipProps> = ({
+  chat,
+  onDelete = () => {}
+}: ChatChipProps): React.ReactNode => {
+  const pathname = usePathname()
+
+  const ChatBox = ({ selected = false }: { selected?: boolean }) => (
+    <Box
+      padding='small'
+      variant='primary'
+      hover={chat !== null && chat !== undefined}
+      className={cn(
+        'group flex items-center justify-between gap-2',
+        selected && 'bg-background-secondary',
+        !chat && 'animate-pulse'
+      )}
+    >
+      <span
+        className={cn(
+          'transition-all ms-2 duration-300 w-full group-hover:font-bold text-ellipsis',
+          selected
+            ? 'text-text-accent-primary font-bold'
+            : 'text-text-tertiary font-medium group-hover:text-text-primary'
+        )}
+      >
+        {chat ? (
+          chat.title
+        ) : (
+          <div className='bg-background-tertiary h-2 w-full animate-pulse rounded-sm' />
+        )}
+      </span>
+
+      <Button
+        onClick={onDelete}
+        variant='round'
+        className={cn(
+          'invisible opacity-0 transition-all duration-300',
+          chat && 'group-hover:opacity-100 group-hover:visible'
+        )}
+        type='button'
+      >
+        <Trash size={16} />
+      </Button>
+    </Box>
+  )
+
+  if (chat) {
+    const selected = pathname.includes(chat.id)
+    return (
+      <Link href={`/chat/${chat.id}`} key={chat.id}>
+        <ChatBox selected={selected} />
+      </Link>
+    )
+  }
+
+  return <ChatBox />
+}
+
 export const Sidebar: React.FC<SidebarProps> = ({
-  onClose = () => { },
+  onClose = () => {},
   ...props
 }: SidebarProps): React.ReactNode => {
-  const pathname = usePathname()
   const router = useRouter()
 
   const [mounted, setMounted] = useState<boolean>(false)
@@ -45,37 +107,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const fetchChats = async () => {
     const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
-      try {
-        const response = await Fetch.get<{
-          data: Chat[]
-        }>('/api/chats', {
-          Authorization: `Bearer ${token}`
-        })
+      const chats = await ChatManager.getAll(token)
+      if (chats) setChats(chats)
 
-        const json = await response.json()
-        if (response.status < 400) {
-          setChats(json.data)
-        }
-      } catch {
-      } finally {
-        setLoading(false)
-      }
+      setLoading(false)
     }
   }
 
-  const deleteChat = async (id: string) => {
+  const deleteChat = async (id: string, selected: boolean) => {
     const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
-      const response = await Fetch.delete<{
-        data: Chat[]
-      }>(`/api/chat/${id}`, {
-        Authorization: `Bearer ${token}`
-      })
-
-      if (response.status >= 400) {
+      const deleted = await ChatManager.delete(token, id)
+      if (!deleted) {
         toast(t_common('error'))
-
         fetchChats()
+      }
+
+      if (selected) {
+        const chat = await ChatManager.get(token, '-1')
+        if (chat) {
+          router.push(`/chat/${chat.id}`)
+        } else {
+          router.push('/')
+        }
       }
     }
   }
@@ -83,22 +137,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const newChat = async () => {
     const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
-      const response = await Fetch.post<{
-        data: Chat
-      }>(
-        '/api/chats',
-        {},
-        {
-          Authorization: `Bearer ${token}`
-        }
-      )
-
-      if (response.status < 400) {
-        const json = await response.json()
-        router.push(`/chat/${json.data.id}`)
+      const created = await ChatManager.new(token)
+      if (created) {
+        router.push(`/chat/${created.id}`)
+        fetchChats()
       } else {
         toast(t_common('error'))
-
         fetchChats()
       }
     }
@@ -108,9 +152,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     fetchChats()
   }, [])
 
-  useEffect(() => {
-    fetchChats()
-  }, [pathname])
+  const pathname = usePathname()
 
   return (
     <div
@@ -139,89 +181,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </Container>
       </div>
 
-      <Container className='grid gap-2 size-full max-md:px-4 overflow-y-auto py-4'>
-        {!loading && mounted && chats ? (
-          <>
-            <Box
-              className='h-min cursor-pointer'
-              padding='small'
-              onClick={() => {
-                newChat()
-              }}
-            >
-              <div className='text-text-primary items-center font-medium flex gap-2 hover:text-text-secondary'>
-                <Button variant='round' color='secondary'>
-                  <Plus size={16} />
-                </Button>
+      <Container className='grid gap-2 size-full max-lg:px-4 overflow-y-auto py-4'>
+        <Box hover className='h-min group' onClick={() => !loading && newChat()} padding='small'>
+          <div className='text-text-primary items-center font-medium flex gap-2 hover:text-text-secondary'>
+            <Button variant='round' color='secondary'>
+              <Plus size={16} />
+            </Button>
 
-                <span>{t_chat('new-chat')}</span>
-              </div>
-            </Box>
+            <span className='transition-all ms-2 duration-300 w-full group-hover:font-bold text-ellipsis text-text-tertiary font-medium group-hover:text-text-primary'>
+              {t_chat('new-chat')}
+            </span>
+          </div>
+        </Box>
 
-            <div className='flex flex-col-reverse gap-2'>
-              {chats.map((chat) => {
-                const selected = pathname.includes(chat.id)
-
+        <div className='flex flex-col-reverse gap-2'>
+          {!loading && mounted && chats
+            ? chats.map((chat) => {
                 return (
-                  <Link href={`/chat/${chat.id}`} key={chat.id}>
-                    <Box
-                      padding='small'
-                      variant='primary'
-                      className={cn(
-                        'group flex items-center hover:bg-background-secondary justify-between gap-2',
-                        selected && 'bg-background-secondary'
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          'transition-all ms-2 duration-300 group-hover:font-bold text-ellipsis',
-                          selected
-                            ? 'text-text-accent-primary font-bold'
-                            : 'text-text-tertiary font-medium group-hover:text-text-primary'
-                        )}
-                      >
-                        {chat.title}
-                      </span>
+                  <ChatChip
+                    key={chat.id}
+                    chat={chat}
+                    onDelete={async () => {
+                      setChats(chats.filter((_chat) => _chat.id !== chat.id))
 
-                      <Button
-                        onClick={async () => {
-                          setChats(chats.filter((_chat) => _chat.id !== chat.id))
-
-                          deleteChat(chat.id)
-
-                          if (selected) {
-                            const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-                            const response = await Fetch.get<{
-                              data: {
-                                id: string
-                              }
-                            }>('/api/chat/-1', {
-                              authorization: `Bearer ${token}`
-                            })
-
-                            const json = await response.json()
-                            if (response.status < 400) {
-                              router.push(`/chat/${json.data.id}`)
-                            } else {
-                              router.push('/')
-                            }
-                          }
-                        }}
-                        variant='round'
-                        className='invisible opacity-0 group-hover:opacity-100 group-hover:visible transition-all duration-300'
-                        type='button'
-                      >
-                        <Trash size={16} />
-                      </Button>
-                    </Box>
-                  </Link>
+                      deleteChat(chat.id, pathname.includes(chat.id))
+                    }}
+                  />
                 )
+              })
+            : [...Array(2)].map((_, index) => {
+                return <ChatChip key={index} />
               })}
-            </div>
-          </>
-        ) : (
-          <h1>{t_common('loading')}</h1>
-        )}
+        </div>
       </Container>
     </div>
   )

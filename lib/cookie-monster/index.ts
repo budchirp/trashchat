@@ -31,18 +31,13 @@ export class CookieMonster {
   public set = (key: string, value: unknown, options?: cookie.SerializeOptions): void => {
     document.cookie = cookie.serialize(key, this.stringfy(value), {
       ...options,
-      expires: new Date(2147483647000)
+      secure: true
     })
   }
 
   public delete = (key: string): void => {
     this.set(key, '', {
       maxAge: -1
-    })
-
-    document.cookie = cookie.serialize(key, '', {
-      maxAge: -1,
-      expires: new Date(0)
     })
   }
 

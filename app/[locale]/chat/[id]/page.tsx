@@ -5,15 +5,14 @@ import { MetadataManager } from '@/lib/metadata-manager'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { cookies } from 'next/headers'
 import { protectRoute } from '@/lib/auth/client/protect-route'
-import { Env } from '@/lib/env'
-import { Fetch } from '@/lib/fetch'
 import { notFound } from 'next/navigation'
+import { ChatManager } from '@/lib/chat'
 
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
-import type { Chat } from '@/types/chat'
 
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale, id } = await params
@@ -21,24 +20,10 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
 
   const token = protectRoute(await cookies(), locale) as string
 
-  const response = await Fetch.get<{
-    data: Chat
-  }>(`${Env.appUrl}/api/chat/${id}`, {
-    Authorization: `Bearer ${token}`
-  })
+  const chat = await ChatManager.get(token, id)
+  if (!chat) return notFound()
 
-  if (response.status >= 400) {
-    notFound()
-  }
-
-  const json = await response.json()
-  return (
-    <ChatClientPage
-      token={token}
-      chatId={id}
-      initialMessages={(json?.data?.messages as any) || []}
-    />
-  )
+  return <ChatClientPage token={token} chat={chat} />
 }
 
 export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Metadata> => {
@@ -51,18 +36,10 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
 
   const token = protectRoute(await cookies(), locale) as string
 
-  const response = await Fetch.get<{
-    data: Chat
-  }>(`${Env.appUrl}/api/chat/${id}`, {
-    Authorization: `Bearer ${token}`
-  })
+  const chat = await ChatManager.get(token, id)
+  if (!chat) notFound()
 
-  if (response.status >= 400) {
-    notFound()
-  }
-
-  const json = await response.json()
-  return MetadataManager.generate(json.data.title, t('description'))
+  return MetadataManager.generate(chat.title, t('description'))
 }
 
 export default ChatPage

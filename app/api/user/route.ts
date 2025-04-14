@@ -93,7 +93,7 @@ export const POST = async (request: NextRequest) => {
     })
 
     if (user) {
-      throw new Error('With these stuff already exists!')
+      throw new Error('User with these stuff already exists!')
     }
 
     await prisma.user.create({

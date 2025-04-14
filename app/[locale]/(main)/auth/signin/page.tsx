@@ -20,6 +20,7 @@ const SignInPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
     namespace: 'auth.signin',
     locale
   })
+
   return (
     <div className='flex size-full flex-col mt-4'>
       <div className='w-full page-h-screen flex-col gap-8 flex items-center justify-center'>

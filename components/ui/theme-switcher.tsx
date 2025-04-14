@@ -20,11 +20,14 @@ import { useTheme } from 'next-themes'
 import { Backdrop } from '@/components/backdrop'
 
 import type { Theme } from '@/types/theme'
+import { useTranslations } from 'next-intl'
 
-export const themes: { [key in Theme]: [string, LucideIcon] } = {
-  dark: ['Dark', Moon],
-  light: ['Light', Sun],
-  system: ['System', Laptop]
+export const themes: {
+  [key in Theme]: [(t: (value: string) => string) => string, LucideIcon]
+} = {
+  dark: [(t) => t('dark'), Moon],
+  light: [(t) => t('light'), Sun],
+  system: [(t) => t('system'), Laptop]
 }
 
 type ThemeSwitcherProps = {
@@ -40,6 +43,8 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   useEffect((): void => {
     setMounted(true)
   }, [])
+
+  const t = useTranslations('common')
 
   return (
     <Listbox value={theme} onChange={(value: Theme): any => setTheme(value)}>
@@ -108,7 +113,7 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
                             )}
                           >
                             <Icon />
-                            <span>{label}</span>
+                            <span>{label(t)}</span>
                           </p>
                         )}
                       </ListboxOption>

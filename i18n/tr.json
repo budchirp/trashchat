@@ -27,7 +27,10 @@
     "error": "Hata",
     "update": "Güncelle",
     "not-found": "Sayfa bulunamadı",
-    "footer": "Can Kolay tarafından ❤️ ile yapıldı"
+    "footer": "Can Kolay tarafından ❤️ ile yapıldı",
+    "dark": "Koyu",
+    "light": "Açık",
+    "system": "Sistem"
   },
   "auth": {
     "not-found": "Kullanıcı bulunamadı",
