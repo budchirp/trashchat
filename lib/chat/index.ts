@@ -25,7 +25,7 @@ export class ChatManager {
     }
   }
 
-  public static getAll = async (token: string): Promise<Chat[]> => {
+  public static getAll = async (token: string): Promise<Chat[] | null> => {
     try {
       const response = await Fetch.get<{
         data: Chat[]
@@ -38,11 +38,11 @@ export class ChatManager {
         return json.data
       }
 
-      return []
+      return null
     } catch (error) {
       console.log(error)
 
-      return []
+      return null
     }
   }
 

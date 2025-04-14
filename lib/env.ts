@@ -1,6 +1,6 @@
 export const Env = {
   appName: 'Trash Chat',
-  appUrl: process.env.APP_URL || 'http://localhost:3000',
+  appUrl: process.env.APP_URL || '',
 
   enabledProviders: ['google', 'azure'],
 
