@@ -4,10 +4,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Heading } from '@/components/heading'
 import { routing } from '@/lib/i18n/routing'
-import { Fetch } from '@/lib/fetch'
-import { Env } from '@/lib/env'
 import { protectRoute } from '@/lib/auth/client/protect-route'
 import { cookies } from 'next/headers'
+import { UserAPIManager } from '@/lib/user'
 import { CONSTANTS } from '@/lib/constants'
 
 import type { Metadata } from 'next'
@@ -20,14 +19,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
 
   const token = protectRoute(await cookies(), locale) as string
 
-  const response = await Fetch.get<{
-    data: User
-  }>(`${Env.appUrl}/api/user`, {
-    authorization: `Bearer ${token}`
-  })
-
-  const json = await response.json()
-  const user = json.data
+  const user = (await UserAPIManager.get(token)) as User
 
   const credits = CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS
   const premium_credits = CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
@@ -36,6 +28,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
     namespace: 'usages',
     locale
   })
+
   return (
     <div className='flex size-full flex-col mt-4'>
       <Heading className='max-md:mt-0'>{t('text')}</Heading>

@@ -2,6 +2,9 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
 import { Env } from '@/lib/env'
+import { cookies } from 'next/headers'
+import { CookieMonster } from '@/lib/cookie-monster'
+import { CONSTANTS } from '@/lib/constants'
 import jwt from 'jsonwebtoken'
 
 export const POST = async (request: NextRequest) => {
@@ -36,6 +39,11 @@ export const POST = async (request: NextRequest) => {
       }
     )
 
+    const cookieMonster = new CookieMonster(await cookies())
+    cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {
+      expires: new Date(2147483647000)
+    })
+
     return NextResponse.json({
       message: 'Success',
       data: {
@@ -46,7 +54,26 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json(
       {
         message: (error as Error).message,
-        details: (error as Error).message,
+        data: {}
+      },
+      { status: 500 }
+    )
+  }
+}
+
+export const DELETE = async () => {
+  try {
+    const cookieMonster = new CookieMonster(await cookies())
+    cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
+
+    return NextResponse.json({
+      message: 'Success',
+      data: {}
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: (error as Error).message,
         data: {}
       },
       { status: 500 }

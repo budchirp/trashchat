@@ -6,13 +6,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { cookies } from 'next/headers'
 import { protectRoute } from '@/lib/auth/client/protect-route'
 import { notFound } from 'next/navigation'
-import { ChatManager } from '@/lib/chat'
+import { ChatAPIManager } from '@/lib/chat'
 
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale, id } = await params
@@ -20,7 +19,7 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
 
   const token = protectRoute(await cookies(), locale) as string
 
-  const chat = await ChatManager.get(token, id)
+  const chat = await ChatAPIManager.get(token, id)
   if (!chat) return notFound()
 
   return <ChatClientPage token={token} chat={chat} />
@@ -36,7 +35,7 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
 
   const token = protectRoute(await cookies(), locale) as string
 
-  const chat = await ChatManager.get(token, id)
+  const chat = await ChatAPIManager.get(token, id)
   if (!chat) notFound()
 
   return MetadataManager.generate(chat.title, t('description'))

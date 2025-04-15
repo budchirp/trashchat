@@ -45,7 +45,7 @@ export class CookieMonster {
 
   public set = (key: string, value: unknown, options?: cookie.SerializeOptions): void => {
     if (this.isServer && this.cookieStore) {
-      this.cookieStore.set(key, options as any)
+      this.cookieStore.set(key, value as any, options as any)
       return
     }
 

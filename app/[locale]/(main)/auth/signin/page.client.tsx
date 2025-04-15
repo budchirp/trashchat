@@ -11,11 +11,11 @@ import { useFormik } from 'formik'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { signInValidator } from '@/lib/validators/signin'
 import { Box } from '@/components/box'
-import { Fetch } from '@/lib/fetch'
 import { toast } from '@/lib/toast'
 import { useRouter } from '@/lib/i18n/routing'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { CONSTANTS } from '@/lib/constants'
+import { SessionAPIManager } from '@/lib/session'
 
 export const SignInClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations('auth')
@@ -33,24 +33,18 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const response = await Fetch.post<{
-        message: string
-        data: {
-          token: string
-        }
-      }>('/api/session', values)
-      const json = await response.json()
-      if (response.status >= 400) {
-        setError(json?.message || t_common('error'))
-      } else {
+      const [success, message, token] = await SessionAPIManager.new(values)
+      if (success) {
         toast(t_common('success'))
 
         const cookieMonster = new CookieMonster()
-        cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, json.data.token, {
+        cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {
           expires: new Date(2147483647000)
         })
 
         router.push('/chat')
+      } else {
+        setError(message || t_common('error'))
       }
 
       setSubmitting(false)

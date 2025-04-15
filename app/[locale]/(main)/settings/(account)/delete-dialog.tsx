@@ -8,7 +8,9 @@ import { CONSTANTS } from '@/lib/constants'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { Fetch } from '@/lib/fetch'
 import { useRouter } from '@/lib/i18n/routing'
+import { SessionAPIManager } from '@/lib/session'
 import { toast } from '@/lib/toast'
+import { UserAPIManager } from '@/lib/user'
 import { deleteAccountValidator } from '@/lib/validators/delete-account'
 import { useFormik } from 'formik'
 import { Lock } from 'lucide-react'
@@ -45,27 +47,11 @@ export const AccountDeleteDialog: React.FC<AccountDeleteDialogProps> = ({
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        const verify_response = await Fetch.post<{
-          message: string
-        }>('/api/user/verify', values, {
-          Authorization: `Bearer ${token}`
-        })
-
-        const verify_json = await verify_response.json()
-        if (verify_response.status < 400) {
-          setError(null)
-
-          const response = await Fetch.delete<{
-            message: string
-          }>('/api/user', {
-            Authorization: `Bearer ${token}`
-          })
-
-          const json = await response.json()
-          if (response.status < 400) {
-            setError(null)
-
-            cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
+        const [verify_success, verify_message] = await UserAPIManager.verify(token, values.password)
+        if (verify_success) {
+          const [success, message] = await UserAPIManager.delete(token)
+          if (success) {
+            await SessionAPIManager.delete()
 
             toast(t_common('success'))
 
@@ -73,10 +59,10 @@ export const AccountDeleteDialog: React.FC<AccountDeleteDialogProps> = ({
 
             router.push('/')
           } else {
-            setError(json?.message || t_common('error'))
+            setError(message || t_common('error'))
           }
         } else {
-          setError(verify_json?.message || t_common('error'))
+          setError(verify_message || t_common('error'))
         }
 
         setSubmitting(false)

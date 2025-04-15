@@ -15,11 +15,12 @@ import { CookieMonster } from '@/lib/cookie-monster'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
 import { useTranslations } from 'next-intl'
-import { Fetch } from '@/lib/fetch'
 import { Link } from '@/lib/i18n/routing'
 
 import type { User } from '@/types/user'
 import { usePathname, useRouter } from 'next/navigation'
+import { SessionAPIManager } from '@/lib/session'
+import { UserAPIManager } from '@/lib/user'
 
 export type ProfileMenuProps = {
   sidebar?: boolean
@@ -64,7 +65,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
     setMounted(true)
   }, [])
 
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
   const [user, setUser] = useState<User | null>(null)
 
   const t = useTranslations('auth')
@@ -77,21 +78,10 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
     if (token) {
       setLoading(true)
 
-      try {
-        const response = await Fetch.get<{
-          data: User
-        }>('/api/user', {
-          Authorization: `Bearer ${token}`
-        })
+      const user = await UserAPIManager.get(token)
+      if (user) setUser(user)
 
-        const json = await response.json()
-        if (response.status < 400) {
-          setUser(json.data)
-        }
-      } catch {
-      } finally {
-        setLoading(false)
-      }
+      setLoading(false)
     }
   }
 
@@ -110,22 +100,13 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
           window.scrollTo({ top: 0, behavior: 'smooth' })
         }, [pathname])
 
-        useEffect(() => {
-          if (open) fetchUser()
-        }, [open])
-
         return (
           <div>
             {mounted &&
               createPortal(<Backdrop open={open} />, document.querySelector('#main') as Element)}
 
             <MenuButton as={Fragment}>
-              <Button
-                loading={!mounted}
-                aria-label='Open theme switcher menu'
-                variant='round'
-                color='secondary'
-              >
+              <Button aria-label='Open theme switcher menu' variant='round' color='secondary'>
                 {Icon ? <Icon /> : null}
               </Button>
             </MenuButton>
@@ -168,12 +149,13 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                       <button
                         className='w-full'
                         type='button'
-                        onClick={() => {
-                          cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
+                        onClick={async () => {
+                          await SessionAPIManager.delete()
+
+                          toast(t_common('success'))
 
                           setUser(null)
                           close()
-                          toast(t_common('success'))
 
                           router.push('/')
                         }}

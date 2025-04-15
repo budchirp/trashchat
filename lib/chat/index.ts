@@ -1,9 +1,9 @@
-import { Env } from '../env'
-import { Fetch } from '../fetch'
+import { Fetch } from '@/lib/fetch'
+import { Env } from '@/lib/env'
 
 import type { Chat } from '@/types/chat'
 
-export class ChatManager {
+export class ChatAPIManager {
   public static get = async (token: string, id: string): Promise<Chat | null> => {
     try {
       const response = await Fetch.get<{
@@ -29,7 +29,7 @@ export class ChatManager {
     try {
       const response = await Fetch.get<{
         data: Chat[]
-      }>(`${Env.appUrl}/api/chats`, {
+      }>(`${Env.appUrl}/api/chat`, {
         authorization: `Bearer ${token}`
       })
 
@@ -69,7 +69,7 @@ export class ChatManager {
       const response = await Fetch.post<{
         data: Chat
       }>(
-        `${Env.appUrl}/api/chats`,
+        `${Env.appUrl}/api/chat`,
         {},
         {
           Authorization: `Bearer ${token}`

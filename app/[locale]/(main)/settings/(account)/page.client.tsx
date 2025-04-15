@@ -17,11 +17,15 @@ import { useEffect, useState } from 'react'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 
 import type { User } from '@/types/user'
+import { UserAPIManager } from '@/lib/user'
 
-export const AccountClientPage: React.FC = (): React.ReactNode => {
-  const [loading, setLoading] = useState<boolean>(true)
-  const [user, setUser] = useState<User | null>(null)
+type AccountClientPageProps = {
+  user: User
+}
 
+export const AccountClientPage: React.FC<AccountClientPageProps> = ({
+  user
+}: AccountClientPageProps): React.ReactNode => {
   const [error, setError] = useState<string | null>(null)
 
   const t = useTranslations('auth')
@@ -29,86 +33,34 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
   const t_common = useTranslations('common')
 
   const cookieMonster = new CookieMonster()
-
-  const fetchUser = async () => {
-    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-    if (token) {
-      setLoading(true)
-
-      try {
-        const response = await Fetch.get<{
-          data: User
-          message: string
-        }>('/api/user', {
-          Authorization: `Bearer ${token}`
-        })
-
-        const json = await response.json()
-        if (response.status < 400) {
-          setError(null)
-          setUser(json.data)
-        } else {
-          setError(json.message)
-        }
-      } catch {
-        setError(t_common('error'))
-      }
-    }
-
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    fetchUser()
-  }, [])
-
   const router = useRouter()
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      username: '',
-      email: ''
+      name: user.name,
+      username: user.username,
+      email: user.email
     },
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        const response = await Fetch.patch<{
-          message: string
-        }>('/api/user', values, {
-          Authorization: `Bearer ${token}`
-        })
-
-        const json = await response.json()
-        if (response.status < 400) {
-          setError(null)
-
+        const [success, message] = await UserAPIManager.update(token, values as any)
+        if (success) {
           toast(t_common('success'))
-
-          router.push('/settings')
+          router.refresh()
         } else {
-          setError(json?.message || t_common('error'))
+          setError(message || t_common('error'))
         }
-
-        setSubmitting(false)
       }
+
+      setSubmitting(false)
     },
     validationSchema: toFormikValidationSchema(updateAccountValidator)
   })
 
-  useEffect(() => {
-    if (user) {
-      formik.setValues({
-        name: user.name,
-        username: user.username,
-        email: user.email
-      })
-    }
-  }, [user])
-
-  const [showDialog, setShowDialog] = useState<boolean>(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
 
   return (
     <>
@@ -177,16 +129,16 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
         </div>
 
         <div>
-          <Button loading={formik.isSubmitting || loading} type='submit'>
+          <Button loading={formik.isSubmitting} type='submit'>
             {t_common('update')}
           </Button>
         </div>
       </form>
 
-      <AccountDeleteDialog open={showDialog} onClose={() => setShowDialog(false)} />
+      <AccountDeleteDialog open={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} />
 
       <div className='border-t-4 border-border-hover mt-4 pt-4'>
-        <Button onClick={() => setShowDialog(true)}>{t_account('delete')}</Button>
+        <Button onClick={() => setShowDeleteDialog(true)}>{t_account('delete')}</Button>
       </div>
     </>
   )

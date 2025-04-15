@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { verifyToken } from '@/lib/auth/server/verify-token'
 import { prisma } from '@/lib/prisma'
-import type { Chat } from '@/types/chat'
 
 export const DELETE = async (
   request: NextRequest,
@@ -47,7 +46,6 @@ export const DELETE = async (
     return NextResponse.json(
       {
         message: (error as Error).message,
-        details: (error as Error).message,
         data: {}
       },
       { status: 500 }
@@ -142,7 +140,6 @@ export const GET = async (
     return NextResponse.json(
       {
         message: (error as Error).message,
-        details: (error as Error).message,
         data: {}
       },
       { status: 500 }

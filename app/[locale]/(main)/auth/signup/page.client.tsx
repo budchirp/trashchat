@@ -11,9 +11,9 @@ import { useFormik } from 'formik'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { signUpValidator } from '@/lib/validators/signup'
 import { Box } from '@/components/box'
-import { Fetch } from '@/lib/fetch'
 import { toast } from '@/lib/toast'
 import { useRouter } from '@/lib/i18n/routing'
+import { UserAPIManager } from '@/lib/user'
 
 export const SignUpClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations('auth')
@@ -33,17 +33,13 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const response = await Fetch.post<{
-        message: string
-        data: any
-      }>('/api/user', values)
-      const json = await response.json()
-      if (response.status >= 400) {
-        setError(json?.message || t_common('error'))
-      } else {
+      const [success, message] = await UserAPIManager.new(values)
+      if (success) {
         toast(t_common('success'))
 
         router.push('/auth/signin')
+      } else {
+        setError(message || t_common('error'))
       }
 
       setSubmitting(false)

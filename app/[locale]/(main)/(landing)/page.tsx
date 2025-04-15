@@ -1,16 +1,16 @@
 import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { protectRoute } from '@/lib/auth/client/protect-route'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Link, redirect } from '@/lib/i18n/routing'
 import { routing } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
 import { Logo } from '@/components/logo'
+import { cookies } from 'next/headers'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
-import { protectRoute } from '@/lib/auth/client/protect-route'
-import { cookies } from 'next/headers'
 
 const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
@@ -21,8 +21,7 @@ const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
     locale
   })
 
-  const token = protectRoute(await cookies(), locale, false) as string
-  if (token) {
+  if (protectRoute(await cookies(), locale, false)) {
     redirect({
       href: '/chat',
       locale

@@ -161,7 +161,6 @@ export const POST = async (
     return NextResponse.json(
       {
         message: (error as any).message || 'Error while generating content. Please try again',
-        details: (error as Error).message,
         data: {}
       },
       { status: 500 }

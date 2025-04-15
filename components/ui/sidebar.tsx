@@ -11,7 +11,7 @@ import { X, Plus, Trash } from 'lucide-react'
 import { Button } from '@/components/button'
 import { cn } from '@/lib/cn'
 import { CookieMonster } from '@/lib/cookie-monster'
-import { ChatManager } from '@/lib/chat'
+import { ChatAPIManager } from '@/lib/chat'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
 import { usePathname } from 'next/navigation'
@@ -107,7 +107,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const fetchChats = async () => {
     const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
-      const chats = await ChatManager.getAll(token)
+      const chats = await ChatAPIManager.getAll(token)
       if (chats) setChats(chats)
 
       setLoading(false)
@@ -117,14 +117,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const deleteChat = async (id: string, selected: boolean) => {
     const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
-      const deleted = await ChatManager.delete(token, id)
+      const deleted = await ChatAPIManager.delete(token, id)
       if (!deleted) {
         toast(t_common('error'))
         fetchChats()
       }
 
       if (selected) {
-        const chat = await ChatManager.get(token, '-1')
+        const chat = await ChatAPIManager.get(token, '-1')
         if (chat) {
           router.push(`/chat/${chat.id}`)
         } else {
@@ -137,7 +137,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const newChat = async () => {
     const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
-      const created = await ChatManager.new(token)
+      const created = await ChatAPIManager.new(token)
       if (created) {
         router.push(`/chat/${created.id}`)
         fetchChats()

@@ -6,12 +6,12 @@ import { ThemeProvider } from '@/providers/theme'
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
 import { ToastProvider } from '@/providers/toast'
+import { Container } from '@/components/container'
 import { Env } from '@/lib/env'
 import Script from 'next/script'
 
 import type { Metadata } from 'next'
 import type { DynamicLayoutProps } from '@/types/layout'
-import { Container } from '@/components/container'
 
 export const generateMetadata = async ({ params }: DynamicLayoutProps): Promise<Metadata> => {
   const { locale } = await params
@@ -20,9 +20,10 @@ export const generateMetadata = async ({ params }: DynamicLayoutProps): Promise<
     locale,
     namespace: 'landing'
   })
+
   return {
     description: t('description'),
-    keywords: [''],
+    keywords: ['ai', 'chatapp', 'ai chat', 'trashchat', 'trash chat'],
     title: {
       default: t('text'),
       template: `%s - ${Env.appName}`
@@ -38,7 +39,7 @@ export const generateMetadata = async ({ params }: DynamicLayoutProps): Promise<
     },
     openGraph: {
       siteName: Env.appName,
-      locale: 'en_US',
+      locale: locale,
       type: 'website',
       description: t('description'),
       url: Env.appUrl,

@@ -38,7 +38,6 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json(
       {
         message: (error as Error).message,
-        details: (error as Error).message,
         data: {}
       },
       { status: 500 }
@@ -77,7 +76,6 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json(
       {
         message: (error as Error).message,
-        details: (error as Error).message,
         data: {}
       },
       { status: 500 }

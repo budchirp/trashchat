@@ -8,20 +8,31 @@ import { routing } from '@/lib/i18n/routing'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
+import { protectRoute } from '@/lib/auth/client/protect-route'
+import { cookies } from 'next/headers'
+import type { User } from '@/types/user'
+import { UserAPIManager } from '@/lib/user'
 
 const CustomizationPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
   setRequestLocale(locale)
 
+  const token = protectRoute(await cookies(), locale) as string
+
+  const user = (await UserAPIManager.get(token)) as User
+
   const t = await getTranslations({
     namespace: 'customization',
     locale
   })
+
   return (
     <div className='flex size-full flex-col mt-4'>
       <Heading className='max-md:mt-0'>{t('text')}</Heading>
 
-      <CustomizationClientPage />
+      <div>
+        <CustomizationClientPage user={user} />
+      </div>
     </div>
   )
 }

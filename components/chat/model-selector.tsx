@@ -36,9 +36,9 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   chatFormRef
 }: ModelSelectorProps): React.ReactNode => {
   const [height, setHeight] = useState<number>(0)
-  const changeHeight = () => {
+  const updateHeight = () => {
     // @ts-ignore
-    if (chatFormRef && chatFormRef.current) {
+    if (chatFormRef.current) {
       // @ts-ignore
       setHeight(chatFormRef.current.clientHeight)
     }
@@ -48,11 +48,11 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   useEffect(() => {
     setMounted(true)
 
-    changeHeight()
+    updateHeight()
   }, [])
 
   useEffect(() => {
-    changeHeight()
+    updateHeight()
   }, [input])
 
   return (
@@ -61,7 +61,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
         const Icon: LucideIcon | null = mounted ? EllipsisVertical : null
 
         useEffect(() => {
-          changeHeight()
+          updateHeight()
         }, [open])
 
         return (
@@ -78,12 +78,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
               )}
 
             <ListboxButton as={Fragment}>
-              <Button
-                loading={!mounted}
-                aria-label='Open model selector menu'
-                variant='round'
-                color='secondary'
-              >
+              <Button aria-label='Open model selector menu' variant='round' color='secondary'>
                 {Icon ? <Icon /> : null}
               </Button>
             </ListboxButton>

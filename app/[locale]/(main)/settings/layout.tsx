@@ -2,29 +2,24 @@ import type React from 'react'
 
 import { Container } from '@/components/container'
 
-import type { DynamicLayoutProps } from '@/types/layout'
+import { SettingsSection } from '@/app/[locale]/(main)/settings/layout.client'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { protectRoute } from '@/lib/auth/client/protect-route'
+import { UserAPIManager } from '@/lib/user'
 import { cookies } from 'next/headers'
-import { Env } from '@/lib/env'
-import { Fetch } from '@/lib/fetch'
 import { Crown } from 'lucide-react'
 import Image from 'next/image'
 
+import type { DynamicLayoutProps } from '@/types/layout'
 import type { User } from '@/types/user'
-import { SettingsSection } from './layout.client'
 
 const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: DynamicLayoutProps) => {
   const { locale } = await params
+  setRequestLocale(locale)
 
   const token = protectRoute(await cookies(), locale) as string
 
-  const response = await Fetch.get<{ data: User }>(`${Env.appUrl}/api/user`, {
-    authorization: `Bearer ${token}`
-  })
-
-  const json = await response.json()
-  const user = json.data
+  const user = (await UserAPIManager.get(token)) as User
 
   const t = await getTranslations({
     namespace: 'account',

@@ -5,7 +5,7 @@ import { MetadataManager } from '@/lib/metadata-manager'
 import { protectRoute } from '@/lib/auth/client/protect-route'
 import { ChatClientPage } from '../[id]/page.client'
 import { cookies } from 'next/headers'
-import { ChatManager } from '@/lib/chat'
+import { ChatAPIManager } from '@/lib/chat'
 import { routing, redirect } from '@/lib/i18n/routing'
 
 import type { Metadata } from 'next'
@@ -17,7 +17,7 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
 
   const token = protectRoute(await cookies(), locale) as string
 
-  const chat = await ChatManager.get(token, '-1')
+  const chat = await ChatAPIManager.get(token, '-1')
   // const chat = await ChatManager.new(token)
   if (chat) {
     return <ChatClientPage token={token} chat={chat} />

@@ -16,6 +16,7 @@ const PrivacyPolicyPage: React.FC<DynamicPageProps> = async ({ params }: Dynamic
     namespace: 'legal.privacy-policy',
     locale
   })
+
   return (
     <div className='flex size-full flex-col mt-4'>
       <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
