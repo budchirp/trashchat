@@ -101,6 +101,7 @@ html {
 }
 
 *::-webkit-scrollbar {
+  display: none !important;
   position: absolute !important;
 }
 

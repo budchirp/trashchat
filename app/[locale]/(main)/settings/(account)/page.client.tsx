@@ -1,23 +1,25 @@
 'use client'
 
-import { Box } from '@/components/box'
+import type React from 'react'
+import { useEffect, useState } from 'react'
+
+import { AccountDeleteDialog } from '@/app/[locale]/(main)/settings/(account)/delete-dialog'
+import { updateAccountValidator } from '@/lib/validators/update-account'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
+import { CookieMonster } from '@/lib/cookie-monster'
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { CONSTANTS } from '@/lib/constants'
-import { CookieMonster } from '@/lib/cookie-monster'
-import { Fetch } from '@/lib/fetch'
+import { UserAPIManager } from '@/lib/api/user'
+import { SessionAPIManager } from '@/lib/api/session'
 import { useRouter } from '@/lib/i18n/routing'
-import { AccountDeleteDialog } from '@/app/[locale]/(main)/settings/(account)/delete-dialog'
 import { toast } from '@/lib/toast'
-import { updateAccountValidator } from '@/lib/validators/update-account'
 import { useFormik } from 'formik'
 import { Mail, UserIcon } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useState } from 'react'
-import { toFormikValidationSchema } from 'zod-formik-adapter'
+import { Box } from '@/components/box'
 
 import type { User } from '@/types/user'
-import { UserAPIManager } from '@/lib/user'
 
 type AccountClientPageProps = {
   user: User
@@ -137,8 +139,21 @@ export const AccountClientPage: React.FC<AccountClientPageProps> = ({
 
       <AccountDeleteDialog open={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} />
 
-      <div className='border-t-4 border-border-hover mt-4 pt-4'>
+      <div className='border-t-4 border-border-hover mt-4 pt-4 flex gap-2'>
         <Button onClick={() => setShowDeleteDialog(true)}>{t_account('delete')}</Button>
+
+        <Button
+          color='secondary'
+          onClick={async () => {
+            await SessionAPIManager.delete()
+
+            toast(t_common('success'))
+
+            router.push('/')
+          }}
+        >
+          {t('logout')}
+        </Button>
       </div>
     </>
   )

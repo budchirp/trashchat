@@ -1,10 +1,10 @@
 import type React from 'react'
 
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { VerticalPage } from '@/components/vertical-page'
 import { MetadataManager } from '@/lib/metadata-manager'
-import { routing } from '@/lib/i18n/routing'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { Container } from '@/components/container'
+import { routing } from '@/lib/i18n/routing'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'

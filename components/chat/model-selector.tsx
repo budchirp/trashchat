@@ -1,7 +1,7 @@
 'use client'
 
 import type React from 'react'
-import { Fragment, useEffect, useState, type Ref } from 'react'
+import { useEffect, useState, type Ref } from 'react'
 import { createPortal } from 'react-dom'
 
 import { Box } from '@/components/box'
@@ -13,74 +13,44 @@ import {
   ListboxOptions,
   Transition
 } from '@headlessui/react'
-import { Crown, DollarSign, EllipsisVertical, type LucideIcon } from 'lucide-react'
+import { ChevronDown, Crown, DollarSign } from 'lucide-react'
 import { Backdrop } from '@/components/backdrop'
-import { Button } from '@/components/button'
 import { Container } from '@/components/container'
 
 import { AIModels, type AIModelID } from '@/lib/ai/models'
 
 export type ModelSelectorProps = {
-  input: string
   model: AIModelID
+  height: number
   onChange: (model: AIModelID) => void
-  chatFormRef: Ref<HTMLDivElement>
 }
 
 const models = AIModels.get(false)
 
 export const ModelSelector: React.FC<ModelSelectorProps> = ({
-  input,
   model,
-  onChange,
-  chatFormRef
+  height,
+  onChange
 }: ModelSelectorProps): React.ReactNode => {
-  const [height, setHeight] = useState<number>(0)
-  const updateHeight = () => {
-    // @ts-ignore
-    if (chatFormRef.current) {
-      // @ts-ignore
-      setHeight(chatFormRef.current.clientHeight)
-    }
-  }
-
   const [mounted, setMounted] = useState<boolean>(false)
   useEffect(() => {
     setMounted(true)
-
-    updateHeight()
   }, [])
-
-  useEffect(() => {
-    updateHeight()
-  }, [input])
 
   return (
     <Listbox value={model} onChange={onChange}>
       {({ open }) => {
-        const Icon: LucideIcon | null = mounted ? EllipsisVertical : null
-
-        useEffect(() => {
-          updateHeight()
-        }, [open])
-
         return (
           <div>
             {mounted &&
-              createPortal(
-                <Backdrop
-                  style={{
-                    height: `calc(100vh - 4rem - 1px - ${height}px)`
-                  }}
-                  open={open}
-                />,
-                document.querySelector('#main') as Element
-              )}
+              createPortal(<Backdrop open={open} />, document.querySelector('#main') as Element)}
 
-            <ListboxButton as={Fragment}>
-              <Button aria-label='Open model selector menu' variant='round' color='secondary'>
-                {Icon ? <Icon /> : null}
-              </Button>
+            <ListboxButton className='cursor-pointer' aria-label='Open model selector menu'>
+              <span className='px-3 py-1 transition-all duration-150 rounded-lg bg-transparent hover:bg-background-secondary flex items-center gap-1'>
+                {models[model].name}
+
+                <ChevronDown />
+              </span>
             </ListboxButton>
 
             {mounted &&

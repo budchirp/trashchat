@@ -6,7 +6,7 @@ import { Heading } from '@/components/heading'
 import { routing } from '@/lib/i18n/routing'
 import { protectRoute } from '@/lib/auth/client/protect-route'
 import { cookies } from 'next/headers'
-import { UserAPIManager } from '@/lib/user'
+import { UserAPIManager } from '@/lib/api/user'
 import { CONSTANTS } from '@/lib/constants'
 
 import type { Metadata } from 'next'
@@ -29,9 +29,19 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
     locale
   })
 
+  const resetDate = new Date(user.firstUsage || Date.now())
+  resetDate.setDate(resetDate.getDate() + 10)
+
   return (
     <div className='flex size-full flex-col mt-4'>
-      <Heading className='max-md:mt-0'>{t('text')}</Heading>
+      <Heading
+        description={
+          user.firstUsage && <p>{t('reset', { date: resetDate.toLocaleDateString() })}</p>
+        }
+        className='max-md:mt-0'
+      >
+        {t('text')}
+      </Heading>
 
       <div className='grid gap-4'>
         <div className='grid gap-1'>

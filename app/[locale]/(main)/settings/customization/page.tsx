@@ -2,16 +2,16 @@ import type React from 'react'
 
 import { CustomizationClientPage } from '@/app/[locale]/(main)/settings/customization/page.client'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { protectRoute } from '@/lib/auth/client/protect-route'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Heading } from '@/components/heading'
 import { routing } from '@/lib/i18n/routing'
+import { UserAPIManager } from '@/lib/api/user'
+import { cookies } from 'next/headers'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
-import { protectRoute } from '@/lib/auth/client/protect-route'
-import { cookies } from 'next/headers'
 import type { User } from '@/types/user'
-import { UserAPIManager } from '@/lib/user'
 
 const CustomizationPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params

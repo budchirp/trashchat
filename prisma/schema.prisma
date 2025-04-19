@@ -8,45 +8,80 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @unique @default(autoincrement())
-  name            String
-  username        String   @unique
-  email           String   @unique
-  password        String
-  profilePicture  String?
-  plus            Boolean  @default(false)
-  credits         Int      @default(50)
-  premiumCredits  Int      @default(0)
-  systemPrompt    String   @default("")
-  shareInfoWithAI Boolean  @default(true)
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  chats           Chat[]
+  id Int @id @unique @default(autoincrement())
+
+  name     String
+  username String @unique
+
+  email String @unique
+
+  password String
+
+  profilePicture String?
+
+  plus           Boolean @default(false)
+  credits        Int     @default(50)
+  premiumCredits Int     @default(0)
+
+  systemPrompt    String  @default("")
+  shareInfoWithAI Boolean @default(true)
+
+  firstUsage DateTime?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  chats Chat[]
 
   @@map("users")
 }
 
 model Chat {
-  id        String    @id @unique @default(uuid())
-  title     String
-  model     String?
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages  Message[]
+  id String @id @unique @default(uuid())
+
+  title String
+
+  model String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  messages Message[]
 
   @@map("chats")
 }
 
 model Message {
-  id        String   @id @unique @default(uuid())
-  role      String
-  content   String
+  id String @id @unique @default(uuid())
+
+  role String
+
+  content String
+
+  files File[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  chatId    String
-  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   @@map("messages")
+}
+
+model File {
+  id Int @id @unique @default(autoincrement())
+
+  name String
+  url  String
+
+  contentType String
+
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("files")
 }

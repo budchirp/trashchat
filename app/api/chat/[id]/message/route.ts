@@ -1,10 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { appendClientMessage, generateText, smoothStream, streamText } from 'ai'
-import { verifyToken } from '@/lib/auth/server/verify-token'
+import { generateText, smoothStream, streamText, type Message } from 'ai'
+import { authenticate } from '@/lib/auth/server/authenticate'
 import { AIModels, type AIModelID } from '@/lib/ai/models'
 import { constructSystemPrompt } from '@/lib/ai/prompt'
 import { prisma } from '@/lib/prisma'
 import { getTranslations } from 'next-intl/server'
+import { CONSTANTS } from '@/lib/constants'
+import type { File } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -21,11 +23,12 @@ export const POST = async (
 ) => {
   try {
     const locale = request.headers.get('accept-language') || 'en'
+
     const t = await getTranslations({ locale, namespace: 'chat' })
     const t_common = await getTranslations({ locale, namespace: 'common' })
     const t_auth = await getTranslations({ locale, namespace: 'auth' })
 
-    const [isTokenValid, payload] = await verifyToken(request.headers)
+    const [isTokenValid, payload] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error(t_common('invalid-token'))
     }
@@ -40,9 +43,42 @@ export const POST = async (
       throw new Error(t_auth('not-found'))
     }
 
+    if (!user.firstUsage) {
+      await prisma.user.update({
+        where: {
+          id: user.id
+        },
+        data: {
+          firstUsage: new Date(Date.now())
+        }
+      })
+    } else {
+      if (new Date(user.firstUsage).getTime() < new Date(Date.now()).getTime()) {
+        await prisma.user.update({
+          where: {
+            id: user.id
+          },
+          data: {
+            firstUsage: new Date(Date.now()),
+
+            credits: CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS,
+            premiumCredits: CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+          }
+        })
+      }
+    }
+
     const { id } = await params
 
-    const { message, model: modelName } = await request.json()
+    const {
+      messages,
+      model: modelName,
+      files
+    }: {
+      messages: Message[]
+      model: AIModelID
+      files: File[]
+    } = await request.json()
 
     const chat = await prisma.chat.findUnique({
       where: {
@@ -59,7 +95,8 @@ export const POST = async (
       throw new Error(t('not-found'))
     }
 
-    await prisma.message.create({
+    const message = messages[messages.length - 1]
+    const { id: messageId } = await prisma.message.create({
       data: {
         role: message.role,
         content: message.content,
@@ -68,10 +105,20 @@ export const POST = async (
       }
     })
 
-    const messages = appendClientMessage({
-      messages: chat.messages as any,
-      message
-    })
+    await Promise.all(
+      files.map(async (file) => {
+        await prisma.file.create({
+          data: {
+            name: file.name,
+            url: file.url,
+
+            contentType: file.contentType,
+
+            messageId
+          }
+        })
+      })
+    )
 
     const models = AIModels.get()
 
@@ -95,7 +142,7 @@ export const POST = async (
       })
     }
 
-    const model = modelName ? models[modelName as AIModelID] : models['gemini-2.0-flash']
+    const model = modelName ? models[modelName] : models['gemini-2.0-flash']
     if (model.plus && !user.plus) {
       throw new Error(t('plus-error'))
     }
@@ -123,7 +170,33 @@ export const POST = async (
 
     const result = streamText({
       model: model.provider,
-      messages,
+      messages: [
+        ...(chat.messages as any),
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: message.content
+            },
+            ...files.map((file) => {
+              if (file.contentType.startsWith('image/')) {
+                return {
+                  type: 'image',
+                  image: file.url
+                }
+              }
+
+              return {
+                type: 'file',
+                mimeType: file.contentType,
+                data: file.url,
+                filename: file.name
+              }
+            })
+          ]
+        }
+      ],
       experimental_transform: smoothStream(),
       system: constructSystemPrompt(model, user),
       onFinish: async ({ response }) => {
@@ -151,6 +224,8 @@ export const POST = async (
     })
 
     return result.toDataStreamResponse({
+      sendReasoning: true,
+      sendSources: true,
       getErrorMessage: (error: unknown) => {
         console.log(error)
 

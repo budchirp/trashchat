@@ -1,23 +1,23 @@
 'use client'
 
-import { Box } from '@/components/box'
+import type React from 'react'
+import { useState } from 'react'
+
+import { deleteAccountValidator } from '@/lib/validators/delete-account'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
+import { SessionAPIManager } from '@/lib/api/session'
+import { CookieMonster } from '@/lib/cookie-monster'
 import { Button } from '@/components/button'
 import { Dialog } from '@/components/dialog'
 import { Input } from '@/components/input'
 import { CONSTANTS } from '@/lib/constants'
-import { CookieMonster } from '@/lib/cookie-monster'
-import { Fetch } from '@/lib/fetch'
+import { useTranslations } from 'next-intl'
 import { useRouter } from '@/lib/i18n/routing'
-import { SessionAPIManager } from '@/lib/session'
+import { UserAPIManager } from '@/lib/api/user'
+import { Box } from '@/components/box'
 import { toast } from '@/lib/toast'
-import { UserAPIManager } from '@/lib/user'
-import { deleteAccountValidator } from '@/lib/validators/delete-account'
 import { useFormik } from 'formik'
 import { Lock } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import type React from 'react'
-import { useState } from 'react'
-import { toFormikValidationSchema } from 'zod-formik-adapter'
 
 type AccountDeleteDialogProps = {
   open: boolean

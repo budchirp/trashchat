@@ -69,7 +69,8 @@
     "text": "Kullanımlar",
     "description": "Kullanımlar",
     "credits": "Kredi",
-    "premium-credits": "Premium kredi"
+    "premium-credits": "Premium kredi",
+    "reset": "Kullanım haklarınız {date} tarihinde yenilenecektir"
   },
   "legal": {
     "privacy-policy": {

@@ -69,7 +69,8 @@
     "text": "Usages",
     "description": "Usages",
     "credits": "Credits",
-    "premium-credits": "Premium credits"
+    "premium-credits": "Premium credits",
+    "reset": "Your usages will reset on {date}"
   },
   "legal": {
     "privacy-policy": {

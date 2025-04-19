@@ -3,17 +3,17 @@
 import type React from 'react'
 import { useState } from 'react'
 
-import { Input } from '@/components/input'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
+import { signUpValidator } from '@/lib/validators/signup'
+import { UserAPIManager } from '@/lib/api/user'
 import { Lock, Mail, User } from 'lucide-react'
+import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
 import { useFormik } from 'formik'
-import { toFormikValidationSchema } from 'zod-formik-adapter'
-import { signUpValidator } from '@/lib/validators/signup'
 import { Box } from '@/components/box'
 import { toast } from '@/lib/toast'
 import { useRouter } from '@/lib/i18n/routing'
-import { UserAPIManager } from '@/lib/user'
 
 export const SignUpClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations('auth')
@@ -22,7 +22,6 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
   const [error, setError] = useState<string | null>(null)
 
   const router = useRouter()
-
   const formik = useFormik({
     initialValues: {
       name: '',

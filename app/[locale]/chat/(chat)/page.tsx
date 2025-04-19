@@ -1,12 +1,12 @@
 import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { ChatClientPage } from '@/app/[locale]/chat/[id]/page.client'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { protectRoute } from '@/lib/auth/client/protect-route'
-import { ChatClientPage } from '../[id]/page.client'
-import { cookies } from 'next/headers'
-import { ChatAPIManager } from '@/lib/chat'
 import { routing, redirect } from '@/lib/i18n/routing'
+import { ChatAPIManager } from '@/lib/api/chat'
+import { cookies } from 'next/headers'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'

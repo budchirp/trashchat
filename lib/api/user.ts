@@ -21,7 +21,7 @@ export class UserAPIManager {
         }
       )
 
-      if (response.status < 400) return [true, null]
+      if (response.ok) return [true, null]
 
       const json = await response.json()
       return [false, json.message]
@@ -38,7 +38,7 @@ export class UserAPIManager {
         Authorization: `Bearer ${token}`
       })
 
-      if (response.status < 400) return [true, null]
+      if (response.ok) return [true, null]
 
       const json = await response.json()
       return [false, json.message]
@@ -55,7 +55,7 @@ export class UserAPIManager {
         Authorization: `Bearer ${token}`
       })
 
-      if (response.status < 400) {
+      if (response.ok) {
         const json = await response.json()
         return json.data
       }
@@ -74,7 +74,7 @@ export class UserAPIManager {
         Authorization: `Bearer ${token}`
       })
 
-      if (response.status < 400) return [true, null]
+      if (response.ok) return [true, null]
 
       const json = await response.json()
       return [false, json.message]
@@ -94,7 +94,7 @@ export class UserAPIManager {
         message: string
       }>(`${Env.appUrl}/api/user`, user)
 
-      if (response.status < 400) {
+      if (response.ok) {
         return [true, null]
       }
 

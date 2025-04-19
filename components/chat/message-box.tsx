@@ -3,21 +3,24 @@ import type { Ref } from 'react'
 
 import { Box } from '@/components/box'
 import { useTranslations } from 'next-intl'
-
-import type { Message } from 'ai'
 import { cn } from '@/lib/cn'
+import { FileIcon } from 'lucide-react'
 
-export type MessageBoxProps = {
+import type { UIMessage } from 'ai'
+import type { File } from '@prisma/client'
+
+type MessageBoxProps = {
   className?: string
-  message: React.ReactNode
-  role: Message['role']
+  message: Partial<UIMessage> & {
+    content: any
+    files?: File[]
+  }
   ref?: Ref<HTMLDivElement>
 }
 
 export const MessageBox: React.FC<MessageBoxProps> = ({
   className,
   message,
-  role,
   ref
 }: MessageBoxProps): React.ReactNode => {
   const t = useTranslations('chat')
@@ -32,12 +35,36 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
       )}
       ref={ref}
     >
+      {message.files && message.files.length > 0 && (
+        <div className='flex gap-2 overflow-x-scroll'>
+          {message.files.map((file, index) => {
+            return (
+              <Box
+                className='size-16 relative flex items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
+                key={index}
+                padding='none'
+              >
+                {file.contentType.startsWith('image/') ? (
+                  <img
+                    className='aspect-square size-max rounded-lg object-cover'
+                    aria-label={file.name}
+                    src={file.url}
+                  />
+                ) : (
+                  <FileIcon size={16} />
+                )}
+              </Box>
+            )
+          })}
+        </div>
+      )}
+
       <h2 className='font-bold select-none text-text-tertiary'>
-        {role === 'user' ? t('you') : role === 'assistant' ? t('ai') : t('system')}
+        {message.role === 'user' ? t('you') : message.role === 'assistant' ? t('ai') : t('system')}
       </h2>
 
       <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
-        {message}
+        {message.content}
       </article>
     </Box>
   )

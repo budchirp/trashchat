@@ -4,23 +4,23 @@ import type React from 'react'
 import { Fragment, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import { LoaderCircle, LogIn, LogOut, type LucideIcon, UserIcon, UserPlus } from 'lucide-react'
+import { Menu, Transition, MenuButton, MenuItems, MenuItem } from '@headlessui/react'
 import { Container } from '@/components/container'
 import { Button } from '@/components/button'
 import { Box } from '@/components/box'
-import { cn } from '@/lib/cn'
-import { LoaderCircle, LogIn, LogOut, type LucideIcon, UserIcon, UserPlus } from 'lucide-react'
-import { Menu, Transition, MenuButton, MenuItems, MenuItem } from '@headlessui/react'
 import { Backdrop } from '@/components/backdrop'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/routing'
+import { usePathname, useRouter } from 'next/navigation'
+import { SessionAPIManager } from '@/lib/api/session'
+import { UserAPIManager } from '@/lib/api/user'
+import { cn } from '@/lib/cn'
 
 import type { User } from '@/types/user'
-import { usePathname, useRouter } from 'next/navigation'
-import { SessionAPIManager } from '@/lib/session'
-import { UserAPIManager } from '@/lib/user'
 
 export type ProfileMenuProps = {
   sidebar?: boolean
@@ -88,6 +88,10 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   useEffect(() => {
     fetchUser()
   }, [])
+
+  useEffect(() => {
+    fetchUser()
+  }, [pathname])
 
   return (
     <Menu>

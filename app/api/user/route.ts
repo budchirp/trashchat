@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { verifyToken } from '@/lib/auth/server/verify-token'
+import { authenticate } from '@/lib/auth/server/authenticate'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
 
@@ -7,7 +7,7 @@ import type { User } from '@/types/user'
 
 export const GET = async (request: NextRequest) => {
   try {
-    const [isTokenValid, payload] = await verifyToken(request.headers)
+    const [isTokenValid, payload] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
     }
@@ -44,7 +44,7 @@ export const GET = async (request: NextRequest) => {
 
 export const DELETE = async (request: NextRequest) => {
   try {
-    const [isTokenValid, payload] = await verifyToken(request.headers)
+    const [isTokenValid, payload] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
     }
@@ -125,7 +125,7 @@ export const POST = async (request: NextRequest) => {
 
 export const PATCH = async (request: NextRequest) => {
   try {
-    const [isTokenValid, payload] = await verifyToken(request.headers)
+    const [isTokenValid, payload] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
     }

@@ -16,11 +16,11 @@ import {
   ListboxOptions,
   Transition
 } from '@headlessui/react'
+import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { Backdrop } from '@/components/backdrop'
 
 import type { Theme } from '@/types/theme'
-import { useTranslations } from 'next-intl'
 
 export const themes: {
   [key in Theme]: [(t: (value: string) => string) => string, LucideIcon]
@@ -93,6 +93,7 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
                     return (
                       <ListboxOption
                         key={theme}
+                        aria-label={label(t)}
                         className={({ selected }) =>
                           cn(
                             'border-border flex h-min w-full cursor-pointer items-center border-b px-4 py-2 transition duration-300 last:border-none',

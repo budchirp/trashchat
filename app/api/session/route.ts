@@ -35,13 +35,13 @@ export const POST = async (request: NextRequest) => {
       },
       Env.appSecret,
       {
-        expiresIn: '14d'
+        expiresIn: '30d'
       }
     )
 
     const cookieMonster = new CookieMonster(await cookies())
     cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {
-      expires: new Date(2147483647000)
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     })
 
     return NextResponse.json({

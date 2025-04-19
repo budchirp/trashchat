@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { verifyToken } from '@/lib/auth/server/verify-token'
+import { authenticate } from '@/lib/auth/server/authenticate'
 import { prisma } from '@/lib/prisma'
 
 export const DELETE = async (
@@ -13,7 +13,7 @@ export const DELETE = async (
   }
 ) => {
   try {
-    const [isTokenValid, payload] = await verifyToken(request.headers)
+    const [isTokenValid, payload] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
     }
@@ -64,7 +64,7 @@ export const GET = async (
   }
 ) => {
   try {
-    const [isTokenValid, payload] = await verifyToken(request.headers)
+    const [isTokenValid, payload] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
     }
@@ -88,7 +88,11 @@ export const GET = async (
           updatedAt: 'desc'
         },
         include: {
-          messages: true
+          messages: {
+            include: {
+              files: true
+            }
+          }
         },
         where: {
           userId: user.id
@@ -104,7 +108,11 @@ export const GET = async (
             userId: user.id
           },
           include: {
-            messages: true
+            messages: {
+              include: {
+                files: true
+              }
+            }
           }
         })
       } else {
@@ -124,7 +132,11 @@ export const GET = async (
         userId: user.id
       },
       include: {
-        messages: true
+        messages: {
+          include: {
+            files: true
+          }
+        }
       }
     })
 

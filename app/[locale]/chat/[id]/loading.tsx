@@ -16,20 +16,24 @@ const Loading: React.FC = () => {
               className='animate-pulse'
               key={index}
               message={
-                <div className='grid gap-1.5'>
-                  <div className='bg-background-tertiary h-2 w-full rounded-sm' />
-                  <div className='bg-background-tertiary h-2 w-full rounded-sm' />
-                  {index % 2 !== 0 && (
-                    <>
+                {
+                  role: index % 2 === 0 ? 'user' : 'assistant',
+                  content: (
+                    <div className='grid gap-1.5'>
                       <div className='bg-background-tertiary h-2 w-full rounded-sm' />
                       <div className='bg-background-tertiary h-2 w-full rounded-sm' />
-                      <div className='bg-background-tertiary h-2 w-full rounded-sm' />
-                      <div className='bg-background-tertiary h-2 w-full rounded-sm' />
-                    </>
-                  )}
-                </div>
+                      {index % 2 !== 0 && (
+                        <>
+                          <div className='bg-background-tertiary h-2 w-full rounded-sm' />
+                          <div className='bg-background-tertiary h-2 w-full rounded-sm' />
+                          <div className='bg-background-tertiary h-2 w-full rounded-sm' />
+                          <div className='bg-background-tertiary h-2 w-full rounded-sm' />
+                        </>
+                      )}
+                    </div>
+                  )
+                } as any
               }
-              role={index % 2 === 0 ? 'user' : 'assistant'}
             />
           )
         })}
@@ -38,9 +42,11 @@ const Loading: React.FC = () => {
       <ChatForm
         placeholder
         loading={true}
+        isUploading={false}
         stop={() => {}}
         model={'gemini-2.0-flash'}
         input={''}
+        handleFilesChange={() => {}}
         handleModelChange={() => {}}
         handleInputChange={() => {}}
         handleSubmit={() => {}}

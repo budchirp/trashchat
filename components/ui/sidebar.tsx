@@ -11,7 +11,7 @@ import { X, Plus, Trash } from 'lucide-react'
 import { Button } from '@/components/button'
 import { cn } from '@/lib/cn'
 import { CookieMonster } from '@/lib/cookie-monster'
-import { ChatAPIManager } from '@/lib/chat'
+import { ChatAPIManager } from '@/lib/api/chat'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/lib/toast'
 import { usePathname } from 'next/navigation'
@@ -37,6 +37,7 @@ const ChatChip: React.FC<ChatChipProps> = ({
     <Box
       padding='small'
       variant='primary'
+      aria-label={chat?.title}
       hover={chat !== null && chat !== undefined}
       className={cn(
         'group flex items-center justify-between gap-2',
@@ -154,6 +155,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const pathname = usePathname()
 
+  useEffect(() => {
+    fetchChats()
+  }, [pathname])
+
   return (
     <div
       {...props}
@@ -182,13 +187,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <Container className='grid gap-2 size-full max-lg:px-4 overflow-y-auto py-4'>
-        <Box hover className='h-min group' onClick={() => !loading && newChat()} padding='small'>
-          <div className='text-text-primary items-center font-medium flex gap-2 hover:text-text-secondary'>
-            <Button variant='round' color='secondary'>
+        <Box
+          aria-label={t_chat('new-chat')}
+          hover
+          className='h-min group'
+          onClick={() => !loading && newChat()}
+          padding='small'
+        >
+          <div className='text-text-primary items-center gap-2 font-medium flex hover:text-text-secondary'>
+            <Button aria-label='Plus icon' variant='round' color='secondary'>
               <Plus size={16} />
             </Button>
 
-            <span className='transition-all ms-2 duration-300 w-full group-hover:font-bold text-ellipsis text-text-tertiary font-medium group-hover:text-text-primary'>
+            <span className='transition-all duration-300 w-full group-hover:font-bold text-ellipsis text-text-tertiary font-medium group-hover:text-text-primary'>
               {t_chat('new-chat')}
             </span>
           </div>

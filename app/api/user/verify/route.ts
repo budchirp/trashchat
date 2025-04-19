@@ -1,7 +1,7 @@
-import { verifyToken } from '@/lib/auth/server/verify-token'
+import { NextResponse, type NextRequest } from 'next/server'
+import { authenticate } from '@/lib/auth/server/authenticate'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
-import { NextResponse, type NextRequest } from 'next/server'
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -10,7 +10,7 @@ export const POST = async (request: NextRequest) => {
       throw new Error('Password is null!')
     }
 
-    const [isTokenValid, payload] = await verifyToken(request.headers)
+    const [isTokenValid, payload] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       throw new Error('Invalid token.')
     }

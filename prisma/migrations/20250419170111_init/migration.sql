@@ -5,6 +5,13 @@ CREATE TABLE "users" (
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "profilePicture" TEXT,
+    "plus" BOOLEAN NOT NULL DEFAULT false,
+    "credits" INTEGER NOT NULL DEFAULT 50,
+    "premiumCredits" INTEGER NOT NULL DEFAULT 0,
+    "systemPrompt" TEXT NOT NULL DEFAULT '',
+    "shareInfoWithAI" BOOLEAN NOT NULL DEFAULT true,
+    "firstUsage" DATETIME,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL
 );
@@ -13,6 +20,7 @@ CREATE TABLE "users" (
 CREATE TABLE "chats" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
+    "model" TEXT,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -30,6 +38,16 @@ CREATE TABLE "messages" (
     CONSTRAINT "messages_chatId_fkey" FOREIGN KEY ("chatId") REFERENCES "chats" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "files" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "contentType" TEXT NOT NULL,
+    "messageId" TEXT NOT NULL,
+    CONSTRAINT "files_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "messages" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_id_key" ON "users"("id");
 
@@ -44,3 +62,6 @@ CREATE UNIQUE INDEX "chats_id_key" ON "chats"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "messages_id_key" ON "messages"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "files_id_key" ON "files"("id");

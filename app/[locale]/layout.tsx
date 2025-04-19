@@ -1,12 +1,12 @@
 import type React from 'react'
 
-import { routing } from '@/lib/i18n/routing'
-import { notFound } from 'next/navigation'
-import { ThemeProvider } from '@/providers/theme'
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
+import { ThemeProvider } from '@/providers/theme'
 import { NextIntlClientProvider } from 'next-intl'
 import { ToastProvider } from '@/providers/toast'
 import { Container } from '@/components/container'
+import { routing } from '@/lib/i18n/routing'
+import { notFound } from 'next/navigation'
 import { Env } from '@/lib/env'
 import Script from 'next/script'
 

@@ -3,19 +3,17 @@
 import type React from 'react'
 import { useState } from 'react'
 
+import { toFormikValidationSchema } from 'zod-formik-adapter'
+import { signInValidator } from '@/lib/validators/signin'
+import { SessionAPIManager } from '@/lib/api/session'
+import { useRouter } from '@/lib/i18n/routing'
 import { Input } from '@/components/input'
 import { Lock, Mail } from 'lucide-react'
 import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
 import { useFormik } from 'formik'
-import { toFormikValidationSchema } from 'zod-formik-adapter'
-import { signInValidator } from '@/lib/validators/signin'
 import { Box } from '@/components/box'
 import { toast } from '@/lib/toast'
-import { useRouter } from '@/lib/i18n/routing'
-import { CookieMonster } from '@/lib/cookie-monster'
-import { CONSTANTS } from '@/lib/constants'
-import { SessionAPIManager } from '@/lib/session'
 
 export const SignInClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations('auth')
@@ -33,14 +31,9 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const [success, message, token] = await SessionAPIManager.new(values)
+      const [success, message, _] = await SessionAPIManager.new(values)
       if (success) {
         toast(t_common('success'))
-
-        const cookieMonster = new CookieMonster()
-        cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {
-          expires: new Date(2147483647000)
-        })
 
         router.push('/chat')
       } else {

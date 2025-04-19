@@ -2,10 +2,10 @@ import type React from 'react'
 
 import { AccountClientPage } from '@/app/[locale]/(main)/settings/(account)/page.client'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { protectRoute } from '@/lib/auth/client/protect-route'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Heading } from '@/components/heading'
-import { UserAPIManager } from '@/lib/user'
-import { protectRoute } from '@/lib/auth/client/protect-route'
+import { UserAPIManager } from '@/lib/api/user'
 import { cookies } from 'next/headers'
 import { routing } from '@/lib/i18n/routing'
 

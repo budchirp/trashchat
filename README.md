@@ -26,3 +26,4 @@
 - [ ] Payments
 - [ ] Add capctha
 - [ ] Add an option to disable/enable blur
+- [ ] Improve privacy and security

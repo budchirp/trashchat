@@ -19,11 +19,15 @@
       },
       "style": {
         "useNodejsImportProtocol": "off",
-        "noInferrableTypes": "off"
+        "noInferrableTypes": "off",
+        "noNonNullAssertion": "off"
       },
       "complexity": {
         "noStaticOnlyClass": "off",
         "useOptionalChain": "off"
+      },
+      "a11y": {
+        "useValidAriaRole": "off"
       }
     }
   },
