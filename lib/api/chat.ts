@@ -13,7 +13,7 @@ export class ChatAPIManager {
       })
 
       const json = await response.json()
-      if (response.status < 400) {
+      if (response.ok) {
         return json.data
       }
 
@@ -34,7 +34,7 @@ export class ChatAPIManager {
       })
 
       const json = await response.json()
-      if (response.status < 400) {
+      if (response.ok) {
         return json.data
       }
 
@@ -54,7 +54,7 @@ export class ChatAPIManager {
         Authorization: `Bearer ${token}`
       })
 
-      if (response.status < 400) return true
+      if (response.ok) return true
 
       return false
     } catch (error) {
@@ -76,7 +76,7 @@ export class ChatAPIManager {
         }
       )
 
-      if (response.status < 400) {
+      if (response.ok) {
         const json = await response.json()
         return json.data
       }

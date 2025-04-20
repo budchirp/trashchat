@@ -26,22 +26,32 @@ export const POST = async (
 
     const t = await getTranslations({ locale, namespace: 'chat' })
     const t_common = await getTranslations({ locale, namespace: 'common' })
-    const t_auth = await getTranslations({ locale, namespace: 'auth' })
 
-    const [isTokenValid, payload] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
-      throw new Error(t_common('invalid-token'))
+      return NextResponse.json(
+        {
+          message: t_common('unauthorized'),
+          data: {}
+        },
+        {
+          status: 403
+        }
+      )
     }
 
-    const user = await prisma.user.findUnique({
-      where: {
-        id: payload.id
-      }
-    })
+    const {
+      messages,
+      model: modelName,
+      files
+    }: {
+      messages: Message[]
+      model: AIModelID
+      files: File[]
+    } = await request.json()
 
-    if (!user) {
-      throw new Error(t_auth('not-found'))
-    }
+    const message = messages[messages.length - 1]
+    if (message.role === 'system') return
 
     if (!user.firstUsage) {
       await prisma.user.update({
@@ -70,16 +80,6 @@ export const POST = async (
 
     const { id } = await params
 
-    const {
-      messages,
-      model: modelName,
-      files
-    }: {
-      messages: Message[]
-      model: AIModelID
-      files: File[]
-    } = await request.json()
-
     const chat = await prisma.chat.findUnique({
       where: {
         id,
@@ -95,18 +95,17 @@ export const POST = async (
       throw new Error(t('not-found'))
     }
 
-    const message = messages[messages.length - 1]
     const { id: messageId } = await prisma.message.create({
       data: {
         role: message.role,
-        content: message.content,
+        content: btoa(unescape(encodeURIComponent(message.content))),
 
         chatId: chat.id
       }
     })
 
     await Promise.all(
-      files.map(async (file) => {
+      (files || []).map(async (file) => {
         await prisma.file.create({
           data: {
             name: file.name,
@@ -179,7 +178,7 @@ export const POST = async (
               type: 'text',
               text: message.content
             },
-            ...files.map((file) => {
+            ...(files || []).map((file) => {
               if (file.contentType.startsWith('image/')) {
                 return {
                   type: 'image',
@@ -204,7 +203,7 @@ export const POST = async (
 
         await prisma.message.create({
           data: {
-            content: (message.content as any)[0].text,
+            content: btoa(unescape(encodeURIComponent((message.content as any)[0].text))),
             role: message.role,
 
             chatId: chat.id

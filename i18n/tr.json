@@ -5,6 +5,8 @@
     "go-to-chat": "Sohbete git"
   },
   "chat": {
+    "upload-fail": "Ek yüklenemedi",
+    "file-too-big": "Bu dosya çok büyük",
     "plus-error": "Bu model plus kullanıcılar içindir!",
     "credit-error": "Yetersiz kredi!",
     "error": "İçerik oluşturulurken hata oluştu. Lütfen tekrar deneyin.",

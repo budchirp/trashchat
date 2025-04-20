@@ -14,6 +14,8 @@ export type AIModel = {
   plus: boolean
   premium: boolean
 
+  supportsAttachments: boolean
+
   provider: LanguageModelV1
 }
 
@@ -45,6 +47,8 @@ export class AIModels {
 
         plus: false,
         premium: false,
+
+        supportsAttachments: true,
 
         provider: provider('gemini-2.0-flash-exp')
       }
@@ -82,6 +86,8 @@ export class AIModels {
         plus: true,
         premium: false,
 
+        supportsAttachments: false,
+
         provider: provider('DeepSeek-R1')
       },
       'openai-gpt-4o-mini': {
@@ -92,6 +98,8 @@ export class AIModels {
         plus: true,
         premium: false,
 
+        supportsAttachments: true,
+
         provider: provider('gpt-4o-mini')
       },
       'openai-o3-mini': {
@@ -101,6 +109,8 @@ export class AIModels {
 
         plus: true,
         premium: true,
+
+        supportsAttachments: true,
 
         provider: provider('gpt-4o-mini')
       }

@@ -8,9 +8,9 @@ import { ChatForm } from '@/components/chat/chat-form'
 import { MessageBox } from '@/components/chat/message-box'
 import { Container } from '@/components/container'
 import { Fetch } from '@/lib/fetch'
+import { generateId } from 'ai'
 import { useChat } from '@ai-sdk/react'
 import { useLocale, useTranslations } from 'next-intl'
-import { generateId } from 'ai'
 
 import type { Chat } from '@/types/chat'
 import type { AIModelID } from '@/lib/ai/models'
@@ -34,37 +34,44 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const [files, setFiles] = useState<FileList | undefined>(undefined)
 
+  const [messageFiles, setMessageFiles] = useState<{
+    [index: number]: File[]
+  }>({})
+
   const ref = useRef<HTMLDivElement | null>(null)
 
   const locale = useLocale()
 
-  const { messages, setMessages, append, input, status, stop, handleInputChange, handleSubmit } =
-    useChat({
-      api: `/api/chat/${chat.id}/message`,
-      initialMessages: (chat.messages as any) || [],
-      headers: {
-        authorization: `Bearer ${token}`,
-        'accept-language': locale
-      },
-      onError: async (error) => {
-        let erorrMessage: string | null = null
-        try {
-          const json = JSON.parse(error.message)
-          erorrMessage = json.message
-        } catch {
-          erorrMessage = error.message
-        }
-
-        setError(erorrMessage || t_common('error'))
+  const { messages, setMessages, input, status, stop, handleInputChange, handleSubmit } = useChat({
+    api: `/api/chat/${chat.id}/message`,
+    initialMessages: (chat.messages as any) || [],
+    headers: {
+      authorization: `Bearer ${token}`,
+      'accept-language': locale
+    },
+    onError: async (error) => {
+      let erorrMessage: string | null = null
+      try {
+        const json = JSON.parse(error.message)
+        erorrMessage = json.message
+      } catch {
+        erorrMessage = error.message
       }
-    })
+
+      setError(erorrMessage || t_common('error'))
+    }
+  })
 
   useEffect(() => {
     if (error)
-      append({
-        role: 'system',
-        content: error
-      })
+      setMessages([
+        ...messages,
+        {
+          id: generateId(),
+          role: 'system',
+          content: error
+        }
+      ])
   }, [error])
 
   useEffect(() => {
@@ -91,6 +98,10 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
             key={index}
             message={{
               ...message,
+              files:
+                message.files && message.files.length > 0
+                  ? message.files
+                  : messageFiles[index] || [],
               content: <MemoizedMarkdown content={message.content} />
             }}
           />
@@ -128,6 +139,8 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         handleModelChange={setModel}
         handleInputChange={handleInputChange}
         handleSubmit={async (event?: FormEvent) => {
+          setError(null)
+
           event && event.preventDefault()
 
           let uploadedFiles: Partial<PrismaFile>[] = []
@@ -162,11 +175,15 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
                 await Promise.all(
                   filesArray.map(async (file) => {
+                    if (file.size > 1024 * 1024 * 1) {
+                      setError(t('file-too-big'))
+                      return
+                    }
+
                     const { url, fields } = json.data[file.name]
 
                     const formData = new FormData()
                     for (const [key, value] of Object.entries(fields)) {
-                      console.log(key, value)
                       formData.append(key, value as string)
                     }
 
@@ -188,21 +205,36 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
                     try {
                       await Fetch.post(url, formData)
-                    } catch {}
+                    } catch {
+                      setError(t('upload-fail'))
+                      return
+                    }
                   })
                 )
+              } else {
+                setError(t('upload-fail'))
+                return
               }
             } catch {
+              setError(t('upload-fail'))
+              return
             } finally {
               setIsUploading(false)
             }
           }
 
-          handleSubmit(event, {
-            body: {
-              model,
-              files: uploadedFiles
-            }
+          if (!error) {
+            handleSubmit(event, {
+              body: {
+                model,
+                files: uploadedFiles
+              }
+            })
+          }
+
+          setMessageFiles({
+            ...messageFiles,
+            [messages.length]: uploadedFiles as any
           })
 
           setFiles(undefined)

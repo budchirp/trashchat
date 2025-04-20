@@ -7,12 +7,11 @@ import { ModelSelector } from '@/components/chat/model-selector'
 import { FileIcon, Loader2, Paperclip, Search, Send, Square } from 'lucide-react'
 import { Container } from '@/components/container'
 import { Input } from '@/components/input'
+import { Box } from '@/components/box'
+import { cn } from '@/lib/cn'
 import { Button, buttonVariants } from '@/components/button'
 import { useTranslations } from 'next-intl'
-
-import type { AIModelID } from '@/lib/ai/models'
-import { Box } from '../box'
-import { cn } from '@/lib/cn'
+import { AIModels, type AIModelID } from '@/lib/ai/models'
 
 export type ChatFormProps = {
   placeholder?: boolean
@@ -27,6 +26,8 @@ export type ChatFormProps = {
   handleModelChange: (model: AIModelID) => void
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
+
+const models = AIModels.get(false)
 
 export const ChatForm: React.FC<ChatFormProps> = ({
   placeholder = false,
@@ -60,6 +61,8 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   useEffect(() => {
     updateHeight()
   }, [input, files])
+
+  const supportsAttachments = models[model].supportsAttachments
 
   return (
     <>
@@ -112,12 +115,20 @@ export const ChatForm: React.FC<ChatFormProps> = ({
               />
 
               <label
-                className={cn(buttonVariants({ variant: 'round', color: 'secondary' }))}
+                className={cn(
+                  buttonVariants({
+                    variant: 'round',
+                    color: 'secondary',
+                    className: !supportsAttachments ? '!opacity-75 pointer-events-none' : ''
+                  })
+                )}
                 htmlFor='upload'
               >
                 <Paperclip size={16} />
 
                 <input
+                  readOnly={!supportsAttachments}
+                  disabled={!supportsAttachments}
                   id='upload'
                   className='sr-only'
                   type='file'
@@ -144,7 +155,12 @@ export const ChatForm: React.FC<ChatFormProps> = ({
             </div>
 
             <div className='flex items-center'>
-              <ModelSelector height={height} model={model} onChange={handleModelChange} />
+              <ModelSelector
+                height={height}
+                models={models}
+                model={model}
+                onChange={handleModelChange}
+              />
             </div>
           </Container>
         </div>

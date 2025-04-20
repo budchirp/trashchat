@@ -23,6 +23,7 @@
 - [x] Deleting account
 - [x] Updating account details
 - [x] Better profile page
+- [x] File uploads
 - [ ] Payments
 - [ ] Add capctha
 - [ ] Add an option to disable/enable blur

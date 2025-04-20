@@ -5,6 +5,8 @@
     "go-to-chat": "Go to chat"
   },
   "chat": {
+    "upload-fail": "Failed to upload attachment",
+    "file-too-big": "This file is too big",
     "plus-error": "This model is for plus users!",
     "credit-error": "Not enough credits!",
     "error": "Error while generating content. Please try again",

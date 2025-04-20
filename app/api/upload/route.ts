@@ -17,19 +17,17 @@ const client = new S3Client({
 
 export const POST = async (request: NextRequest) => {
   try {
-    const [isTokenValid, payload] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
-      throw new Error('Invalid token.')
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: payload.id
-      }
-    })
-
-    if (!user) {
-      throw new Error('User not found!')
+      return NextResponse.json(
+        {
+          message: 'Unauthorized',
+          data: {}
+        },
+        {
+          status: 403
+        }
+      )
     }
 
     let response: {

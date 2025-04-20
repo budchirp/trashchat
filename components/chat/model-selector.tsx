@@ -21,14 +21,14 @@ import { AIModels, type AIModelID } from '@/lib/ai/models'
 
 export type ModelSelectorProps = {
   model: AIModelID
+  models: AIModelMap
   height: number
   onChange: (model: AIModelID) => void
 }
 
-const models = AIModels.get(false)
-
 export const ModelSelector: React.FC<ModelSelectorProps> = ({
   model,
+  models,
   height,
   onChange
 }: ModelSelectorProps): React.ReactNode => {

@@ -1,28 +1,25 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server/authenticate'
 import { Encrypt } from '@/lib/encrypt'
-import { prisma } from '@/lib/prisma'
 
 export const POST = async (request: NextRequest) => {
   try {
+    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    if (!isTokenValid || !payload) {
+      return NextResponse.json(
+        {
+          message: 'Unauthorized',
+          data: {}
+        },
+        {
+          status: 403
+        }
+      )
+    }
+
     const { password } = await request.json()
     if (!password) {
       throw new Error('Password is null!')
-    }
-
-    const [isTokenValid, payload] = await authenticate(request.headers)
-    if (!isTokenValid || !payload) {
-      throw new Error('Invalid token.')
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: payload.id
-      }
-    })
-
-    if (!user) {
-      throw new Error('User not found!')
     }
 
     const passwordMatch = await Encrypt.compare(password, user.password)

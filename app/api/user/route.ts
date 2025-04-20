@@ -7,19 +7,17 @@ import type { User } from '@/types/user'
 
 export const GET = async (request: NextRequest) => {
   try {
-    const [isTokenValid, payload] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
-      throw new Error('Invalid token.')
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: payload.id
-      }
-    })
-
-    if (!user) {
-      throw new Error('User not found!')
+      return NextResponse.json(
+        {
+          message: 'Unauthorized',
+          data: {}
+        },
+        {
+          status: 403
+        }
+      )
     }
 
     return NextResponse.json(
@@ -44,19 +42,17 @@ export const GET = async (request: NextRequest) => {
 
 export const DELETE = async (request: NextRequest) => {
   try {
-    const [isTokenValid, payload] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
-      throw new Error('Invalid token.')
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: payload.id
-      }
-    })
-
-    if (!user) {
-      throw new Error('User not found!')
+      return NextResponse.json(
+        {
+          message: 'Unauthorized',
+          data: {}
+        },
+        {
+          status: 403
+        }
+      )
     }
 
     await prisma.user.delete({ where: user })
@@ -125,24 +121,20 @@ export const POST = async (request: NextRequest) => {
 
 export const PATCH = async (request: NextRequest) => {
   try {
-    const [isTokenValid, payload] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
-      throw new Error('Invalid token.')
+      return NextResponse.json(
+        {
+          message: 'Unauthorized',
+          data: {}
+        },
+        {
+          status: 403
+        }
+      )
     }
 
     const { name, username, email, systemPrompt, shareInfoWithAI } = (await request.json()) as User
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: payload.id,
-
-        email
-      }
-    })
-
-    if (!user) {
-      throw new Error('User not found!')
-    }
 
     if (username && user.username !== username) {
       if (
