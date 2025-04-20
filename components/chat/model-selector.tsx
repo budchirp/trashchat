@@ -1,10 +1,12 @@
 'use client'
 
 import type React from 'react'
-import { useEffect, useState, type Ref } from 'react'
+import { type Ref, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import { Backdrop } from '@/components/backdrop'
 import { Box } from '@/components/box'
+import { Container } from '@/components/container'
 import { cn } from '@/lib/cn'
 import {
   Listbox,
@@ -14,10 +16,8 @@ import {
   Transition
 } from '@headlessui/react'
 import { ChevronDown, Crown, DollarSign } from 'lucide-react'
-import { Backdrop } from '@/components/backdrop'
-import { Container } from '@/components/container'
 
-import { AIModels, type AIModelID } from '@/lib/ai/models'
+import type { AIModelID, AIModelMap } from '@/lib/ai/models'
 
 export type ModelSelectorProps = {
   model: AIModelID
