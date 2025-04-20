@@ -81,13 +81,28 @@ export const GET = async (
 
     const decode = (chats: Chat[] | Chat): Chat[] | Chat => {
       const decodeMessages = (messages: Message[]): Message[] => {
+        function isBase64(str: string) {
+          if (str.length % 4 !== 0) {
+            return false
+          }
+
+          const base64Regex = /^[A-Za-z0-9+/]+={0,2}$/
+          if (!base64Regex.test(str)) {
+            return false
+          }
+
+          try {
+            return btoa(atob(str)) === str
+          } catch {
+            return false
+          }
+        }
+
         return messages.map((message): Message => {
           try {
             return {
               ...message,
-              content: /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(
-                message.content
-              )
+              content: isBase64(message.content)
                 ? decodeURIComponent(escape(atob(message.content)))
                 : message.content
             }

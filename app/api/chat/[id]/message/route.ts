@@ -50,9 +50,6 @@ export const POST = async (
       files: File[]
     } = await request.json()
 
-    const message = messages[messages.length - 1]
-    if (message.role === 'system') return
-
     if (!user.firstUsage) {
       await prisma.user.update({
         where: {
@@ -95,6 +92,7 @@ export const POST = async (
       throw new Error(t('not-found'))
     }
 
+    const message = messages[messages.length - 1]
     const { id: messageId } = await prisma.message.create({
       data: {
         role: message.role,

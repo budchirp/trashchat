@@ -11,6 +11,7 @@ import { Fetch } from '@/lib/fetch'
 import { generateId } from 'ai'
 import { useChat } from '@ai-sdk/react'
 import { useLocale, useTranslations } from 'next-intl'
+import imageCompression from 'browser-image-compression'
 
 import type { Chat } from '@/types/chat'
 import type { AIModelID } from '@/lib/ai/models'
@@ -175,7 +176,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
                 await Promise.all(
                   filesArray.map(async (file) => {
-                    if (file.size > 1024 * 1024 * 1) {
+                    if (file.size > 1024 * 1024 * 3) {
                       setError(t('file-too-big'))
                       return
                     }
@@ -187,11 +188,22 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
                       formData.append(key, value as string)
                     }
 
+                    const compressed = file.type.startsWith('image/')
+                      ? await imageCompression(file, {
+                        maxSizeMB: 1,
+                        useWebWorker: true
+                      })
+                      : file
+
                     formData.append(
                       'file',
-                      new File([file.slice(0, file.size, file.type)], fields.key, {
-                        type: file.type
-                      })
+                      new File(
+                        [compressed.slice(0, compressed.size, compressed.type)],
+                        fields.key,
+                        {
+                          type: compressed.type
+                        }
+                      )
                     )
 
                     uploadedFiles = [
@@ -203,12 +215,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
                       }
                     ]
 
-                    try {
-                      await Fetch.post(url, formData)
-                    } catch {
-                      setError(t('upload-fail'))
-                      return
-                    }
+                    await Fetch.post(url, formData)
                   })
                 )
               } else {
