@@ -188,12 +188,16 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
                       formData.append(key, value as string)
                     }
 
-                    const compressed = file.type.startsWith('image/')
-                      ? await imageCompression(file, {
-                        maxSizeMB: 1,
-                        useWebWorker: true
-                      })
-                      : file
+                    let compressed = file
+                    try {
+                      if (file.type.startsWith('image/'))
+                        compressed = await imageCompression(file, {
+                          maxSizeMB: 1,
+                          useWebWorker: true
+                        })
+                    } catch {
+                      compressed = file
+                    }
 
                     formData.append(
                       'file',
@@ -215,16 +219,16 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
                       }
                     ]
 
-                    await Fetch.post(url, formData)
+                    try {
+                      await Fetch.post(url, formData)
+                    } catch {}
                   })
                 )
               } else {
                 setError(t('upload-fail'))
-                return
               }
             } catch {
               setError(t('upload-fail'))
-              return
             } finally {
               setIsUploading(false)
             }
@@ -237,12 +241,12 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
                 files: uploadedFiles
               }
             })
-          }
 
-          setMessageFiles({
-            ...messageFiles,
-            [messages.length]: uploadedFiles as any
-          })
+            setMessageFiles({
+              ...messageFiles,
+              [messages.length]: uploadedFiles as any
+            })
+          }
 
           setFiles(undefined)
         }}
