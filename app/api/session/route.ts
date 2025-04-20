@@ -44,12 +44,18 @@ export const POST = async (request: NextRequest) => {
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     })
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: 'Success',
       data: {
         token
       }
     })
+
+    response.cookies.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    })
+
+    return response
   } catch (error) {
     return NextResponse.json(
       {

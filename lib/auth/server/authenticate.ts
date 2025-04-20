@@ -11,7 +11,9 @@ export const authenticate = async (
   headers: Headers
 ): Promise<[true, JWTPayload, User] | [false, undefined, undefined]> => {
   const authorization = headers.get('authorization')
-  const [_, token] = authorization?.split(' ') || []
+  if (!authorization) return [false, undefined, undefined]
+
+  const [_, token] = authorization.split(' ') || []
   if (!token) return [false, undefined, undefined]
 
   try {
