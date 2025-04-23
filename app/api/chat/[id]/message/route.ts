@@ -6,6 +6,7 @@ import { constructSystemPrompt } from '@/lib/ai/prompt'
 import { prisma } from '@/lib/prisma'
 import { getTranslations } from 'next-intl/server'
 import { CONSTANTS } from '@/lib/constants'
+
 import type { File } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
@@ -96,7 +97,7 @@ export const POST = async (
     const { id: messageId } = await prisma.message.create({
       data: {
         role: message.role,
-        content: btoa(unescape(encodeURIComponent(message.content))),
+        content: message.content,
 
         chatId: chat.id
       }
@@ -201,7 +202,7 @@ export const POST = async (
 
         await prisma.message.create({
           data: {
-            content: btoa(unescape(encodeURIComponent((message.content as any)[0].text))),
+            content: (message.content as any)[0].text,
             role: message.role,
 
             chatId: chat.id

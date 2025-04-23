@@ -1,8 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server/authenticate'
 import { prisma } from '@/lib/prisma'
-import type { Chat } from '@/types/chat'
-import type { Message } from '@prisma/client'
 
 export const DELETE = async (
   request: NextRequest,
@@ -79,57 +77,6 @@ export const GET = async (
 
     const { id } = await params
 
-    const decode = (chats: Chat[] | Chat): Chat[] | Chat => {
-      const decodeMessages = (messages: Message[]): Message[] => {
-        function isBase64(str: string) {
-          if (str.length % 4 !== 0) {
-            return false
-          }
-
-          const base64Regex = /^[A-Za-z0-9+/]+={0,2}$/
-          if (!base64Regex.test(str)) {
-            return false
-          }
-
-          try {
-            return btoa(atob(str)) === str
-          } catch {
-            return false
-          }
-        }
-
-        return messages.map((message): Message => {
-          try {
-            return {
-              ...message,
-              content: isBase64(message.content)
-                ? decodeURIComponent(escape(atob(message.content)))
-                : message.content
-            }
-          } catch {
-            return {
-              ...message,
-              content: message.content
-            }
-          }
-        })
-      }
-
-      if (Array.isArray(chats)) {
-        return chats.map((chat): Chat => {
-          return {
-            ...chat,
-            messages: decodeMessages(chat.messages)
-          }
-        })
-      }
-
-      return {
-        ...chats,
-        messages: decodeMessages(chats.messages)
-      }
-    }
-
     if (id === '-1') {
       const chats = await prisma.chat.findMany({
         take: 1,
@@ -170,7 +117,7 @@ export const GET = async (
 
       return NextResponse.json({
         message: 'Success',
-        data: decode(chat)
+        data: chat
       })
     }
 
@@ -195,7 +142,7 @@ export const GET = async (
 
     return NextResponse.json({
       message: 'Success',
-      data: decode(chat as any)
+      data: chat
     })
   } catch (error) {
     return NextResponse.json(
