@@ -22,6 +22,7 @@
   },
   "common": {
     "invalid-token": "Invalid token",
+    "unauthorized": "Unauthorized",
     "copied": "Copied",
     "submit": "Submit",
     "loading": "Loading...",
@@ -53,10 +54,10 @@
     },
     "verify": {
       "go-to-home": "Go to home",
-      "sent": "Email is successfully sent",
-      "verified": "Email is successfully verified 🥳",
+      "sent": "E-Mail is successfully sent",
+      "verified": "E-Mail is successfully verified 🥳",
       "invalid-token": "Invalid verification token",
-      "resend": "Resend verification email"
+      "resend": "Resend verification e-mail"
     },
     "logout": "Log out"
   },
@@ -68,7 +69,7 @@
     "description": "Account",
     "delete": "Delete account",
     "profile-picture": "Profile Picture",
-    "verify-warning": "Your email is not verified. Please verify it"
+    "verify-warning": "Your e-mail is not verified. Please verify it"
   },
   "customization": {
     "text": "Customization",
@@ -82,7 +83,7 @@
     "credits": "Credits",
     "premium-credits": "Premium credits",
     "reset": "Your usages will reset on {date}",
-    "verify-warning": "Verify your email to increase limits"
+    "verify-warning": "Verify your e-mail to increase limits"
   },
   "legal": {
     "privacy-policy": {

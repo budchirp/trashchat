@@ -6,7 +6,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const { captcha } = await request.json()
     if (!captcha) {
-      throw new Error('captcha required')
+      throw new Error('`captcha` field is required')
     }
 
     const response = await Fetch.post<{

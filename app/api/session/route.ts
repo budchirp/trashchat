@@ -12,7 +12,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const { email, password } = await request.json()
     if (!email || !password) {
-      throw new Error('Email or Password is null!')
+      throw new Error('`email` and `password` password field is required')
     }
 
     const user = await prisma.user.findUnique({

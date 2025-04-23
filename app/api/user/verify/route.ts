@@ -19,7 +19,7 @@ export const POST = async (request: NextRequest) => {
 
     const { password } = await request.json()
     if (!password) {
-      throw new Error('Password is null!')
+      throw new Error('`password` field is required')
     }
 
     const passwordMatch = await Encrypt.compare(password, user.password)

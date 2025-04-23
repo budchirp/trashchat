@@ -26,7 +26,7 @@ export const POST = async (request: NextRequest) => {
 
     const { token } = await request.json()
     if (!token) {
-      throw new Error('Token required')
+      throw new Error('`token` field is required')
     }
 
     if (user.verificationToken !== token) {

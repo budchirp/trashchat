@@ -81,7 +81,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const { name, username, email, password } = await request.json()
     if (!name || !username || !email || !password) {
-      throw new Error('Name, Username, Email or Password is null!')
+      throw new Error('`name`, `username`, `email` and `password` field is required')
     }
 
     const user = await prisma.user.findUnique({
@@ -95,7 +95,7 @@ export const POST = async (request: NextRequest) => {
       throw new Error('User with these stuff already exists!')
     }
 
-    const createdUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name,
         username,
@@ -104,10 +104,6 @@ export const POST = async (request: NextRequest) => {
         password: await Encrypt.encrypt(password)
       }
     })
-
-    if (!createdUser) {
-      throw new Error('Failed to create user')
-    }
 
     return NextResponse.json(
       {

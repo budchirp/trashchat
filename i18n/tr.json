@@ -22,6 +22,7 @@
   },
   "common": {
     "invalid-token": "Geçersiz anahtar",
+    "unauthorized": "İzinsiz erişim",
     "copied": "Kopyalandı",
     "submit": "Gönder",
     "loading": "Yükleniyor...",
@@ -35,6 +36,7 @@
     "system": "Sistem"
   },
   "auth": {
+    "captcha-error": "Captcha hatası",
     "not-found": "Kullanıcı bulunamadı",
     "name": "Ad",
     "username": "Kullanıcı adı",
@@ -50,6 +52,13 @@
       "description": "Kayıt ol",
       "signin": "Giriş yapmak için buraya tıklayın"
     },
+    "verify": {
+      "go-to-home": "Ana sayfaya git",
+      "sent": "E-Posta başarıyla gönderildi",
+      "verified": "E-Posta adresiniz başarıyla doğrulandı 🥳",
+      "invalid-token": "Geçersiz doğrulama anahtarı",
+      "resend": "Doğrulama e-postasını yeniden gönder"
+    },
     "logout": "Çıkış yap"
   },
   "settings": {
@@ -59,7 +68,8 @@
     "text": "Hesap",
     "description": "Hesap",
     "delete": "Hesabı sil",
-    "profile-picture": "Profil Resmi"
+    "profile-picture": "Profil Resmi",
+    "verify-warning": "E-Posta adresiniz doğrulanmamış. Lütfen doğrulayın"
   },
   "customization": {
     "text": "Özelleştirme",
@@ -72,7 +82,8 @@
     "description": "Kullanımlar",
     "credits": "Kredi",
     "premium-credits": "Premium kredi",
-    "reset": "Kullanım haklarınız {date} tarihinde yenilenecektir"
+    "reset": "Kullanım haklarınız {date} tarihinde yenilenecektir",
+    "verify-warning": "E-Posta adresinizi doğrulayarak limitleriniz arttırın"
   },
   "legal": {
     "privacy-policy": {
