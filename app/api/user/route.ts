@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server/authenticate'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
+import { randomUUID } from 'crypto'
 
 import type { User } from '@/types/user'
 
@@ -23,7 +24,11 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json(
       {
         message: 'Success',
-        data: user
+        data: {
+          ...user,
+          password: undefined,
+          verificationToken: undefined
+        }
       },
       {
         status: 201
@@ -90,14 +95,19 @@ export const POST = async (request: NextRequest) => {
       throw new Error('User with these stuff already exists!')
     }
 
-    await prisma.user.create({
+    const createdUser = await prisma.user.create({
       data: {
         name,
         username,
         email,
+        verificationToken: randomUUID(),
         password: await Encrypt.encrypt(password)
       }
     })
+
+    if (!createdUser) {
+      throw new Error('Failed to create user')
+    }
 
     return NextResponse.json(
       {

@@ -1,7 +1,7 @@
 'use client'
 
 import type React from 'react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { signUpValidator } from '@/lib/validators/signup'
@@ -14,12 +14,23 @@ import { useFormik } from 'formik'
 import { Box } from '@/components/box'
 import { toast } from '@/lib/toast'
 import { useRouter } from '@/lib/i18n/routing'
+import { Env } from '@/lib/env'
+import ReCAPTCHA from 'react-google-recaptcha'
+import { Fetch } from '@/lib/fetch'
 
-export const SignUpClientPage: React.FC = (): React.ReactNode => {
+type SignUpClientPageProps = {
+  captchaSiteKey: string
+}
+
+export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
+  captchaSiteKey
+}: SignUpClientPageProps): React.ReactNode => {
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
   const [error, setError] = useState<string | null>(null)
+
+  const ref = useRef(null)
 
   const router = useRouter()
   const formik = useFormik({
@@ -31,6 +42,33 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
     },
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
+
+      if (ref.current) {
+        const captcha = (ref.current as any).getValue()
+        if (!captcha) {
+          setError(t('captcha-error'))
+          return
+        }
+
+        const response = await Fetch.post<{
+          data: {
+            success: boolean
+          }
+        }>(`${Env.appUrl}/api/captcha`, {
+          captcha
+        })
+
+        if (response.ok) {
+          const json = await response.json()
+          if (!json.data.success) {
+            setError(t('captcha-error'))
+            return
+          }
+        } else {
+          setError(t('captcha-error'))
+          return
+        }
+      }
 
       const [success, message] = await UserAPIManager.new(values)
       if (success) {
@@ -125,6 +163,10 @@ export const SignUpClientPage: React.FC = (): React.ReactNode => {
           {formik.errors.password && formik.touched.password && (
             <p className='text-red-500 ms-2'>{formik.errors.password}</p>
           )}
+        </div>
+
+        <div>
+          <ReCAPTCHA ref={ref} sitekey={captchaSiteKey} />
         </div>
       </div>
 

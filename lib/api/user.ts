@@ -104,4 +104,45 @@ export class UserAPIManager {
       return [false, null]
     }
   }
+
+  public static sendEmail = async (token: string): Promise<boolean> => {
+    try {
+      const response = await Fetch.get(`${Env.appUrl}/api/user/email`, {
+        Authorization: `Bearer ${token}`
+      })
+
+      if (response.ok) {
+        return true
+      }
+
+      return false
+    } catch {
+      return false
+    }
+  }
+
+  public static verifyEmail = async (
+    token: string,
+    verificationToken: string
+  ): Promise<boolean> => {
+    try {
+      const response = await Fetch.post(
+        `${Env.appUrl}/api/user/email`,
+        {
+          token: verificationToken
+        },
+        {
+          Authorization: `Bearer ${token}`
+        }
+      )
+
+      if (response.ok) {
+        return true
+      }
+
+      return false
+    } catch {
+      return false
+    }
+  }
 }

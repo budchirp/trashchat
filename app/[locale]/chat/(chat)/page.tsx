@@ -1,7 +1,6 @@
 import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { ChatClientPage } from '@/app/[locale]/chat/[id]/page.client'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { protectRoute } from '@/lib/auth/client/protect-route'
 import { routing, redirect } from '@/lib/i18n/routing'
@@ -18,9 +17,11 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
   const token = protectRoute(await cookies(), locale) as string
 
   const chat = await ChatAPIManager.get(token, '-1')
-  // const chat = await ChatManager.new(token)
   if (chat) {
-    return <ChatClientPage token={token} chat={chat} />
+    return redirect({
+      href: `/chat/${chat.id}`,
+      locale
+    })
   }
 
   return redirect({

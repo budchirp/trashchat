@@ -9,6 +9,7 @@ import { cookies } from 'next/headers'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
+import { Env } from '@/lib/env'
 
 const SignUpPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
@@ -32,7 +33,7 @@ const SignUpPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
           </Link>
         </div>
 
-        <SignUpClientPage />
+        <SignUpClientPage captchaSiteKey={Env.captchaSiteKey!} />
       </div>
     </div>
   )

@@ -36,7 +36,7 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
               width={128}
               className='size-full rounded-full'
               alt={t('profile-picture')}
-              src={user.profilePicure || '/images/placeholder.png'}
+              src={user.profilePicture || '/images/placeholder.png'}
             />
           </div>
 

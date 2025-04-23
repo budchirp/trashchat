@@ -68,7 +68,7 @@ export const POST = async (
           data: {
             firstUsage: new Date(Date.now()),
 
-            credits: CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS,
+            credits: user.verified ? CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS : 10,
             premiumCredits: CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
           }
         })

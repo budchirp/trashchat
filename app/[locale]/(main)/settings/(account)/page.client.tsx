@@ -20,6 +20,7 @@ import { useTranslations } from 'next-intl'
 import { Box } from '@/components/box'
 
 import type { User } from '@/types/user'
+import { ResendVerificationEmailButton } from '../../auth/verify/email/[token]/resend-button'
 
 type AccountClientPageProps = {
   user: User
@@ -29,12 +30,17 @@ export const AccountClientPage: React.FC<AccountClientPageProps> = ({
   user
 }: AccountClientPageProps): React.ReactNode => {
   const [error, setError] = useState<string | null>(null)
+  const [token, setToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    const cookieMonster = new CookieMonster()
+    setToken(cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)!)
+  }, [])
 
   const t = useTranslations('auth')
   const t_account = useTranslations('account')
   const t_common = useTranslations('common')
 
-  const cookieMonster = new CookieMonster()
   const router = useRouter()
 
   const formik = useFormik({
@@ -46,7 +52,6 @@ export const AccountClientPage: React.FC<AccountClientPageProps> = ({
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
         const [success, message] = await UserAPIManager.update(token, values as any)
         if (success) {
@@ -110,7 +115,7 @@ export const AccountClientPage: React.FC<AccountClientPageProps> = ({
             )}
           </div>
 
-          <div>
+          <div className='grid gap-2'>
             <Input
               readOnly
               id='email'
@@ -126,6 +131,16 @@ export const AccountClientPage: React.FC<AccountClientPageProps> = ({
 
             {formik.errors.email && formik.touched.email && (
               <p className='text-red-500 ms-2'>{formik.errors.email}</p>
+            )}
+
+            {!user.verified && (
+              <div className='border-b-4 border-border-hover mb-2 pb-4 grid gap-2'>
+                <p>{t_account('verify-warning')}</p>
+
+                <div>
+                  <ResendVerificationEmailButton token={token!} />
+                </div>
+              </div>
             )}
           </div>
         </div>

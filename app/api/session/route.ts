@@ -5,6 +5,7 @@ import { Env } from '@/lib/env'
 import { cookies } from 'next/headers'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { CONSTANTS } from '@/lib/constants'
+import { UserAPIManager } from '@/lib/api/user'
 import jwt from 'jsonwebtoken'
 
 export const POST = async (request: NextRequest) => {
@@ -38,6 +39,8 @@ export const POST = async (request: NextRequest) => {
         expiresIn: '30d'
       }
     )
+
+    if (!user.verified) await UserAPIManager.sendEmail(token)
 
     const cookieMonster = new CookieMonster(await cookies())
     cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {

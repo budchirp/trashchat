@@ -38,9 +38,9 @@ const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
             <p className=''>{t('description')}</p>
           </div>
 
-          <Button>
-            <Link href='/chat'>{t('go-to-chat')}</Link>
-          </Button>
+          <Link href='/chat'>
+            <Button>{t('go-to-chat')}</Button>
+          </Link>
         </div>
       </div>
     </div>

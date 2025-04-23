@@ -21,7 +21,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
 
   const user = (await UserAPIManager.get(token)) as User
 
-  const credits = CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS
+  const credits = user.verified ? CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS : 10
   const premium_credits = CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
 
   const t = await getTranslations({
@@ -36,7 +36,12 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
     <div className='flex size-full flex-col mt-4'>
       <Heading
         description={
-          user.firstUsage && <p>{t('reset', { date: resetDate.toLocaleDateString() })}</p>
+          <div>
+            {!user.verified && <p>{t('verify-warning')}</p>}
+            {user.firstUsage && user.verified && (
+              <p>{t('reset', { date: resetDate.toLocaleDateString() })}</p>
+            )}
+          </div>
         }
         className='max-md:mt-0'
       >
@@ -53,7 +58,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
             </span>
           </div>
 
-          <div className='w-full border border-border h-4 bg-background-secondary rounded-full'>
+          <div className='w-full border border-border overflow-hidden h-4 bg-background-secondary rounded-full'>
             <div
               className='bg-background-accent-primary h-full rounded-full'
               style={{
@@ -72,7 +77,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
             </span>
           </div>
 
-          <div className='w-full border border-border h-4 bg-background-secondary rounded-full'>
+          <div className='w-full border border-border overflow-hidden h-4 bg-background-secondary rounded-full'>
             <div
               className='bg-accent-700 h-full rounded-full'
               style={{

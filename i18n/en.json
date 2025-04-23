@@ -35,6 +35,7 @@
     "system": "System"
   },
   "auth": {
+    "captcha-error": "Failed to resolve captcha",
     "not-found": "User not found",
     "name": "Name",
     "username": "Username",
@@ -50,6 +51,13 @@
       "description": "Sign up",
       "signin": "Click here to sign in"
     },
+    "verify": {
+      "go-to-home": "Go to home",
+      "sent": "Email is successfully sent",
+      "verified": "Email is successfully verified 🥳",
+      "invalid-token": "Invalid verification token",
+      "resend": "Resend verification email"
+    },
     "logout": "Log out"
   },
   "settings": {
@@ -59,7 +67,8 @@
     "text": "Account",
     "description": "Account",
     "delete": "Delete account",
-    "profile-picture": "Profile Picture"
+    "profile-picture": "Profile Picture",
+    "verify-warning": "Your email is not verified. Please verify it"
   },
   "customization": {
     "text": "Customization",
@@ -72,7 +81,8 @@
     "description": "Usages",
     "credits": "Credits",
     "premium-credits": "Premium credits",
-    "reset": "Your usages will reset on {date}"
+    "reset": "Your usages will reset on {date}",
+    "verify-warning": "Verify your email to increase limits"
   },
   "legal": {
     "privacy-policy": {

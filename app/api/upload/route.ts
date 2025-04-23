@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server/authenticate'
-import { prisma } from '@/lib/prisma'
 import { S3Client } from '@aws-sdk/client-s3'
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { Env } from '@/lib/env'
@@ -48,7 +47,7 @@ export const POST = async (request: NextRequest) => {
           contentType: string
         }) => {
           const { url, fields } = await createPresignedPost(client, {
-            Bucket: Env.S3_bucket!,
+            Bucket: Env.S3Bucket!,
             Key: `${user.id}-${new Date().getTime()}-${randomUUID()}-${slugify(name)}`,
             Fields: {
               'Content-Type': contentType
