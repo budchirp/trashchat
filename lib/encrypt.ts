@@ -1,3 +1,5 @@
+import 'server-only'
+
 import * as bcrypt from 'bcrypt'
 
 export class Encrypt {

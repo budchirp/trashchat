@@ -1,7 +1,7 @@
 'use client'
 
 import type React from 'react'
-import { type Ref, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { Backdrop } from '@/components/backdrop'

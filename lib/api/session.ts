@@ -16,7 +16,7 @@ export class SessionAPIManager {
   public static new = async (user: {
     email: string
     password: string
-  }): Promise<[boolean, string | null, string | null]> => {
+  }): Promise<[boolean, string | null, string | null] | [true, null, string]> => {
     try {
       const response = await Fetch.post<{
         message: string

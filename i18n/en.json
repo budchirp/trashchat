@@ -21,6 +21,7 @@
     "new-chat": "New chat"
   },
   "common": {
+    "go-to-home": "Go to home",
     "invalid-token": "Invalid token",
     "unauthorized": "Unauthorized",
     "copied": "Copied",
@@ -53,7 +54,6 @@
       "signin": "Click here to sign in"
     },
     "verify": {
-      "go-to-home": "Go to home",
       "sent": "E-Mail is successfully sent",
       "verified": "E-Mail is successfully verified 🥳",
       "invalid-token": "Invalid verification token",

@@ -1,11 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
-import { Env } from '@/lib/env'
 import { cookies } from 'next/headers'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { CONSTANTS } from '@/lib/constants'
 import { UserAPIManager } from '@/lib/api/user'
+import { Secrets } from '@/lib/secrets'
 import jwt from 'jsonwebtoken'
 
 export const POST = async (request: NextRequest) => {
@@ -34,7 +34,7 @@ export const POST = async (request: NextRequest) => {
       {
         id: user.id
       },
-      Env.appSecret,
+      Secrets.appSecret,
       {
         expiresIn: '30d'
       }

@@ -1,26 +1,23 @@
 'use client'
 
 import type React from 'react'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, use, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { LoaderCircle, LogIn, LogOut, type LucideIcon, UserIcon, UserPlus } from 'lucide-react'
+import { LogIn, LogOut, type LucideIcon, UserIcon, UserPlus } from 'lucide-react'
 import { Menu, Transition, MenuButton, MenuItems, MenuItem } from '@headlessui/react'
 import { Container } from '@/components/container'
 import { Button } from '@/components/button'
 import { Box } from '@/components/box'
 import { Backdrop } from '@/components/backdrop'
-import { CookieMonster } from '@/lib/cookie-monster'
-import { CONSTANTS } from '@/lib/constants'
-import { toast } from '@/lib/toast'
+import { toast } from '@/components/toast'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/routing'
 import { usePathname, useRouter } from 'next/navigation'
 import { SessionAPIManager } from '@/lib/api/session'
-import { UserAPIManager } from '@/lib/api/user'
 import { cn } from '@/lib/cn'
 
-import type { User } from '@/types/user'
+import { UserContext } from '@/providers/context/user'
 
 export type ProfileMenuProps = {
   sidebar?: boolean
@@ -65,38 +62,15 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
     setMounted(true)
   }, [])
 
-  const [loading, setLoading] = useState<boolean>(false)
-  const [user, setUser] = useState<User | null>(null)
+  const { user, setUser } = use(UserContext)
 
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
-  const cookieMonster = new CookieMonster()
-
-  const fetchUser = async () => {
-    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-    if (token) {
-      setLoading(true)
-
-      const user = await UserAPIManager.get(token)
-      if (user) setUser(user)
-
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchUser()
-  }, [])
-
-  useEffect(() => {
-    fetchUser()
-  }, [pathname])
-
   return (
     <Menu>
       {({ open, close }) => {
-        const Icon: LucideIcon | null = mounted || !loading ? UserIcon : null
+        const Icon: LucideIcon | null = mounted ? UserIcon : null
 
         useEffect((): void => {
           close()
@@ -135,13 +109,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
                   padding='none'
                   className='top-0 min-w-48 w-min max-w-64 overflow-hidden'
                 >
-                  {loading ? (
-                    [...Array(2)].map((_, index) => (
-                      <ProfileMenuItem key={index} icon={<LoaderCircle className='animate-spin' />}>
-                        <div className='bg-background-tertiary h-2 w-full animate-pulse rounded-sm' />
-                      </ProfileMenuItem>
-                    ))
-                  ) : user ? (
+                  {user ? (
                     <>
                       <Link href='/settings'>
                         <ProfileMenuItem icon={<UserIcon />}>

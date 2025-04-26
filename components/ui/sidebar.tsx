@@ -13,13 +13,14 @@ import { cn } from '@/lib/cn'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { ChatAPIManager } from '@/lib/api/chat'
 import { CONSTANTS } from '@/lib/constants'
-import { toast } from '@/lib/toast'
+import { toast } from '@/components/toast'
 import { usePathname } from 'next/navigation'
 
 import type { Chat } from '@/types/chat'
 
 type SidebarProps = {
   onClose?: () => void
+  initialChats?: Chat[]
 } & ComponentProps<'div'>
 
 type ChatChipProps = {
@@ -88,17 +89,12 @@ const ChatChip: React.FC<ChatChipProps> = ({
 
 export const Sidebar: React.FC<SidebarProps> = ({
   onClose = () => {},
+  initialChats = [],
   ...props
 }: SidebarProps): React.ReactNode => {
   const router = useRouter()
 
-  const [mounted, setMounted] = useState<boolean>(false)
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const [loading, setLoading] = useState<boolean>(true)
-  const [chats, setChats] = useState<Chat[]>([])
+  const [chats, setChats] = useState<Chat[]>(initialChats)
 
   const t_common = useTranslations('common')
   const t_chat = useTranslations('chat')
@@ -110,8 +106,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (token) {
       const chats = await ChatAPIManager.getAll(token)
       if (chats) setChats(chats)
-
-      setLoading(false)
     }
   }
 
@@ -149,12 +143,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   }
 
-  useEffect(() => {
-    fetchChats()
-  }, [])
-
   const pathname = usePathname()
-
   useEffect(() => {
     fetchChats()
   }, [pathname])
@@ -191,7 +180,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           aria-label={t_chat('new-chat')}
           hover
           className='h-min group'
-          onClick={() => !loading && newChat()}
+          onClick={() => newChat()}
           padding='small'
         >
           <div className='text-text-primary items-center gap-2 font-medium flex hover:text-text-secondary'>
@@ -206,7 +195,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </Box>
 
         <div className='flex flex-col-reverse gap-2'>
-          {!loading && mounted && chats
+          {chats
             ? chats.map((chat) => {
                 return (
                   <ChatChip

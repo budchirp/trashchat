@@ -1,6 +1,8 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
 import { createAzure } from '@ai-sdk/azure'
+import { AISecrets } from '@/lib/ai/secrets'
 import { Env } from '@/lib/env'
+
 import type { LanguageModelV1 } from 'ai'
 
 export type AIProvider = 'google' | 'azure'
@@ -27,7 +29,7 @@ export class AIModels {
   private static getGoogle = (withProvider: boolean): Partial<AIModelMap> => {
     let provider: (model: string) => LanguageModelV1 = () => null as any
     if (withProvider) {
-      const geminiApiKey = Env.geminiApiKey
+      const geminiApiKey = AISecrets.geminiApiKey
       if (!geminiApiKey) {
         throw new Error('No gemini api key found!')
       }
@@ -58,12 +60,12 @@ export class AIModels {
   private static getAzure = (withProvider: boolean): Partial<AIModelMap> => {
     let provider: (model: string) => LanguageModelV1 = () => null as any
     if (withProvider) {
-      const azureResourceName = Env.azureResourceName
+      const azureResourceName = AISecrets.azureResourceName
       if (!azureResourceName) {
         throw new Error('No azure resource name found!')
       }
 
-      const azureApiKey = Env.azureApiKey
+      const azureApiKey = AISecrets.azureApiKey
       if (!azureApiKey) {
         throw new Error('No azure api key found!')
       }

@@ -4,7 +4,7 @@ import { Env } from '@/lib/env'
 import type { User } from '@/types/user'
 
 export class UserAPIManager {
-  public static verify = async (
+  public static verifyPassword = async (
     token: string,
     password: string
   ): Promise<[boolean, string | null]> => {
@@ -12,7 +12,7 @@ export class UserAPIManager {
       const response = await Fetch.post<{
         message: string
       }>(
-        `${Env.appUrl}/api/user/verify`,
+        `${Env.appUrl}/api/user/password/verify`,
         {
           password
         },
@@ -107,7 +107,7 @@ export class UserAPIManager {
 
   public static sendEmail = async (token: string): Promise<boolean> => {
     try {
-      const response = await Fetch.get(`${Env.appUrl}/api/user/email`, {
+      const response = await Fetch.get(`${Env.appUrl}/api/user/verify/email`, {
         Authorization: `Bearer ${token}`
       })
 
@@ -127,7 +127,7 @@ export class UserAPIManager {
   ): Promise<boolean> => {
     try {
       const response = await Fetch.post(
-        `${Env.appUrl}/api/user/email`,
+        `${Env.appUrl}/api/user/verify/email`,
         {
           token: verificationToken
         },

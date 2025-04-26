@@ -1,0 +1,39 @@
+import type React from 'react'
+
+import { authenticatedRoute } from '@/lib/auth/client'
+import { setRequestLocale } from 'next-intl/server'
+import { Header } from '@/components/ui/header'
+import { Sidebar } from '@/components/ui/sidebar'
+import { cookies } from 'next/headers'
+
+import type { DynamicLayoutProps } from '@/types/layout'
+import { ChatAPIManager } from '@/lib/api/chat'
+
+const ChatLayout: React.FC<DynamicLayoutProps> = async ({
+  children,
+  params
+}: DynamicLayoutProps) => {
+  const { locale } = await params
+  setRequestLocale(locale)
+
+  const token = authenticatedRoute(await cookies(), locale)
+  const chats = await ChatAPIManager.getAll(token)
+
+  return (
+    <div className='flex size-full'>
+      <div className='w-1/4 hidden md:block h-screen relative'>
+        <Sidebar initialChats={chats || []} />
+      </div>
+
+      <div className='w-full md:w-3/4 flex flex-col grow h-full relative'>
+        <Header sidebar />
+
+        <main id='main' className='w-full page-min-h-screen'>
+          {children}
+        </main>
+      </div>
+    </div>
+  )
+}
+
+export default ChatLayout

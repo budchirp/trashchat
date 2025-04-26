@@ -1,6 +1,6 @@
-import { Env } from '@/lib/env'
-import { Fetch } from '@/lib/fetch'
 import { NextResponse, type NextRequest } from 'next/server'
+import { Secrets } from '@/lib/secrets'
+import { Fetch } from '@/lib/fetch'
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -12,7 +12,7 @@ export const POST = async (request: NextRequest) => {
     const response = await Fetch.post<{
       success: boolean
     }>(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${Env.captchaSecretKey}&response=${captcha}`
+      `https://www.google.com/recaptcha/api/siteverify?secret=${Secrets.captchaSecretKey}&response=${captcha}`
     )
     const json = await response.json()
 

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { generateText, smoothStream, streamText, type Message } from 'ai'
-import { authenticate } from '@/lib/auth/server/authenticate'
+import { authenticate } from '@/lib/auth/server'
 import { AIModels, type AIModelID } from '@/lib/ai/models'
 import { constructSystemPrompt } from '@/lib/ai/prompt'
 import { prisma } from '@/lib/prisma'

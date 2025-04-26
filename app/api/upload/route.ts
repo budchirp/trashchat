@@ -1,16 +1,16 @@
-import { NextResponse, type NextRequest } from 'next/server'
-import { authenticate } from '@/lib/auth/server/authenticate'
-import { S3Client } from '@aws-sdk/client-s3'
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
-import { Env } from '@/lib/env'
+import { NextResponse, type NextRequest } from 'next/server'
+import { authenticate } from '@/lib/auth/server'
+import { S3Client } from '@aws-sdk/client-s3'
+import { Secrets } from '@/lib/secrets'
 import { randomUUID } from 'crypto'
 import slugify from 'slugify'
 
 const client = new S3Client({
   region: 'eu-north-1',
   credentials: {
-    accessKeyId: Env.awsAccessKeyId!,
-    secretAccessKey: Env.awsSecretAccessKey!
+    accessKeyId: Secrets.awsAccessKeyId!,
+    secretAccessKey: Secrets.awsSecretAccessKey!
   }
 })
 
@@ -36,7 +36,7 @@ export const POST = async (request: NextRequest) => {
       }
     } = {}
 
-    const { files } = await request.json()
+    const { files, randomize = true } = await request.json()
     await Promise.all(
       files.map(
         async ({
@@ -47,8 +47,10 @@ export const POST = async (request: NextRequest) => {
           contentType: string
         }) => {
           const { url, fields } = await createPresignedPost(client, {
-            Bucket: Env.S3Bucket!,
-            Key: `${user.id}-${new Date().getTime()}-${randomUUID()}-${slugify(name)}`,
+            Bucket: Secrets.S3Bucket!,
+            Key: randomize
+              ? `${user.id}-${new Date().getTime()}-${randomUUID()}-${slugify(name)}`
+              : slugify(name),
             Fields: {
               'Content-Type': contentType
             }

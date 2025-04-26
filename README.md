@@ -12,19 +12,25 @@
 ## TODO
 
 - [x] Add Auth
-- [x] Save messages
-- [x] Add more models maybe
-- [ ] Landing page
-- [x] Code highlighting (laggy asf currntly)
-- [ ] Translate API routes
-- [ ] SEO
+- [x] Save messages to db
+- [x] Add more models
+- [x] Code highlighting
 - [x] Sidebar for chats
 - [x] Ability to delete chats
-- [x] Deleting account
+- [x] Ability to delete account
 - [x] Updating account details
 - [x] Better profile page
 - [x] File uploads
+- [x] Add capctha
+- [ ] Profile picture upload
+- [ ] Chat share feature
+- [ ] Copy message feature
+- [ ] Landing page
+- [ ] Google OAuth maybe
+- [ ] Forgot password feature
+- [ ] Translate API routes
+- [ ] SEO
 - [ ] Payments
-- [ ] Add capctha
+- [ ] Appearance page
 - [ ] Add an option to disable/enable blur
 - [ ] Improve privacy and security

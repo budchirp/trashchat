@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { authenticate } from '@/lib/auth/server/authenticate'
+import { authenticate } from '@/lib/auth/server'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
 import { randomUUID } from 'crypto'
