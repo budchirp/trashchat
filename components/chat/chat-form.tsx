@@ -68,7 +68,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
     <>
       <div
         style={{
-          height: height > 0 ? `${height}px` : 'calc(var(--spacing) * 26)'
+          height: height > 0 ? `calc(${height}px - 2rem)` : 'calc(var(--spacing) * 26)'
         }}
       />
 

@@ -4,10 +4,10 @@ import type React from 'react'
 import { use, useState } from 'react'
 
 import { ResendVerificationEmailButton } from '../../auth/verify/email/[token]/resend-button'
+import { DeleteAccountDialog } from '@/components/settings/delete-account-dialog'
 import { updateAccountValidator } from '@/lib/validators/update-account'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { UserContext } from '@/providers/context/user'
-import { AccountDeleteDialog } from './delete-dialog'
 import { SessionAPIManager } from '@/lib/api/session'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { UserAPIManager } from '@/lib/api/user'
@@ -20,6 +20,7 @@ import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
 import { Box } from '@/components/box'
 import { useFormik } from 'formik'
+import { Heading } from '@/components/heading'
 
 export const AccountClientPage: React.FC = (): React.ReactNode => {
   const router = useRouter()
@@ -143,25 +144,31 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
         </div>
       </form>
 
-      <AccountDeleteDialog open={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} />
+      <DeleteAccountDialog open={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} />
 
-      <div className='border-t-4 border-border-hover mt-4 pt-4 flex gap-2'>
-        <Button onClick={() => setShowDeleteDialog(true)}>{t_account('delete')}</Button>
+      <div>
+        <Heading>{t('danger-zone')}</Heading>
 
-        <Button
-          color='secondary'
-          onClick={async () => {
-            await SessionAPIManager.delete()
+        <div className='flex gap-2'>
+          <Button color='danger' onClick={() => setShowDeleteDialog(true)}>
+            {t_account('delete')}
+          </Button>
 
-            setUser(null)
+          <Button
+            color='secondary'
+            onClick={async () => {
+              await SessionAPIManager.delete()
 
-            toast(t_common('success'))
+              setUser(null)
 
-            router.push('/')
-          }}
-        >
-          {t('logout')}
-        </Button>
+              toast(t_common('success'))
+
+              router.push('/')
+            }}
+          >
+            {t('logout')}
+          </Button>
+        </div>
       </div>
     </>
   )

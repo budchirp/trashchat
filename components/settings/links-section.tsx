@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl'
 
 import type { RouteMap } from '@/types/route-map'
 
-export const SettingsSection: React.FC = (): React.ReactNode => {
+export const SettingsLinksSection: React.FC = (): React.ReactNode => {
   const t = useTranslations()
 
   const routes: RouteMap = [

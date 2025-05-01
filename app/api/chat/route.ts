@@ -17,13 +17,33 @@ export const POST = async (request: NextRequest) => {
       )
     }
 
-    const chat = await prisma.chat.create({
-      data: {
-        title: 'New chat',
-
+    const chats = await prisma.chat.findMany({
+      take: 1,
+      orderBy: {
+        updatedAt: 'desc'
+      },
+      include: {
+        messages: {
+          include: {
+            files: true
+          }
+        }
+      },
+      where: {
         userId: user.id
       }
     })
+
+    let chat: any = chats.length > 0 ? chats[0] : null
+    if (!chat || (chat && chat.messages.length > 1)) {
+      chat = await prisma.chat.create({
+        data: {
+          title: 'New chat',
+
+          userId: user.id
+        }
+      })
+    }
 
     return NextResponse.json({
       message: 'Success',

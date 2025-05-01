@@ -17,6 +17,7 @@ import { toast } from '@/components/toast'
 import { usePathname } from 'next/navigation'
 
 import type { Chat } from '@/types/chat'
+import { DeleteChatDialog } from '../chat/delete-chat-dialog'
 
 type SidebarProps = {
   onClose?: () => void
@@ -24,67 +25,73 @@ type SidebarProps = {
 } & ComponentProps<'div'>
 
 type ChatChipProps = {
+  selected?: boolean
   chat?: Chat
   onDelete?: any
 }
 
 const ChatChip: React.FC<ChatChipProps> = ({
+  selected = false,
   chat,
   onDelete = () => {}
 }: ChatChipProps): React.ReactNode => {
   const pathname = usePathname()
 
-  const ChatBox = ({ selected = false }: { selected?: boolean }) => (
-    <Box
-      padding='small'
-      variant='primary'
-      aria-label={chat?.title}
-      hover={chat !== null && chat !== undefined}
-      className={cn(
-        'group flex items-center justify-between gap-2',
-        selected && 'bg-background-secondary',
-        !chat && 'animate-pulse'
+  const [showDeleteChatDialog, setShowDeleteChatDialog] = useState<boolean>(false)
+
+  return (
+    <>
+      {chat && (
+        <DeleteChatDialog
+          id={chat.id}
+          redirect={pathname.includes(chat.id)}
+          onDelete={onDelete}
+          open={showDeleteChatDialog}
+          onClose={() => setShowDeleteChatDialog(false)}
+        />
       )}
-    >
-      <span
-        className={cn(
-          'transition-all ms-2 duration-300 w-full group-hover:font-bold text-ellipsis',
-          selected
-            ? 'text-text-accent-primary font-bold'
-            : 'text-text-tertiary font-medium group-hover:text-text-primary'
-        )}
-      >
-        {chat ? (
-          chat.title
-        ) : (
-          <div className='bg-background-tertiary h-2 w-full animate-pulse rounded-sm' />
-        )}
-      </span>
 
-      <Button
-        onClick={onDelete}
-        variant='round'
+      <Box
+        padding='small'
+        variant='primary'
+        aria-label={chat?.title}
         className={cn(
-          'invisible opacity-0 transition-all duration-300',
-          chat && 'group-hover:opacity-100 group-hover:visible'
+          'group flex items-center justify-between gap-2',
+          selected && 'bg-background-secondary',
+          !chat && 'animate-pulse'
         )}
-        type='button'
       >
-        <Trash size={16} />
-      </Button>
-    </Box>
+        <Link className='size-full flex items-center' href={`/chat/${chat ? chat.id : ''}`}>
+          <span
+            className={cn(
+              'transition-all ms-2 duration-300 group-hover:font-bold text-ellipsis',
+              selected
+                ? 'text-text-accent-primary font-bold'
+                : 'text-text-tertiary font-medium group-hover:text-text-primary'
+            )}
+          >
+            {chat ? (
+              chat.title
+            ) : (
+              <div className='bg-background-tertiary h-2 w-full animate-pulse rounded-sm' />
+            )}
+          </span>
+        </Link>
+
+        <Button
+          onClick={() => chat && setShowDeleteChatDialog(true)}
+          variant='round'
+          className={cn(
+            'invisible opacity-0 transition-all duration-300',
+            chat && 'group-hover:opacity-100 group-hover:visible'
+          )}
+          type='button'
+        >
+          <Trash size={16} />
+        </Button>
+      </Box>
+    </>
   )
-
-  if (chat) {
-    const selected = pathname.includes(chat.id)
-    return (
-      <Link href={`/chat/${chat.id}`} key={chat.id}>
-        <ChatBox selected={selected} />
-      </Link>
-    )
-  }
-
-  return <ChatBox />
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -106,26 +113,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     if (token) {
       const chats = await ChatAPIManager.getAll(token)
       if (chats) setChats(chats)
-    }
-  }
-
-  const deleteChat = async (id: string, selected: boolean) => {
-    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-    if (token) {
-      const deleted = await ChatAPIManager.delete(token, id)
-      if (!deleted) {
-        toast(t_common('error'))
-        fetchChats()
-      }
-
-      if (selected) {
-        const chat = await ChatAPIManager.get(token, '-1')
-        if (chat) {
-          router.push(`/chat/${chat.id}`)
-        } else {
-          router.push('/')
-        }
-      }
     }
   }
 
@@ -196,16 +183,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <div className='flex flex-col-reverse gap-2'>
           {chats
-            ? chats.map((chat) => {
+            ? chats.map((chat, index) => {
                 return (
                   <ChatChip
-                    key={chat.id}
-                    chat={chat}
-                    onDelete={async () => {
+                    onDelete={() => {
                       setChats(chats.filter((_chat) => _chat.id !== chat.id))
 
-                      deleteChat(chat.id, pathname.includes(chat.id))
+                      fetchChats()
                     }}
+                    selected={
+                      index === chats.length - 1 && pathname.endsWith('chat')
+                        ? true
+                        : pathname.includes(chat.id)
+                    }
+                    key={chat.id}
+                    chat={chat}
                   />
                 )
               })

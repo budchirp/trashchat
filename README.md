@@ -23,7 +23,7 @@
 - [x] File uploads
 - [x] Add capctha
 - [ ] Profile picture upload
-- [ ] Chat share feature
+- [ ] Share feature
 - [ ] Copy message feature
 - [ ] Landing page
 - [ ] Google OAuth maybe

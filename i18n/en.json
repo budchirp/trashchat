@@ -5,6 +5,8 @@
     "go-to-chat": "Go to chat"
   },
   "chat": {
+    "delete": "Delete chat",
+    "are-you-sure": "Are you sure?",
     "upload-fail": "Failed to upload attachment",
     "file-too-big": "This file is too big",
     "plus-error": "This model is for plus users!",
@@ -21,6 +23,7 @@
     "new-chat": "New chat"
   },
   "common": {
+    "cancel": "Cancel",
     "go-to-home": "Go to home",
     "invalid-token": "Invalid token",
     "unauthorized": "Unauthorized",
@@ -37,6 +40,7 @@
     "system": "System"
   },
   "auth": {
+    "danger-zone": "Danger zone",
     "captcha-error": "Failed to resolve captcha",
     "not-found": "User not found",
     "name": "Name",

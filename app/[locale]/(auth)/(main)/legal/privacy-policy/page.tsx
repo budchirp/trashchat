@@ -3,6 +3,7 @@ import type React from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
 import { Markdown } from '@/components/markdown'
+import { Heading } from '@/components/heading'
 import { routing } from '@/lib/i18n/routing'
 
 import type { Metadata } from 'next'
@@ -19,7 +20,9 @@ const PrivacyPolicyPage: React.FC<DynamicPageProps> = async ({ params }: Dynamic
 
   return (
     <div className='flex size-full flex-col mt-4'>
-      <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
+      <Heading>{t('text')}</Heading>
+
+      <article className='prose dark:prose-dark max-w-full! text-text-primary'>
         <Markdown content={t('policy')} />
       </article>
     </div>

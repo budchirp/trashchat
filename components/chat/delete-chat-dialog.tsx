@@ -1,0 +1,65 @@
+'use client'
+
+import type React from 'react'
+
+import { CookieMonster } from '@/lib/cookie-monster'
+import { useRouter } from '@/lib/i18n/routing'
+import { useTranslations } from 'next-intl'
+import { AreYouSureDialog } from '@/components/r-u-sure'
+import { ChatAPIManager } from '@/lib/api/chat'
+import { toast } from 'sonner'
+import { CONSTANTS } from '@/lib/constants'
+
+type DeleteChatDialogProps = {
+  id: string
+  redirect: boolean
+  open: boolean
+  onClose: () => void
+  onDelete: () => void
+}
+
+export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
+  id,
+  redirect,
+  open,
+  onClose,
+  onDelete
+}: DeleteChatDialogProps): React.ReactNode => {
+  const t = useTranslations('chat')
+  const t_common = useTranslations('common')
+
+  const cookieMonster = new CookieMonster()
+
+  const router = useRouter()
+  return (
+    <AreYouSureDialog
+      open={open}
+      onClose={onClose}
+      onSubmit={async () => {
+        const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+        if (token) {
+          const deleted = await ChatAPIManager.delete(token, id)
+          if (!deleted) {
+            toast(t_common('error'))
+            return
+          }
+
+          if (redirect) {
+            const chat = await ChatAPIManager.get(token, '-1')
+
+            onDelete()
+
+            if (chat) {
+              router.push(`/chat/${chat.id}`)
+            } else {
+              router.push('/')
+            }
+          }
+        }
+      }}
+      title={t('delete')}
+    >
+      <p>{t('are-you-sure')}</p>
+    </AreYouSureDialog>
+  )
+}

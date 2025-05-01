@@ -9,8 +9,6 @@ import { SessionAPIManager } from '@/lib/api/session'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { UserAPIManager } from '@/lib/api/user'
 import { useRouter } from '@/lib/i18n/routing'
-import { Button } from '@/components/button'
-import { Dialog } from '@/components/dialog'
 import { CONSTANTS } from '@/lib/constants'
 import { useTranslations } from 'next-intl'
 import { Input } from '@/components/input'
@@ -18,16 +16,17 @@ import { toast } from '@/components/toast'
 import { Box } from '@/components/box'
 import { Lock } from 'lucide-react'
 import { useFormik } from 'formik'
+import { AreYouSureDialog } from '@/components/r-u-sure'
 
-type AccountDeleteDialogProps = {
+type DeleteAccountDialogProps = {
   open: boolean
   onClose: () => void
 }
 
-export const AccountDeleteDialog: React.FC<AccountDeleteDialogProps> = ({
+export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
   open,
   onClose
-}: AccountDeleteDialogProps): React.ReactNode => {
+}: DeleteAccountDialogProps): React.ReactNode => {
   const [error, setError] = useState<string | null>(null)
 
   const t = useTranslations('account')
@@ -75,45 +74,39 @@ export const AccountDeleteDialog: React.FC<AccountDeleteDialogProps> = ({
   })
 
   return (
-    <Dialog
+    <AreYouSureDialog
       open={open}
       onClose={onClose}
+      onSubmit={formik.handleSubmit}
       title={t('delete')}
-      content={
-        <form className='grid  gap-2' onSubmit={formik.handleSubmit}>
-          {error && (
-            <Box variant='primary'>
-              <p className='text-red-500'>{error}</p>
-            </Box>
-          )}
+    >
+      <form className='grid gap-2' onSubmit={formik.handleSubmit}>
+        {error && (
+          <Box variant='primary'>
+            <p className='text-red-500'>{error}</p>
+          </Box>
+        )}
 
-          <div className='grid gap-2 w-full'>
-            <div>
-              <Input
-                id='password'
-                name='password'
-                type='password'
-                autoComplete='name'
-                icon={<Lock size={16} />}
-                placeholder={t_auth('password')}
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-
-              {formik.errors.password && formik.touched.password && (
-                <p className='text-red-500 ms-2'>{formik.errors.password}</p>
-              )}
-            </div>
-          </div>
-
+        <div className='grid gap-2 w-full'>
           <div>
-            <Button loading={formik.isSubmitting} type='submit'>
-              {t_common('submit')}
-            </Button>
+            <Input
+              id='password'
+              name='password'
+              type='password'
+              autoComplete='name'
+              icon={<Lock size={16} />}
+              placeholder={t_auth('password')}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+
+            {formik.errors.password && formik.touched.password && (
+              <p className='text-red-500 ms-2'>{formik.errors.password}</p>
+            )}
           </div>
-        </form>
-      }
-    />
+        </div>
+      </form>
+    </AreYouSureDialog>
   )
 }

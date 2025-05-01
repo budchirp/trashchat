@@ -5,6 +5,8 @@
     "go-to-chat": "Sohbete git"
   },
   "chat": {
+    "delete": "Sohbeti sil",
+    "are-you-sure": "Emin misin?",
     "upload-fail": "Ek yüklenemedi",
     "file-too-big": "Bu dosya çok büyük",
     "plus-error": "Bu model plus kullanıcılar içindir!",
@@ -21,6 +23,7 @@
     "new-chat": "Yeni sohbet"
   },
   "common": {
+    "cancel": "İptal",
     "invalid-token": "Geçersiz anahtar",
     "unauthorized": "İzinsiz erişim",
     "copied": "Kopyalandı",
@@ -36,6 +39,7 @@
     "system": "Sistem"
   },
   "auth": {
+    "danger-zone": "Tehlikeli alan",
     "captcha-error": "Captcha hatası",
     "not-found": "Kullanıcı bulunamadı",
     "name": "Ad",

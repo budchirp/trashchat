@@ -22,7 +22,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
     <div
       className={cn(
-        'size-8 flex items-center justify-center bg-background-secondary hover:bg-background-tertiary relative transition-all duration-150 border border-border rounded-xl',
+        'size-8 flex items-center justify-center bg-background-secondary hover:bg-background-tertiary relative transition-all duration-150 border border-border rounded-full p-1',
         checked &&
           'bg-background-accent-primary hover:bg-background-accent-secondary border-border-accent'
       )}

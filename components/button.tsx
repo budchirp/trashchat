@@ -19,7 +19,9 @@ export const buttonVariants = cva(
         primary:
           'bg-background-accent-primary border-border-accent text-gray-50 hover:bg-background-accent-secondary hover:text-gray-100 disabled:text-gray-200',
         secondary:
-          'bg-background-primary border-border hover:bg-background-secondary hover:border-border-hover disabled:text-text-secondary text-text-primary hover:text-text-secondary'
+          'bg-background-primary border-border hover:bg-background-secondary hover:border-border-hover text-text-primary hover:text-text-secondary disabled:text-text-secondary',
+        danger:
+          'bg-red-600 hover:bg-red-700 border-red-500 hover:border-red-600 text-gray-50 hover:text-gray-100 disabled:text-gray-200'
       }
     },
     defaultVariants: {
