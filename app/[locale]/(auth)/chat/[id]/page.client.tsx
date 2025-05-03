@@ -103,6 +103,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
                 message.files && message.files.length > 0
                   ? message.files
                   : messageFiles[index] || [],
+              text: message.content,
               content: <MemoizedMarkdown content={message.content} />
             }}
           />
@@ -112,7 +113,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
           <MessageBox
             message={
               {
-                content: t_common('loading'),
+                text: t_common('loading'),
                 role: 'assistant',
                 files: []
               } as any
@@ -121,7 +122,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         )}
 
         {messages.length < 1 && (
-          <div className='h-[calc(100vh-4rem-4rem-3rem)] flex flex-col gap-4 items-center text-center justify-center'>
+          <div className='h-[calc(100vh-4rem-4rem-4rem-1rem)] flex flex-col gap-4 items-center text-center justify-center'>
             <h1 className='font-bold text-2xl'>{t('start')}</h1>
           </div>
         )}

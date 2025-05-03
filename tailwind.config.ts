@@ -191,12 +191,14 @@ export default {
             img: {
               margin: '0'
             },
-            'thead, tbody, tr, td, th': {
+            'table, thead, tbody, tr, td, th': {
               borderColor: theme('colors.gray.200')
             },
             table: {
               width: '100%',
-              borderCollapse: 'collapse'
+              borderCollapse: 'collapse',
+              borderWidth: '1px',
+              borderRadius: theme('borderRadius.2xl')
             },
             th: {
               backgroundColor: theme('colors.gray.50'),
@@ -209,8 +211,11 @@ export default {
               padding: '0.75rem',
               color: theme('colors.gray.900')
             },
-            'tbody tr:nth-child(even)': {
+            'tbody tr': {
               backgroundColor: theme('colors.gray.50')
+            },
+            'tbody tr:nth-child(even)': {
+              backgroundColor: theme('colors.gray.100')
             }
           }
         },
@@ -270,18 +275,21 @@ export default {
             code: {
               color: theme('colors.gray.100')
             },
-            'thead, tbody, tr, td': {
+            'table, thead, tbody, tr, td': {
               borderColor: theme('colors.gray.690')
             },
             th: {
-              backgroundColor: theme('colors.gray.900'),
+              backgroundColor: theme('colors.gray.800'),
               color: theme('colors.gray.50')
             },
             td: {
               color: theme('colors.gray.50')
             },
-            'tbody tr:nth-child(even)': {
+            'tbody tr': {
               backgroundColor: theme('colors.gray.900')
+            },
+            'tbody tr:nth-child(even)': {
+              backgroundColor: theme('colors.gray.800')
             }
           }
         }

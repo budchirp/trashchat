@@ -1,8 +1,8 @@
 import type React from 'react'
 import type { Ref } from 'react'
 
+import { CopyButton } from '@/components/markdown/code/copy-button'
 import { Box } from '@/components/box'
-import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/cn'
 import { FileIcon } from 'lucide-react'
 
@@ -12,7 +12,8 @@ import type { File } from '@prisma/client'
 type MessageBoxProps = {
   className?: string
   message: Partial<UIMessage> & {
-    content: any
+    text: string
+    content?: any
     files?: File[]
   }
   ref?: Ref<HTMLDivElement>
@@ -23,50 +24,57 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
   message,
   ref
 }: MessageBoxProps): React.ReactNode => {
-  const t = useTranslations('chat')
-
   return (
-    <Box
-      variant='primary'
-      padding='none'
+    <div
       className={cn(
-        'grid px-4 !pt-3 pb-4 w-full overflow-hidden gap-2 bg-background-primary/50 backdrop-blur-sm',
-        className
+        'w-full group gap-2 flex flex-col justify-center',
+        message.role === 'user' ? 'items-end' : 'items-start'
       )}
-      ref={ref}
     >
-      {message.files && message.files.length > 0 && (
-        <div className='flex gap-2 overflow-x-scroll'>
-          {message.files.map((file, index) => {
-            return (
-              <Box
-                className='size-16 relative flex items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
-                key={index}
-                padding='none'
-              >
-                {file.contentType.startsWith('image/') ? (
-                  <img
-                    className='aspect-square size-max rounded-lg object-cover'
-                    aria-label={file.name}
-                    src={file.url}
-                  />
-                ) : (
-                  <FileIcon size={16} />
-                )}
-              </Box>
-            )
-          })}
-        </div>
-      )}
+      <Box
+        variant='primary'
+        padding='none'
+        className={cn(
+          message.role === 'user'
+            ? 'grid py-2 px-4 overflow-hidden gap-2 bg-background-primary/50 backdrop-blur-sm w-fit'
+            : 'bg-transparent rounded-none border-none',
+          className
+        )}
+        ref={ref}
+      >
+        {message.files && message.files.length > 0 && (
+          <div className='flex gap-2 overflow-x-scroll'>
+            {message.files.map((file, index) => {
+              return (
+                <Box
+                  className='size-16 relative flex items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
+                  key={index}
+                  padding='none'
+                >
+                  {file.contentType.startsWith('image/') ? (
+                    <img
+                      className='aspect-square size-max rounded-lg object-cover'
+                      aria-label={file.name}
+                      src={file.url}
+                    />
+                  ) : (
+                    <FileIcon size={16} />
+                  )}
+                </Box>
+              )
+            })}
+          </div>
+        )}
 
-      <h2 className='font-bold select-none text-text-tertiary'>
-        {message.role === 'user' ? t('you') : message.role === 'assistant' ? t('ai') : t('system')}
-      </h2>
+        <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
+          {message.content || message.text}
+        </article>
+      </Box>
 
-      <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
-        {message.content}
-      </article>
-    </Box>
+      <div className='pe-2 invisible opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:visible'>
+        <CopyButton variant='small' content={message.text} />
+      </div>
+    </div>
   )
 }
 MessageBox.displayName = 'MessageBox'

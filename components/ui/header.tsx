@@ -65,21 +65,20 @@ export const Header: React.FC<HeaderProps> = ({
         </Container>
       </header>
 
-      {sidebar && (
-        <Transition show={showSidebar}>
-          <Sidebar onClose={() => setShowSidebar(false)} />
-        </Transition>
-      )}
+      {mounted &&
+        sidebar &&
+        createPortal(
+          <Transition show={showSidebar}>
+            <Sidebar onClose={() => setShowSidebar(false)} />
+          </Transition>,
+          document.body
+        )}
 
       {mounted &&
         sidebar &&
         createPortal(
-          <Backdrop
-            className='!h-screen !z-30 inset-0'
-            open={showSidebar}
-            onClose={() => setShowSidebar(false)}
-          />,
-          document.querySelector('#main') as Element
+          <Backdrop open={showSidebar} onClose={() => setShowSidebar(false)} />,
+          document.body
         )}
 
       <div className='h-16' />

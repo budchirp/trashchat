@@ -32,11 +32,11 @@ export const Dialog: React.FC<DialogProps> = ({
     <HeadlessDialog open={open} transition onClose={onClose}>
       {mounted &&
         createPortal(
-          <Backdrop open={open} onClose={onClose} />,
-          document.querySelector('#main') as Element
+          <Backdrop className='!z-40' open={open} onClose={onClose} />,
+          document.body as Element
         )}
 
-      <div className='w-screen h-screen_ flex justify-center items-center z-20 mx-auto inset-0 fixed'>
+      <div className='w-screen h-screen_ flex justify-center items-center z-50 mx-auto inset-0 fixed'>
         <Container className='fixed top-20 flex h-min items-center justify-center'>
           <DialogPanel
             as={Box}
