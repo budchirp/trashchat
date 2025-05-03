@@ -5,6 +5,7 @@ import { CopyButton } from '@/components/markdown/code/copy-button'
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
 import { FileIcon } from 'lucide-react'
+import Image from 'next/image'
 
 import type { UIMessage } from 'ai'
 import type { File } from '@prisma/client'
@@ -26,62 +27,54 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
 }: MessageBoxProps): React.ReactNode => {
   return (
     <div
-      className={cn(
-        'w-full group flex flex-col justify-center',
-        message.role === 'user' ? 'items-end' : 'items-start'
-      )}
+      className={cn('w-full group min-w-0 flex flex-col gap-2', message.role === "user" ? "items-end" : "items-start")}
     >
-      <div
-        className={cn(
-          'flex flex-col justify-center gap-2 w-full',
-          message.role === 'user' ? 'max-w-3/4 items-end' : ''
-        )}
-      >
-        {message.files && message.files.length > 0 && (
-          <div className='w-full flex flex-row-reverse items-center rounded-xl overflow-x-scroll'>
-            <div className='flex gap-2 items-center'>
-              {message.files.map((file, index) => {
-                return (
-                  <Box
-                    className='size-16 flex shrink-0 items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
-                    key={index}
-                    padding='none'
-                  >
-                    {file.contentType.startsWith('image/') ? (
-                      <img
-                        className='size-full rounded-lg object-cover'
-                        aria-label={file.name}
-                        src={file.url}
-                      />
-                    ) : (
-                      <FileIcon size={16} />
-                    )}
-                  </Box>
-                )
-              })}
-            </div>
+      {message.files && message.files.length > 0 && (
+        <div className='rounded-xl w-full flex flex-row-reverse overflow-x-scroll'>
+          <div className='flex justify-end flex-row-reverse gap-2 items-center'>
+            {message.files.map((file, index) => {
+              return (
+                <Box
+                  className='size-16 flex shrink-0 items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
+                  key={index}
+                  padding='none'
+                >
+                  {file.contentType.startsWith('image/') ? (
+                    <Image
+                      height={256}
+                      width={256}
+                      className='size-full rounded-lg object-cover'
+                      alt={file.name}
+                      src={file.url}
+                    />
+                  ) : (
+                    <FileIcon size={16} />
+                  )}
+                </Box>
+              )
+            })}
           </div>
-        )}
-
-        <Box
-          variant='primary'
-          padding='none'
-          className={cn(
-            message.role === 'user'
-              ? 'grid py-2 px-4 overflow-hidden gap-2 bg-background-primary/50 backdrop-blur-sm max-w-full w-fit'
-              : 'bg-transparent rounded-none border-none',
-            className
-          )}
-          ref={ref}
-        >
-          <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
-            {message.content || message.text}
-          </article>
-        </Box>
-
-        <div className='pe-2 invisible opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:visible'>
-          <CopyButton variant='small' content={message.text} />
         </div>
+      )}
+
+      <Box
+        variant='primary'
+        padding='none'
+        className={cn(
+          message.role === 'user'
+            ? 'md:max-w-3/4 py-2 px-4 bg-background-primary/50 backdrop-blur-sm w-fit'
+            : 'max-w-full bg-transparent rounded-none border-none',
+          className
+        )}
+        ref={ref}
+      >
+        <article className='prose dark:prose-dark w-full !max-w-none break-words text-text-primary'>
+          {message.content || message.text}
+        </article>
+      </Box>
+
+      <div className='pe-2 invisible opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:visible'>
+        <CopyButton variant='small' content={message.text} />
       </div>
     </div>
   )

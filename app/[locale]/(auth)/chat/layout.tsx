@@ -3,11 +3,11 @@ import type React from 'react'
 import { authenticatedRoute } from '@/lib/auth/client'
 import { setRequestLocale } from 'next-intl/server'
 import { Header } from '@/components/ui/header'
+import { ChatAPIManager } from '@/lib/api/chat'
 import { Sidebar } from '@/components/ui/sidebar'
 import { cookies } from 'next/headers'
 
 import type { DynamicLayoutProps } from '@/types/layout'
-import { ChatAPIManager } from '@/lib/api/chat'
 
 const ChatLayout: React.FC<DynamicLayoutProps> = async ({
   children,
@@ -21,14 +21,14 @@ const ChatLayout: React.FC<DynamicLayoutProps> = async ({
 
   return (
     <div className='flex size-full'>
-      <div className='w-1/4 hidden md:block h-screen relative'>
+      <div className='w-0 md:w-1/4 h-full relative hidden md:block'>
         <Sidebar initialChats={chats || []} />
       </div>
 
-      <div className='w-full md:w-3/4 flex flex-col grow h-full relative'>
+      <div id="main" className='w-full md:w-3/4 h-full'>
         <Header sidebar />
 
-        <main id='main' className='w-full page-min-h-screen'>
+        <main className='w-full page-min-h-screen'>
           {children}
         </main>
       </div>

@@ -92,8 +92,8 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   }, [status])
 
   return (
-    <div className='flex size-full flex-col mt-4'>
-      <Container className='flex flex-col gap-2 h-full'>
+    <div className='size-full mt-4'>
+      <Container className='grid gap-2'>
         {messages.map((message: any, index) => (
           <MessageBox
             key={index}
