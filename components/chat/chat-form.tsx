@@ -4,7 +4,7 @@ import type React from 'react'
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 
 import { ModelSelector } from '@/components/chat/model-selector'
-import { FileIcon, Loader2, Paperclip, Search, Send, Square } from 'lucide-react'
+import { FileIcon, Loader2, Paperclip, Search, Send, Square, Trash } from 'lucide-react'
 import { Container } from '@/components/container'
 import { Input } from '@/components/input'
 import { Box } from '@/components/box'
@@ -20,9 +20,9 @@ export type ChatFormProps = {
   stop: () => void
   handleSubmit: any
   input: string
-  files?: FileList
+  files: File[]
   model: AIModelID
-  handleFilesChange: (files: FileList) => void
+  handleFilesChange: (files: File[]) => void
   handleModelChange: (model: AIModelID) => void
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
@@ -43,7 +43,6 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   handleInputChange
 }: ChatFormProps): React.ReactNode => {
   const t = useTranslations('chat')
-  const t_common = useTranslations('common')
 
   const ref = useRef<HTMLDivElement>(null)
 
@@ -78,38 +77,51 @@ export const ChatForm: React.FC<ChatFormProps> = ({
           className='flex min-h-26 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center z-20 right-0 w-full md:w-3/4 py-2 border-t border-border bottom-0'
         >
           <Container className='grid gap-2'>
-            {files &&
-              Array.from(files).map((file, index) => {
-                return (
-                  <Box
-                    className='size-16 relative flex items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
-                    key={index}
-                    padding='none'
-                  >
-                    {isUploading && (
-                      <div className='absolute size-full rounded-xl bg-black/75 flex inset-0 items-center justify-center'>
-                        <Loader2 className='animate-spin' />
-                      </div>
-                    )}
+            <div className='w-full rounded-xl overflow-x-scroll'>
+              <div className='flex gap-2'>
+                {supportsAttachments &&
+                  (files || []).map((file, index) => {
+                    return (
+                      <Box
+                        className='size-16 relative flex group shrink-0 items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
+                        key={index}
+                        padding='none'
+                      >
+                        <div
+                          className='invisible opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:visible absolute size-16 aspect-square rounded-xl bg-black/75 flex inset-0 items-center justify-center'
+                          onClick={() => {
+                            handleFilesChange(files.filter((_, _index) => index !== _index))
+                          }}
+                        >
+                          <Trash size={16} />
+                        </div>
 
-                    {file.type.startsWith('image/') ? (
-                      <img
-                        className='aspect-square size-max rounded-lg object-cover'
-                        aria-label={file.name}
-                        src={URL.createObjectURL(file)}
-                      />
-                    ) : (
-                      <FileIcon size={16} />
-                    )}
-                  </Box>
-                )
-              })}
+                        {isUploading && (
+                          <div className='absolute size-16 aspect-square rounded-xl bg-black/75 flex inset-0 items-center justify-center'>
+                            <Loader2 className='animate-spin' />
+                          </div>
+                        )}
+
+                        {file.type.startsWith('image/') ? (
+                          <img
+                            className='size-full rounded-lg object-cover'
+                            aria-label={file.name}
+                            src={URL.createObjectURL(file)}
+                          />
+                        ) : (
+                          <FileIcon size={16} />
+                        )}
+                      </Box>
+                    )
+                  })}
+              </div>
+            </div>
 
             <div className='flex items-center gap-2'>
               <Input
                 textarea
                 value={input}
-                placeholder={loading ? t_common('loading') : t('say-something')}
+                placeholder={t('say-something')}
                 onChange={handleInputChange}
                 icon={<Search size={16} />}
               />
@@ -134,7 +146,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                   type='file'
                   multiple
                   onChange={(e) => {
-                    handleFilesChange(e.target.files as FileList)
+                    handleFilesChange(Array.from(e.target.files as FileList))
                   }}
                 />
               </label>

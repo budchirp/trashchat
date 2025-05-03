@@ -3,6 +3,7 @@
 import type React from 'react'
 import { useEffect, useState, type ComponentProps } from 'react'
 
+import { DeleteChatDialog } from '../chat/delete-chat-dialog'
 import { Container } from '@/components/container'
 import { useTranslations } from 'next-intl'
 import { Box } from '@/components/box'
@@ -17,7 +18,6 @@ import { toast } from '@/components/toast'
 import { usePathname } from 'next/navigation'
 
 import type { Chat } from '@/types/chat'
-import { DeleteChatDialog } from '../chat/delete-chat-dialog'
 
 type SidebarProps = {
   onClose?: () => void
@@ -166,14 +166,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <Box
           aria-label={t_chat('new-chat')}
           hover
+          variant='primary'
           className='h-min group'
           onClick={() => newChat()}
           padding='small'
         >
           <div className='text-text-primary items-center gap-2 font-medium flex hover:text-text-secondary'>
-            <Button aria-label='Plus icon' variant='round' color='secondary'>
+            <div className='size-8 p-2 flex items-center justify-center'>
               <Plus size={16} />
-            </Button>
+            </div>
 
             <span className='transition-all duration-300 w-full group-hover:font-bold text-ellipsis text-text-tertiary font-medium group-hover:text-text-primary'>
               {t_chat('new-chat')}
@@ -181,7 +182,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </Box>
 
-        <div className='flex flex-col-reverse gap-2'>
+        <div className='flex flex-col-reverse w-full gap-2'>
           {chats
             ? chats.map((chat, index) => {
                 return (
@@ -190,6 +191,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       setChats(chats.filter((_chat) => _chat.id !== chat.id))
 
                       fetchChats()
+
+                      onClose()
                     }}
                     selected={
                       index === chats.length - 1 && pathname.endsWith('chat')

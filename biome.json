@@ -27,7 +27,8 @@
         "useOptionalChain": "off"
       },
       "a11y": {
-        "useValidAriaRole": "off"
+        "useValidAriaRole": "off",
+        "useKeyWithClickEvents": "off"
       }
     }
   },

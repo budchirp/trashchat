@@ -27,52 +27,61 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
   return (
     <div
       className={cn(
-        'w-full group gap-2 flex flex-col justify-center',
+        'w-full group flex flex-col justify-center',
         message.role === 'user' ? 'items-end' : 'items-start'
       )}
     >
-      <Box
-        variant='primary'
-        padding='none'
+      <div
         className={cn(
-          message.role === 'user'
-            ? 'grid py-2 px-4 overflow-hidden gap-2 bg-background-primary/50 backdrop-blur-sm w-fit'
-            : 'bg-transparent rounded-none border-none',
-          className
+          'flex flex-col justify-center gap-2 w-full',
+          message.role === 'user' ? 'max-w-3/4 items-end' : ''
         )}
-        ref={ref}
       >
         {message.files && message.files.length > 0 && (
-          <div className='flex gap-2 overflow-x-scroll'>
-            {message.files.map((file, index) => {
-              return (
-                <Box
-                  className='size-16 relative flex items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
-                  key={index}
-                  padding='none'
-                >
-                  {file.contentType.startsWith('image/') ? (
-                    <img
-                      className='aspect-square size-max rounded-lg object-cover'
-                      aria-label={file.name}
-                      src={file.url}
-                    />
-                  ) : (
-                    <FileIcon size={16} />
-                  )}
-                </Box>
-              )
-            })}
+          <div className='w-full flex flex-row-reverse items-center rounded-xl overflow-x-scroll'>
+            <div className='flex gap-2 items-center'>
+              {message.files.map((file, index) => {
+                return (
+                  <Box
+                    className='size-16 flex shrink-0 items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
+                    key={index}
+                    padding='none'
+                  >
+                    {file.contentType.startsWith('image/') ? (
+                      <img
+                        className='size-full rounded-lg object-cover'
+                        aria-label={file.name}
+                        src={file.url}
+                      />
+                    ) : (
+                      <FileIcon size={16} />
+                    )}
+                  </Box>
+                )
+              })}
+            </div>
           </div>
         )}
 
-        <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
-          {message.content || message.text}
-        </article>
-      </Box>
+        <Box
+          variant='primary'
+          padding='none'
+          className={cn(
+            message.role === 'user'
+              ? 'grid py-2 px-4 overflow-hidden gap-2 bg-background-primary/50 backdrop-blur-sm max-w-full w-fit'
+              : 'bg-transparent rounded-none border-none',
+            className
+          )}
+          ref={ref}
+        >
+          <article className='prose select-text dark:prose-dark max-w-full! !p-0 overflow-hidden break-words text-text-primary'>
+            {message.content || message.text}
+          </article>
+        </Box>
 
-      <div className='pe-2 invisible opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:visible'>
-        <CopyButton variant='small' content={message.text} />
+        <div className='pe-2 invisible opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:visible'>
+          <CopyButton variant='small' content={message.text} />
+        </div>
       </div>
     </div>
   )

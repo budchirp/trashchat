@@ -33,7 +33,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   const [error, setError] = useState<string | null>(null)
 
   const [isUploading, setIsUploading] = useState<boolean>(false)
-  const [files, setFiles] = useState<FileList | undefined>(undefined)
+  const [files, setFiles] = useState<File[]>([])
 
   const [messageFiles, setMessageFiles] = useState<{
     [index: number]: File[]
@@ -84,7 +84,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   }, [])
 
   useEffect(() => {
-    if (status === 'ready' && ref.current) {
+    if (ref.current && status === 'ready') {
       ref.current.scrollIntoView({
         behavior: 'smooth'
       })
@@ -147,8 +147,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
           let uploadedFiles: Partial<PrismaFile>[] = []
 
-          const filesArray = Array.from(files || [])
-          if (files && filesArray.length > 0) {
+          if (files.length > 0) {
             setIsUploading(true)
 
             try {
@@ -162,7 +161,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
               }>(
                 '/api/upload',
                 {
-                  files: filesArray.map((file) => ({
+                  files: files.map((file) => ({
                     name: file.name,
                     contentType: file.type
                   }))
@@ -176,7 +175,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
                 const json = await response.json()
 
                 await Promise.all(
-                  filesArray.map(async (file) => {
+                  files.map(async (file) => {
                     if (file.size > 1024 * 1024 * 3) {
                       setError(t('file-too-big'))
                       return
@@ -249,7 +248,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
             })
           }
 
-          setFiles(undefined)
+          setFiles([])
         }}
       />
     </div>
