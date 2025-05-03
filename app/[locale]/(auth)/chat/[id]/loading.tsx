@@ -39,6 +39,7 @@ const Loading: React.FC = () => {
         stop={() => {}}
         model={'gemini-2.0-flash'}
         input={''}
+        files={[]}
         handleFilesChange={() => {}}
         handleModelChange={() => {}}
         handleInputChange={() => {}}
