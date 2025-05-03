@@ -35,8 +35,6 @@ const ChatChip: React.FC<ChatChipProps> = ({
   chat,
   onDelete = () => {}
 }: ChatChipProps): React.ReactNode => {
-  const pathname = usePathname()
-
   const [showDeleteChatDialog, setShowDeleteChatDialog] = useState<boolean>(false)
 
   return (
@@ -44,7 +42,7 @@ const ChatChip: React.FC<ChatChipProps> = ({
       {chat && (
         <DeleteChatDialog
           id={chat.id}
-          redirect={pathname.includes(chat.id)}
+          redirect={selected}
           onDelete={onDelete}
           open={showDeleteChatDialog}
           onClose={() => setShowDeleteChatDialog(false)}
