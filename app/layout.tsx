@@ -58,7 +58,7 @@ const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps): React.ReactNo
     <html suppressHydrationWarning>
       <body
         className={cn(
-          'size-screen antialiased text-text-primary bg-background-primary',
+          'size-full antialiased relative text-text-primary bg-background-primary',
           lexend.variable,
           jetbrainsMono.variable
         )}

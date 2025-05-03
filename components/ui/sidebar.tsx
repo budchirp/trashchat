@@ -139,7 +139,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <div
       {...props}
       className={cn(
-        'w-3/4 md:w-1/4 bg-background-primary fixed z-30 top-0 left-0 flex flex-col h-screen border-r border-border',
+        'w-3/4 md:w-1/4 bg-background-primary select-none fixed z-30 top-0 left-0 flex flex-col h-screen border-r border-border',
         'transition-all opacity-100',
         'data-closed:-translate-x-full data-closed:opacity-75',
         'data-enter:ease-out data-enter:duration-400',

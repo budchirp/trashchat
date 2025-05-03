@@ -172,8 +172,8 @@ export default {
               paddingRight: '0.50rem'
             },
             pre: {
-              borderRadius: theme('borderRadius.2xl'),
-              backgroundColor: 'transparent',
+              borderRadius: theme('borderRadius.3xl'),
+              backgroundColor: theme('colors.gray.50'),
               margin: 0,
               padding: 0
             },
@@ -181,6 +181,7 @@ export default {
               padding: '0.5rem 1rem '
             },
             code: {
+              backgroundColor: 'transparent',
               color: theme('colors.gray.800'),
               padding: 0,
               margin: 0

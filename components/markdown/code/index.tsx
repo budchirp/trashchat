@@ -51,7 +51,7 @@ export const MarkdownCode: React.FC<MarkdownCodeProps> = ({
     })
 
     return (
-      <Box padding='none' variant='primary' className='rounded-2xl'>
+      <Box padding='none' variant='primary'>
         <div className='py-2 select-none ps-4 pe-2 border-b gap-2 w-full flex items-center justify-between border-border'>
           <span className='font-medium text-text-primary'>{lang}</span>
 
@@ -59,6 +59,7 @@ export const MarkdownCode: React.FC<MarkdownCodeProps> = ({
         </div>
 
         <div
+          className='select-text rounded-3xl'
           dangerouslySetInnerHTML={{
             __html: html
           }}

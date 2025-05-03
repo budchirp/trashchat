@@ -68,7 +68,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
         )}
         ref={ref}
       >
-        <article className='prose dark:prose-dark w-full !max-w-none break-words text-text-primary'>
+        <article className='prose dark:prose-dark w-full !max-w-none break-words text-text-primary select-text'>
           {message.content || message.text}
         </article>
       </Box>

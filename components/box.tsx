@@ -4,27 +4,30 @@ import type { ComponentProps } from 'react'
 import { cn } from '@/lib/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
 
-const boxVariants = cva(['w-full rounded-3xl border border-border transition-all duration-300'], {
-  variants: {
-    variant: {
-      primary: 'bg-background-primary',
-      secondary: 'bg-background-secondary'
+const boxVariants = cva(
+  ['w-full rounded-3xl border border-border transition-all duration-300 overflow-hidden'],
+  {
+    variants: {
+      variant: {
+        primary: 'bg-background-primary',
+        secondary: 'bg-background-secondary'
+      },
+      padding: {
+        default: 'px-4 py-3',
+        small: 'p-2',
+        none: ''
+      },
+      hover: {
+        true: 'cursor-pointer hover:bg-background-tertiary',
+        false: ''
+      }
     },
-    padding: {
-      default: 'px-4 py-3',
-      small: 'p-2',
-      none: ''
-    },
-    hover: {
-      true: 'cursor-pointer hover:bg-background-tertiary',
-      false: ''
+    defaultVariants: {
+      padding: 'default',
+      variant: 'secondary'
     }
-  },
-  defaultVariants: {
-    padding: 'default',
-    variant: 'secondary'
   }
-})
+)
 
 export type BoxProps = ComponentProps<'div'> & VariantProps<typeof boxVariants>
 

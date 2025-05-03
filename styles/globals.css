@@ -118,6 +118,7 @@ html {
 
 html.dark .shiki,
 html.dark .shiki span {
+  background-color: transparent;
   color: var(--shiki-dark) !important;
 }
 
