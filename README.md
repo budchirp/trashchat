@@ -13,7 +13,9 @@
 
 - [x] Add Auth
 - [x] Save messages to db
-- [x] Add more models
+- [ ] Add more models
+- [ ] Search
+- [ ] Reasoning options
 - [x] Code highlighting
 - [x] Sidebar for chats
 - [x] Ability to delete chats
@@ -22,9 +24,10 @@
 - [x] Better profile page
 - [x] File uploads
 - [x] Add capctha
+- [ ] Customize scrollbar
 - [ ] Profile picture upload
 - [ ] Share feature
-- [ ] Copy message feature
+- [x] Copy message feature
 - [ ] Landing page
 - [ ] Google OAuth maybe
 - [ ] Forgot password feature
@@ -34,3 +37,4 @@
 - [ ] Appearance page
 - [ ] Add an option to disable/enable blur
 - [ ] Improve privacy and security
+- [ ] Fix ui moving when opening popups

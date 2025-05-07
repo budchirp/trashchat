@@ -122,7 +122,7 @@ export const POST = async (
 
     if (chat.messages.length < 2) {
       const { text: title } = await generateText({
-        model: models['gemini-2.0-flash'].provider,
+        model: models['gemini-2.5-flash'].provider,
         system:
           'Generate a ONE title thats max of 40 characters according to what user asking or talking. Just reply with the title nothing else. MAKE IT RELATED TO USERS REQUEST.',
         prompt: message.content
@@ -140,9 +140,9 @@ export const POST = async (
       })
     }
 
-    const model = modelName ? models[modelName] : models['gemini-2.0-flash']
+    const model = modelName ? models[modelName] : models['gemini-2.5-flash']
     if (model.plus && !user.plus) {
-      throw new Error(t('plus-error'))
+      throw new Error()
     }
 
     if (model.premium) {

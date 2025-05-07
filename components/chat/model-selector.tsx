@@ -1,7 +1,7 @@
 'use client'
 
 import type React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react'
 import { createPortal } from 'react-dom'
 
 import { Backdrop } from '@/components/backdrop'
@@ -15,7 +15,8 @@ import {
   ListboxOptions,
   Transition
 } from '@headlessui/react'
-import { ChevronDown, Crown, DollarSign } from 'lucide-react'
+import { UserContext } from '@/providers/context/user'
+import { ChevronDown, Crown, DollarSign, FlaskConical, ThumbsUp, Camera, File } from 'lucide-react'
 
 import type { AIModelID, AIModelMap } from '@/lib/ai/models'
 
@@ -36,6 +37,8 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const { user } = use(UserContext)
 
   return (
     <Listbox value={model} onChange={onChange}>
@@ -70,22 +73,25 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     style={{
                       bottom: `calc(${height}px + 1rem)`
                     }}
-                    className='fixed flex h-min justify-start items-center'
+                    className='fixed h-min flex justify-start items-center'
                   >
                     <ListboxOptions
                       static
                       as={Box}
                       variant='primary'
                       padding='none'
-                      className='min-w-32 max-w-64 overflow-hidden'
+                      className='min-w-32 overflow-y-auto max-h-96 w-fit grid grid-cols-2 md:grid-cols-3 gap-4 p-4'
                     >
                       {(Object.keys(models) as AIModelID[]).map((modelId: AIModelID) => {
+                        const model = models[modelId]
+
                         return (
                           <ListboxOption
+                            disabled={model.plus && !user.plus}
                             key={modelId}
                             className={({ selected }) =>
                               cn(
-                                'border-border h-12 flex w-full cursor-pointer items-center border-b px-4 py-2 transition duration-300 last:border-none',
+                                'border-border data-disabled:opacity-50 data-disabled:pointer-events-none p-4 cursor-pointer rounded-2xl w-full transition border duration-300',
                                 selected
                                   ? 'bg-background-secondary'
                                   : 'bg-background-primary hover:bg-background-secondary'
@@ -94,26 +100,24 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                             value={modelId}
                           >
                             {({ selected }) => {
-                              const model = models[modelId]
-
                               return (
                                 <div
-                                  className={cn(
-                                    'flex justify-between gap-4 h-full w-full items-center'
-                                  )}
+                                  className={cn('gap-4 flex flex-col items-center justify-center')}
                                 >
                                   <p
                                     className={cn(
-                                      'font-medium transition duration-300',
+                                      'transition text-center duration-300',
                                       selected
-                                        ? 'text-text-accent-primary'
-                                        : 'text-text-primary hover:text-text-secondary'
+                                        ? 'text-text-accent-primary font-bold'
+                                        : model.recommended
+                                          ? 'font-bold text-text-primary'
+                                          : 'font-medium text-text-secondary'
                                     )}
                                   >
                                     {model.name}
                                   </p>
 
-                                  <div className='flex gap-2'>
+                                  <div className='flex items-center flex-wrap justify-center gap-2'>
                                     {model.plus && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Crown />
@@ -123,6 +127,30 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                     {model.premium && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <DollarSign />
+                                      </div>
+                                    )}
+
+                                    {model.recommended && (
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <ThumbsUp />
+                                      </div>
+                                    )}
+
+                                    {model.experimental && (
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <FlaskConical />
+                                      </div>
+                                    )}
+
+                                    {model.imageUpload && (
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <Camera />
+                                      </div>
+                                    )}
+
+                                    {model.fileUpload && (
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <File />
                                       </div>
                                     )}
                                   </div>

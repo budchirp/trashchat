@@ -1,12 +1,22 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
+import { createOpenAI } from '@ai-sdk/openai'
 import { createAzure } from '@ai-sdk/azure'
 import { AISecrets } from '@/lib/ai/secrets'
 import { Env } from '@/lib/env'
 
 import type { LanguageModelV1 } from 'ai'
 
-export type AIProvider = 'google' | 'azure'
-export type AIModelID = 'gemini-2.0-flash' | 'deepseek-r1' | 'openai-gpt-4o-mini' | 'openai-o3-mini'
+export type AIProvider = 'openai' | 'google' | 'azure'
+export type AIModelID =
+  | 'openai-gpt-4.1'
+  | 'openai-gpt-4.1-mini'
+  | 'openai-gpt-4o-mini'
+  | 'openai-o3-mini'
+  | 'openai-o4-mini'
+  | 'gemini-2.0-flash'
+  | 'gemini-2.5-flash'
+  | 'gemini-2.5-pro'
+  | 'deepseek-r1'
 
 export type AIModel = {
   id: AIModelID
@@ -16,7 +26,11 @@ export type AIModel = {
   plus: boolean
   premium: boolean
 
-  supportsAttachments: boolean
+  experimental: boolean
+  recommended: boolean
+
+  imageUpload: boolean
+  fileUpload: boolean
 
   provider: LanguageModelV1
 }
@@ -26,6 +40,105 @@ export type AIModelMap = {
 }
 
 export class AIModels {
+  private static getOpenAI = (withProvider: boolean): Partial<AIModelMap> => {
+    let provider: (model: string) => LanguageModelV1 = () => null as any
+    if (withProvider) {
+      const openaiApiKey = AISecrets.openaiApiKey
+      if (!openaiApiKey) {
+        throw new Error('No OpenAI api key found!')
+      }
+
+      const openai = createOpenAI({
+        apiKey: openaiApiKey
+      })
+
+      provider = (model: string) => openai(model)
+    }
+
+    return {
+      'openai-gpt-4.1': {
+        id: 'openai-gpt-4.1',
+
+        name: 'OpenAI GPT-4.1',
+
+        plus: true,
+        premium: true,
+
+        experimental: false,
+        recommended: false,
+
+        imageUpload: true,
+        fileUpload: false,
+
+        provider: provider('gpt-4.1-2025-04-14')
+      },
+      'openai-gpt-4.1-mini': {
+        id: 'openai-gpt-4.1-mini',
+
+        name: 'OpenAI GPT-4.1 mini',
+
+        plus: true,
+        premium: false,
+
+        experimental: false,
+        recommended: false,
+
+        imageUpload: true,
+        fileUpload: false,
+
+        provider: provider('gpt-4.1-mini-2025-04-14')
+      },
+      'openai-gpt-4o-mini': {
+        id: 'openai-gpt-4o-mini',
+
+        name: 'OpenAI GPT-4o mini',
+
+        plus: true,
+        premium: false,
+
+        experimental: false,
+        recommended: false,
+
+        imageUpload: true,
+        fileUpload: false,
+
+        provider: provider('gpt-4o-mini-2024-07-18')
+      },
+      'openai-o3-mini': {
+        id: 'openai-o3-mini',
+
+        name: 'OpenAI o3 mini',
+
+        plus: true,
+        premium: true,
+
+        experimental: false,
+        recommended: false,
+
+        imageUpload: true,
+        fileUpload: false,
+
+        provider: provider('o3-mini-2025-01-31')
+      },
+      'openai-o4-mini': {
+        id: 'openai-o4-mini',
+
+        name: 'OpenAI o4 mini',
+
+        plus: true,
+        premium: true,
+
+        experimental: false,
+        recommended: true,
+
+        imageUpload: true,
+        fileUpload: false,
+
+        provider: provider('o4-mini-2025-04-16')
+      }
+    }
+  }
+
   private static getGoogle = (withProvider: boolean): Partial<AIModelMap> => {
     let provider: (model: string) => LanguageModelV1 = () => null as any
     if (withProvider) {
@@ -42,6 +155,38 @@ export class AIModels {
     }
 
     return {
+      'gemini-2.5-pro': {
+        id: 'gemini-2.5-pro',
+
+        name: 'Gemini 2.5 Pro',
+
+        plus: true,
+        premium: false,
+
+        experimental: true,
+        recommended: true,
+
+        imageUpload: true,
+        fileUpload: true,
+
+        provider: provider('gemini-2.5-pro-exp-03-25')
+      },
+      'gemini-2.5-flash': {
+        id: 'gemini-2.5-flash',
+
+        name: 'Gemini 2.5 Flash',
+
+        plus: false,
+        premium: false,
+
+        experimental: true,
+        recommended: true,
+
+        imageUpload: true,
+        fileUpload: true,
+
+        provider: provider('gemini-2.5-flash-preview-04-17')
+      },
       'gemini-2.0-flash': {
         id: 'gemini-2.0-flash',
 
@@ -50,9 +195,13 @@ export class AIModels {
         plus: false,
         premium: false,
 
-        supportsAttachments: true,
+        experimental: false,
+        recommended: true,
 
-        provider: provider('gemini-2.0-flash-exp')
+        imageUpload: true,
+        fileUpload: true,
+
+        provider: provider('gemini-2.0-flash')
       }
     }
   }
@@ -88,7 +237,11 @@ export class AIModels {
         plus: true,
         premium: false,
 
-        supportsAttachments: false,
+        experimental: false,
+        recommended: false,
+
+        imageUpload: false,
+        fileUpload: false,
 
         provider: provider('DeepSeek-R1')
       },
@@ -100,7 +253,11 @@ export class AIModels {
         plus: true,
         premium: false,
 
-        supportsAttachments: true,
+        experimental: false,
+        recommended: false,
+
+        imageUpload: true,
+        fileUpload: false,
 
         provider: provider('gpt-4o-mini')
       },
@@ -112,9 +269,13 @@ export class AIModels {
         plus: true,
         premium: true,
 
-        supportsAttachments: true,
+        experimental: false,
+        recommended: false,
 
-        provider: provider('gpt-4o-mini')
+        imageUpload: true,
+        fileUpload: false,
+
+        provider: provider('o3-mini')
       }
     }
   }
@@ -123,6 +284,7 @@ export class AIModels {
     [key in AIProvider]: (withProvider: boolean) => Partial<AIModelMap>
   } = {
     google: this.getGoogle,
+    openai: this.getOpenAI,
     azure: this.getAzure
   }
 

@@ -29,7 +29,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   const t = useTranslations('chat')
   const t_common = useTranslations('common')
 
-  const [model, setModel] = useState<AIModelID>(chat.model || 'gemini-2.0-flash')
+  const [model, setModel] = useState<AIModelID>(chat.model || 'gemini-2.5-flash')
   const [error, setError] = useState<string | null>(null)
 
   const [isUploading, setIsUploading] = useState<boolean>(false)
@@ -104,7 +104,12 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
                   ? message.files
                   : messageFiles[index] || [],
               text: message.content,
-              content: <MemoizedMarkdown content={message.content} />
+              content:
+                message.role === 'user' ? (
+                  message.content
+                ) : (
+                  <MemoizedMarkdown content={message.content} />
+                )
             }}
           />
         ))}
@@ -134,7 +139,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         loading={status === 'streaming' || status === 'submitted' || isUploading}
         isUploading={isUploading}
         stop={stop}
-        model={model}
+        modelId={model}
         input={input}
         files={files}
         handleFilesChange={setFiles}

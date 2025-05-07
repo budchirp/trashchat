@@ -95,15 +95,6 @@
   @apply appearance-none scroll-smooth font-main antialiased outline-hidden selection:bg-accent-300/90 selection:text-black/90;
 }
 
-html {
-  overflow-y: scroll !important;
-}
-
-*::-webkit-scrollbar {
-  display: none !important;
-  position: absolute !important;
-}
-
 .backdrop-h-screen {
   height: calc(100vh - 4rem);
 }

@@ -9,7 +9,7 @@
     "are-you-sure": "Are you sure?",
     "upload-fail": "Failed to upload attachment",
     "file-too-big": "This file is too big",
-    "plus-error": "This model is for plus users!",
+    "only-image": "This model only supports image uploads",
     "credit-error": "Not enough credits!",
     "error": "Error while generating content. Please try again",
     "text": "Chat",

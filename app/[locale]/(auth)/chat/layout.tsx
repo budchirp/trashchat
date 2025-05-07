@@ -25,12 +25,10 @@ const ChatLayout: React.FC<DynamicLayoutProps> = async ({
         <Sidebar initialChats={chats || []} />
       </div>
 
-      <div id="main" className='w-full md:w-3/4 h-full'>
+      <div id='main' className='w-full md:w-3/4 h-full'>
         <Header sidebar />
 
-        <main className='w-full page-min-h-screen relative'>
-          {children}
-        </main>
+        <main className='w-full page-min-h-screen relative'>{children}</main>
       </div>
     </div>
   )

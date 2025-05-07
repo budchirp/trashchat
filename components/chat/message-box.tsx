@@ -27,10 +27,13 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
 }: MessageBoxProps): React.ReactNode => {
   return (
     <div
-      className={cn('w-full group min-w-0 flex flex-col gap-2', message.role === "user" ? "items-end" : "items-start")}
+      className={cn(
+        'w-full group min-w-0 flex flex-col gap-2',
+        message.role === 'user' ? 'items-end' : 'items-start'
+      )}
     >
       {message.files && message.files.length > 0 && (
-        <div className='rounded-xl w-full flex flex-row-reverse overflow-x-scroll'>
+        <div className='rounded-xl w-full flex flex-row-reverse overflow-x-auto'>
           <div className='flex justify-end flex-row-reverse gap-2 items-center'>
             {message.files.map((file, index) => {
               return (
