@@ -24,7 +24,6 @@
 - [x] Better profile page
 - [x] File uploads
 - [x] Add capctha
-- [ ] Customize scrollbar
 - [ ] Profile picture upload
 - [ ] Share feature
 - [x] Copy message feature
@@ -37,4 +36,3 @@
 - [ ] Appearance page
 - [ ] Add an option to disable/enable blur
 - [ ] Improve privacy and security
-- [ ] Fix ui moving when opening popups
