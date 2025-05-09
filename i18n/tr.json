@@ -35,7 +35,8 @@
   "errors": {
     "error": "Hata",
     "not-found": "Sayfa bulunamadı",
-    "unauthorized": "İzinsiz erişim"
+    "unauthorized": "İzinsiz erişim",
+    "sneakt": "Geçersiz anahtar"
   },
   "common": {
     "cancel": "İptal",

@@ -10,8 +10,8 @@ export const useLogout = (): (() => Promise<void>) => {
   const t = useTranslations('common')
 
   const router = useRouter()
-  const { setUser } = use(UserContext)
 
+  const { setUser } = use(UserContext)
   return async () => {
     await SessionAPIManager.delete()
 

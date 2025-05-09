@@ -35,7 +35,8 @@
   "errors": {
     "error": "Error",
     "not-found": "Page not found",
-    "unauthorized": "Unauthorized"
+    "unauthorized": "Unauthorized",
+    "sneaky": "Invalid token"
   },
   "common": {
     "cancel": "Cancel",
