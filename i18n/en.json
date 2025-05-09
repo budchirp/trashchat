@@ -5,39 +5,46 @@
     "go-to-chat": "Go to chat"
   },
   "chat": {
-    "delete": "Delete chat",
-    "are-you-sure": "Are you sure?",
-    "upload-fail": "Failed to upload attachment",
-    "file-too-big": "This file is too big",
-    "only-image": "This model only supports image uploads",
-    "credit-error": "Not enough credits!",
-    "error": "Error while generating content. Please try again",
     "text": "Chat",
     "description": "Chat with your favourite AI model!",
+    "errors": {
+      "not-found": "Chat not found",
+      "upload-fail": "Failed to upload attachment",
+      "file-too-big": "This file is too big",
+      "only-image": "This model only supports image uploads",
+      "credit-error": "Not enough credits!",
+      "api-error": "Error while generating content. Please try again"
+    },
+    "reasoning-effort": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "reasoning": "Reasoning",
+    "sources": "Sources",
+    "delete": "Delete chat",
+    "are-you-sure": "Are you sure?",
     "say-something": "Say something",
     "start": "Don't be shy. Start a conversation.",
-    "you": "You",
-    "ai": "AI",
     "system": "System",
-    "not-found": "Chat not found",
     "new-chat": "New chat"
+  },
+  "ui": {
+    "footer": "Made by Can Kolay with ❤️"
+  },
+  "errors": {
+    "error": "Error",
+    "not-found": "Page not found",
+    "unauthorized": "Unauthorized"
   },
   "common": {
     "cancel": "Cancel",
     "go-to-home": "Go to home",
-    "invalid-token": "Invalid token",
-    "unauthorized": "Unauthorized",
     "copied": "Copied",
     "submit": "Submit",
     "loading": "Loading...",
     "success": "Success",
-    "error": "Error",
-    "update": "Update",
-    "not-found": "Page not found",
-    "footer": "Made by Can Kolay with ❤️",
-    "dark": "Dark",
-    "light": "Light",
-    "system": "System"
+    "update": "Update"
   },
   "auth": {
     "danger-zone": "Danger zone",
@@ -47,6 +54,7 @@
     "username": "Username",
     "email": "E-Mail",
     "password": "Password",
+    "logout": "Log out",
     "signin": {
       "text": "Sign in",
       "description": "Sign in",
@@ -62,32 +70,41 @@
       "verified": "E-Mail is successfully verified 🥳",
       "invalid-token": "Invalid verification token",
       "resend": "Resend verification e-mail"
-    },
-    "logout": "Log out"
+    }
   },
   "settings": {
-    "text": "Settings"
-  },
-  "account": {
-    "text": "Account",
-    "description": "Account",
-    "delete": "Delete account",
-    "profile-picture": "Profile Picture",
-    "verify-warning": "Your e-mail is not verified. Please verify it"
-  },
-  "customization": {
-    "text": "Customization",
-    "description": "Customization",
-    "prompt": "System prompt",
-    "share-info": "Share info with ai"
-  },
-  "usages": {
-    "text": "Usages",
-    "description": "Usages",
-    "credits": "Credits",
-    "premium-credits": "Premium credits",
-    "reset": "Your usages will reset on {date}",
-    "verify-warning": "Verify your e-mail to increase limits"
+    "text": "Settings",
+    "account": {
+      "text": "Account",
+      "description": "Account",
+      "delete": "Delete account",
+      "profile-picture": "Profile Picture",
+      "verify-warning": "Your e-mail is not verified. Please verify it",
+      "profile": "Profile"
+    },
+    "customization": {
+      "text": "Customization",
+      "description": "Customization",
+      "prompt": "System prompt",
+      "share-info": "Share info with ai"
+    },
+    "usages": {
+      "text": "Usages",
+      "description": "Usages",
+      "credits": "Credits",
+      "premium-credits": "Premium credits",
+      "reset": "Your usages will reset on {date}",
+      "verify-warning": "Verify your e-mail to increase limits"
+    },
+    "appearance": {
+      "text": "Appearance",
+      "description": "Appearance",
+      "themes": {
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System"
+      }
+    }
   },
   "legal": {
     "privacy-policy": {

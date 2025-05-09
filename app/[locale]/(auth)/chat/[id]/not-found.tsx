@@ -22,12 +22,21 @@ const NotFound: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
 
   return (
     <Container>
-      <VerticalPage items={t('not-found').split(' ')} title={'404'} />
+      <VerticalPage items={t('errors.not-found').split(' ')} title={'404'} />
     </Container>
   )
 }
 
-export const metadata: Metadata = MetadataManager.generate('Not found', '404')
+export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Metadata> => {
+  const { locale, id } = await params
+
+  const t = await getTranslations({
+    namespace: 'chat',
+    locale
+  })
+
+  return MetadataManager.generate('404', t('errors.not-found'))
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))

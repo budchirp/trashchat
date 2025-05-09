@@ -13,6 +13,7 @@ import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
+import { Field } from '@headlessui/react'
 import { Box } from '@/components/box'
 import { Fetch } from '@/lib/fetch'
 import { useFormik } from 'formik'
@@ -36,7 +37,6 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
   const formik = useFormik({
     initialValues: {
       name: '',
-      username: '',
       email: '',
       password: ''
     },
@@ -93,7 +93,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
       )}
 
       <div className='grid gap-2 w-full'>
-        <div>
+        <Field>
           <Input
             id='name'
             name='name'
@@ -109,27 +109,9 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
           {formik.errors.name && formik.touched.name && (
             <p className='text-red-500 ms-2'>{formik.errors.name}</p>
           )}
-        </div>
+        </Field>
 
-        <div>
-          <Input
-            id='username'
-            name='username'
-            type='text'
-            autoComplete='off'
-            icon={<User size={16} />}
-            placeholder={t('username')}
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-
-          {formik.errors.username && formik.touched.username && (
-            <p className='text-red-500 ms-2'>{formik.errors.username}</p>
-          )}
-        </div>
-
-        <div>
+        <Field>
           <Input
             id='email'
             name='email'
@@ -145,9 +127,9 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
           {formik.errors.email && formik.touched.email && (
             <p className='text-red-500 ms-2'>{formik.errors.email}</p>
           )}
-        </div>
+        </Field>
 
-        <div>
+        <Field>
           <Input
             id='password'
             name='password'
@@ -163,7 +145,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
           {formik.errors.password && formik.touched.password && (
             <p className='text-red-500 ms-2'>{formik.errors.password}</p>
           )}
-        </div>
+        </Field>
 
         <div>
           <ReCAPTCHA ref={captchaRef} sitekey={captchaSiteKey} />

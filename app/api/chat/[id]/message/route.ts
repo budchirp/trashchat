@@ -1,16 +1,29 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { generateText, smoothStream, streamText, type Message } from 'ai'
-import { authenticate } from '@/lib/auth/server'
-import { AIModels, type AIModelID } from '@/lib/ai/models'
+import {
+  extractReasoningMiddleware,
+  generateObject,
+  smoothStream,
+  streamText,
+  wrapLanguageModel,
+  type Message
+} from 'ai'
+import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
 import { constructSystemPrompt } from '@/lib/ai/prompt'
-import { prisma } from '@/lib/prisma'
 import { getTranslations } from 'next-intl/server'
+import { authenticate } from '@/lib/auth/server'
 import { CONSTANTS } from '@/lib/constants'
+import { prisma } from '@/lib/prisma'
+import { randomUUID } from 'crypto'
+import { z } from 'zod'
 
 import type { File } from '@prisma/client'
+import type { GoogleGenerativeAIProviderOptions } from '@ai-sdk/google'
+import type { OpenAIResponsesProviderOptions } from '@ai-sdk/openai/internal'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
+
+const models = AIModels.get()
 
 export const POST = async (
   request: NextRequest,
@@ -25,14 +38,13 @@ export const POST = async (
   try {
     const locale = request.headers.get('accept-language') || 'en'
 
-    const t = await getTranslations({ locale, namespace: 'chat' })
-    const t_common = await getTranslations({ locale, namespace: 'common' })
+    const t = await getTranslations({ locale })
 
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: t_common('unauthorized'),
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -43,12 +55,18 @@ export const POST = async (
 
     const {
       messages,
-      model: modelName,
-      files
+      model: modelName = CONSTANTS.AI.DEFAULT_MODEL,
+      files = [],
+      reasoningEffort = 'low',
+      useReasoning = false,
+      useSearch = false
     }: {
       messages: Message[]
       model: AIModelID
       files: File[]
+      reasoningEffort: AIModelReasoningOption
+      useReasoning: boolean
+      useSearch: boolean
     } = await request.json()
 
     if (!user.firstUsage) {
@@ -90,21 +108,38 @@ export const POST = async (
     })
 
     if (!chat) {
-      throw new Error(t('not-found'))
+      throw new Error(t('chat.errors.not-found'))
     }
 
     const message = messages[messages.length - 1]
+    messages.pop()
     const { id: messageId } = await prisma.message.create({
       data: {
-        role: message.role,
+        role: message.role as 'user',
+
+        model: 'user',
+
         content: message.content,
 
+        userId: user.id,
         chatId: chat.id
       }
     })
 
+    await prisma.messagePart.create({
+      data: {
+        type: 'text',
+
+        text: message.content,
+
+        messageId
+      }
+    })
+
+    const model = models[modelName]
+
     await Promise.all(
-      (files || []).map(async (file) => {
+      (model.imageUpload || model.fileUpload ? files : []).map(async (file) => {
         await prisma.file.create({
           data: {
             name: file.name,
@@ -118,13 +153,14 @@ export const POST = async (
       })
     )
 
-    const models = AIModels.get()
-
     if (chat.messages.length < 2) {
-      const { text: title } = await generateText({
-        model: models['gemini-2.5-flash'].provider,
+      const { object } = await generateObject({
+        model: models['gemini-2.0-flash'].provider(),
+        schema: z.object({
+          title: z.string().max(50)
+        }),
         system:
-          'Generate a ONE title thats max of 40 characters according to what user asking or talking. Just reply with the title nothing else. MAKE IT RELATED TO USERS REQUEST.',
+          "Generate a concise and relevant title (max 50 characters) based on the user's query or conversation",
         prompt: message.content
       })
 
@@ -135,23 +171,22 @@ export const POST = async (
           userId: user.id
         },
         data: {
-          title
+          title: object.title
         }
       })
     }
 
-    const model = modelName ? models[modelName] : models['gemini-2.5-flash']
-    if (model.plus && !user.plus) {
+    if (!user.plus && (model.premium || model.reasoning || model.search || model.imageGeneration)) {
       throw new Error()
     }
 
     if (model.premium) {
       if (user.premiumCredits < 1) {
-        throw new Error(t('credit-error'))
+        throw new Error(t('chat.errors.credit-error'))
       }
     } else {
       if (user.credits < 1) {
-        throw new Error(t('credit-error'))
+        throw new Error(t('chat.errors.credit-error'))
       }
     }
 
@@ -166,8 +201,44 @@ export const POST = async (
       }
     })
 
+    const system = constructSystemPrompt(model, user)
+
     const result = streamText({
-      model: model.provider,
+      model:
+        model.company === 'deepseek'
+          ? wrapLanguageModel({
+            model: model.provider(),
+            middleware: [extractReasoningMiddleware({ tagName: 'think' })]
+          })
+          : model.provider(
+            model.company === 'google' && model.search && useSearch
+              ? {
+                useSearchGrounding: true
+              }
+              : undefined
+          ),
+      providerOptions: {
+        openai:
+          model.reasoning && useReasoning
+            ? ({
+              reasoningEffort
+            } satisfies OpenAIResponsesProviderOptions)
+            : {},
+        google: {
+          responseModalities: model.imageGeneration ? ['TEXT', 'IMAGE'] : ['TEXT'],
+          ...(model.reasoning
+            ? {
+              thinkingBudget: useReasoning
+                ? reasoningEffort === 'low'
+                  ? 1024
+                  : reasoningEffort === 'medium'
+                    ? 2048
+                    : 4096
+                : 0
+            }
+            : {})
+        } satisfies GoogleGenerativeAIProviderOptions
+      },
       messages: [
         ...(chat.messages as any),
         {
@@ -177,7 +248,7 @@ export const POST = async (
               type: 'text',
               text: message.content
             },
-            ...(files || []).map((file) => {
+            ...files.map((file) => {
               if (file.contentType.startsWith('image/')) {
                 return {
                   type: 'image',
@@ -195,19 +266,74 @@ export const POST = async (
           ]
         }
       ],
-      experimental_transform: smoothStream(),
-      system: constructSystemPrompt(model, user),
-      onFinish: async ({ response }) => {
-        const message = response.messages[response.messages.length - 1]
-
-        await prisma.message.create({
+      experimental_transform: [
+        smoothStream({
+          chunking: 'word'
+        })
+      ],
+      system: model.id === 'gemini-2.0-flash-image-generation' ? undefined : system,
+      onFinish: async ({ text, reasoning, sources, files }) => {
+        const message = await prisma.message.create({
           data: {
-            content: (message.content as any)[0].text,
-            role: message.role,
+            role: 'assistant',
 
+            model: modelName,
+
+            content: text,
+
+            userId: user.id,
             chatId: chat.id
           }
         })
+
+        await prisma.messagePart.create({
+          data: {
+            type: 'text',
+            text: text,
+            messageId: message.id
+          }
+        })
+
+        if (reasoning) {
+          await prisma.messagePart.create({
+            data: {
+              type: 'reasoning',
+
+              text: reasoning,
+
+              messageId: message.id
+            }
+          })
+        }
+
+        await Promise.all(
+          (sources || []).map(async (source) => {
+            await prisma.messagePart.create({
+              data: {
+                type: 'source',
+
+                text: `${source.url};${source.title}`,
+
+                messageId: message.id
+              }
+            })
+          })
+        )
+
+        await Promise.all(
+          (model.imageGeneration ? files : []).map(async (file) => {
+            await prisma.file.create({
+              data: {
+                name: randomUUID(),
+                url: `data:${file.mimeType};base64,${file.base64}`,
+
+                contentType: file.mimeType,
+
+                messageId: message.id
+              }
+            })
+          })
+        )
 
         await prisma.user.update({
           where: {
@@ -227,7 +353,7 @@ export const POST = async (
       getErrorMessage: (error: unknown) => {
         console.log(error)
 
-        return (error as any).message || t('error')
+        return (error as any).message || t('chat.errors.api-error')
       }
     })
   } catch (error) {

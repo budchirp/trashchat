@@ -2,13 +2,13 @@ import type React from 'react'
 import { createPortal } from 'react-dom'
 import { useEffect, useState } from 'react'
 
-import { cn } from '@/lib/cn'
-import { Backdrop } from '@/components/backdrop'
 import { DialogPanel, DialogTitle, Dialog as HeadlessDialog } from '@headlessui/react'
 import { Container } from '@/components/container'
-import { Box } from '@/components/box'
+import { Backdrop } from '@/components/backdrop'
 import { Button } from '@/components/button'
+import { Box } from '@/components/box'
 import { X } from 'lucide-react'
+import { cn } from '@/lib/cn'
 
 export type DialogProps = {
   title: React.ReactNode

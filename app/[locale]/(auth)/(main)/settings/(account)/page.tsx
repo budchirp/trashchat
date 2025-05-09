@@ -18,7 +18,7 @@ const AccountPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
   authenticatedRoute(await cookies(), locale)
 
   const t = await getTranslations({
-    namespace: 'account',
+    namespace: 'settings.account',
     locale
   })
 
@@ -35,7 +35,7 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   const { locale } = await params
 
   const t = await getTranslations({
-    namespace: 'account',
+    namespace: 'settings.account',
     locale
   })
   return MetadataManager.generate(t('text'), t('description'))

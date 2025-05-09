@@ -1,11 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { Encrypt } from '@/lib/encrypt'
-import { prisma } from '@/lib/prisma'
-import { cookies } from 'next/headers'
 import { CookieMonster } from '@/lib/cookie-monster'
-import { CONSTANTS } from '@/lib/constants'
 import { UserAPIManager } from '@/lib/api/user'
+import { CONSTANTS } from '@/lib/constants'
 import { Secrets } from '@/lib/secrets'
+import { Encrypt } from '@/lib/encrypt'
+import { cookies } from 'next/headers'
+import { prisma } from '@/lib/prisma'
 import jwt from 'jsonwebtoken'
 
 export const POST = async (request: NextRequest) => {

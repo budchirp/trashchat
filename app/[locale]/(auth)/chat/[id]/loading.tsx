@@ -2,9 +2,9 @@
 
 import type React from 'react'
 
-import { Container } from '@/components/container'
 import { MessageBox } from '@/components/chat/message-box'
 import { ChatForm } from '@/components/chat/chat-form'
+import { Container } from '@/components/container'
 import { cn } from '@/lib/cn'
 
 const Loading: React.FC = () => {
@@ -18,14 +18,21 @@ const Loading: React.FC = () => {
             message={
               {
                 role: index % 2 === 0 ? 'user' : 'assistant',
-                text: '',
-                content: (
-                  <div className='grid gap-2'>
-                    {[...Array(index % 2 === 0 ? 1 : 4)].map((_, index) => (
-                      <div key={index} className='bg-background-tertiary h-2 w-full rounded-sm' />
-                    ))}
-                  </div>
-                )
+                parts: [
+                  {
+                    type: 'text',
+                    text: (
+                      <div className='grid gap-2'>
+                        {[...Array(index % 2 === 0 ? 1 : 4)].map((_, index) => (
+                          <div
+                            key={index}
+                            className='bg-background-tertiary h-2 w-full rounded-sm'
+                          />
+                        ))}
+                      </div>
+                    )
+                  }
+                ]
               } as any
             }
           />
@@ -33,15 +40,21 @@ const Loading: React.FC = () => {
       </Container>
 
       <ChatForm
-        placeholder
+        isSkeleton
         loading={true}
         isUploading={false}
         stop={() => {}}
         modelId={'gemini-2.0-flash'}
         input={''}
         files={[]}
+        reasoningEffort={null}
+        useReasoning={false}
+        useSearch={false}
+        handleReasoningEffortChange={() => {}}
+        handleUseReasoningChange={() => {}}
+        handleUseSearchChange={() => {}}
         handleFilesChange={() => {}}
-        handleModelChange={() => {}}
+        handleModelIdChange={() => {}}
         handleInputChange={() => {}}
         handleSubmit={() => {}}
       />

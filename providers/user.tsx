@@ -1,9 +1,11 @@
 'use client'
 
 import type React from 'react'
-import { UserContext } from './context/user'
-import type { User } from '@/types/user'
 import { useState } from 'react'
+
+import { UserContext } from '@/providers/context/user'
+
+import type { User } from '@/types/user'
 
 type UserProviderProps = {
   children: React.ReactNode

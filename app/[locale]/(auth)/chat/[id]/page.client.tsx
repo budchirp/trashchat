@@ -4,17 +4,17 @@ import type React from 'react'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 
 import { MemoizedMarkdown } from '@/components/markdown/memoized'
-import { ChatForm } from '@/components/chat/chat-form'
 import { MessageBox } from '@/components/chat/message-box'
-import { Container } from '@/components/container'
-import { Fetch } from '@/lib/fetch'
-import { generateId } from 'ai'
-import { useChat } from '@ai-sdk/react'
+import { ChatForm } from '@/components/chat/chat-form'
 import { useLocale, useTranslations } from 'next-intl'
-import imageCompression from 'browser-image-compression'
+import { useUpload } from '@/lib/helpers/use-upload'
+import { Container } from '@/components/container'
+import { generateId, type UIMessage } from 'ai'
+import { CONSTANTS } from '@/lib/constants'
+import { useChat } from '@ai-sdk/react'
 
 import type { Chat } from '@/types/chat'
-import type { AIModelID } from '@/lib/ai/models'
+import type { AIModelID, AIModelReasoningOption } from '@/lib/ai/models'
 import type { File as PrismaFile } from '@prisma/client'
 
 type ChatClientPageProps = {
@@ -26,17 +26,21 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   token,
   chat
 }: ChatClientPageProps): React.ReactNode => {
-  const t = useTranslations('chat')
-  const t_common = useTranslations('common')
+  const t = useTranslations()
 
-  const [model, setModel] = useState<AIModelID>(chat.model || 'gemini-2.5-flash')
+  const [model, setModel] = useState<AIModelID>(chat.model || CONSTANTS.AI.DEFAULT_MODEL)
   const [error, setError] = useState<string | null>(null)
+
+  const [reasoningEffort, setReasoningEffort] = useState<AIModelReasoningOption | null>(null)
+
+  const [useReasoning, setUseReasoning] = useState<boolean>(false)
+  const [useSearch, setUseSearch] = useState<boolean>(false)
 
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const [files, setFiles] = useState<File[]>([])
 
   const [messageFiles, setMessageFiles] = useState<{
-    [index: number]: File[]
+    [index: number]: PrismaFile[]
   }>({})
 
   const ref = useRef<HTMLDivElement | null>(null)
@@ -59,7 +63,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         erorrMessage = error.message
       }
 
-      setError(erorrMessage || t_common('error'))
+      setError(erorrMessage || t('errors.error'))
     }
   })
 
@@ -90,37 +94,50 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
       })
     }
   }, [status])
-
   return (
     <div className='size-full mt-4'>
       <Container className='grid gap-2 mb-2'>
-        {messages.map((message: any, index) => (
-          <MessageBox
-            key={index}
-            message={{
-              ...message,
-              files:
-                message.files && message.files.length > 0
-                  ? message.files
-                  : messageFiles[index] || [],
-              text: message.content,
-              content:
-                message.role === 'user' ? (
-                  message.content
-                ) : (
-                  <MemoizedMarkdown content={message.content} />
-                )
-            }}
-          />
-        ))}
+        {(messages as (UIMessage & { files: PrismaFile[] })[]).map((message, index) => {
+          const text =
+            message.content ||
+            (message.parts.find((part: any) => part.type === 'text') as any)?.text ||
+            ''
+
+          return (
+            <MessageBox
+              key={index}
+              message={
+                {
+                  ...message,
+                  files:
+                    message.files && message.files.length > 0
+                      ? message.files
+                      : messageFiles[index] || [],
+                  parts: [
+                    ...message.parts.filter((part: any) => part.type !== 'text'),
+                    {
+                      type: 'text',
+                      text: message.role === 'user' ? text : <MemoizedMarkdown content={text} />
+                    }
+                  ]
+                } as any
+              }
+            />
+          )
+        })}
 
         {messages.length > 0 && status === 'submitted' && (
           <MessageBox
             message={
               {
-                text: t_common('loading'),
                 role: 'assistant',
-                files: []
+                files: [],
+                parts: [
+                  {
+                    type: 'text',
+                    text: t('common.loading')
+                  }
+                ]
               } as any
             }
           />
@@ -128,7 +145,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
         {messages.length < 1 && (
           <div className='h-[calc(100vh-4rem-4rem-4rem-1rem)] flex flex-col gap-4 items-center text-center justify-center'>
-            <h1 className='font-bold text-2xl'>{t('start')}</h1>
+            <h1 className='font-bold text-2xl'>{t('chat.start')}</h1>
           </div>
         )}
       </Container>
@@ -142,106 +159,57 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         modelId={model}
         input={input}
         files={files}
+        reasoningEffort={reasoningEffort}
+        useReasoning={useReasoning}
+        useSearch={useSearch}
+        handleReasoningEffortChange={setReasoningEffort}
+        handleUseReasoningChange={setUseReasoning}
+        handleUseSearchChange={setUseSearch}
         handleFilesChange={setFiles}
-        handleModelChange={setModel}
+        handleModelIdChange={setModel}
         handleInputChange={handleInputChange}
         handleSubmit={async (event?: FormEvent) => {
           setError(null)
 
           event && event.preventDefault()
 
-          let uploadedFiles: Partial<PrismaFile>[] = []
+          const uploadedFiles: Partial<PrismaFile>[] = []
 
           if (files.length > 0) {
             setIsUploading(true)
 
-            try {
-              const response = await Fetch.post<{
-                data: {
-                  [filename: string]: {
-                    url: string
-                    fields: any
-                  }
-                }
-              }>(
-                '/api/upload',
-                {
-                  files: files.map((file) => ({
+            await Promise.all(
+              files.map(async (file) => {
+                const error = await useUpload(token, file, (file, url) => {
+                  uploadedFiles.push({
                     name: file.name,
-                    contentType: file.type
-                  }))
-                },
-                {
-                  authorization: `Bearer ${token}`
-                }
-              )
-
-              if (response.ok) {
-                const json = await response.json()
-
-                await Promise.all(
-                  files.map(async (file) => {
-                    if (file.size > 1024 * 1024 * 3) {
-                      setError(t('file-too-big'))
-                      return
-                    }
-
-                    const { url, fields } = json.data[file.name]
-
-                    const formData = new FormData()
-                    for (const [key, value] of Object.entries(fields)) {
-                      formData.append(key, value as string)
-                    }
-
-                    let compressed = file
-                    try {
-                      if (file.type.startsWith('image/'))
-                        compressed = await imageCompression(file, {
-                          maxSizeMB: 1,
-                          useWebWorker: true
-                        })
-                    } catch {
-                      compressed = file
-                    }
-
-                    formData.append(
-                      'file',
-                      new File(
-                        [compressed.slice(0, compressed.size, compressed.type)],
-                        fields.key,
-                        {
-                          type: compressed.type
-                        }
-                      )
-                    )
-
-                    uploadedFiles = [
-                      ...uploadedFiles,
-                      {
-                        name: file.name,
-                        contentType: file.type,
-                        url: `${url}${fields.key}`
-                      }
-                    ]
-
-                    try {
-                      await Fetch.post(url, formData)
-                    } catch {}
+                    contentType: file.type,
+                    url
                   })
-                )
-              } else {
-                setError(t('upload-fail'))
-              }
-            } catch {
-              setError(t('upload-fail'))
-            } finally {
-              setIsUploading(false)
-            }
+
+                  if (error) {
+                    switch (error) {
+                      case 'size':
+                        setError(t('errors.upload-size'))
+                        break
+                      case 'upload':
+                        setError(t('errors.upload-fail'))
+                        break
+                    }
+                  }
+                })
+              })
+            )
+
+            setIsUploading(false)
           }
 
           if (!error) {
             handleSubmit(event, {
               body: {
+                reasoningEffort,
+                useReasoning,
+                useSearch,
                 model,
                 files: uploadedFiles
               }

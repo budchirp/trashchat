@@ -11,5 +11,8 @@ export const CONSTANTS = {
       CREDITS: 500,
       PREMIUM_CREDITS: 50
     }
+  },
+  AI: {
+    DEFAULT_MODEL: 'gemini-2.5-flash'
   }
-}
+} as const

@@ -10,16 +10,17 @@ import { SessionAPIManager } from '@/lib/api/session'
 import { toast } from 'sonner'
 
 const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => {
-  const t = useTranslations('common')
-  const t_auth = useTranslations('auth')
+  const t = useTranslations()
 
   const router = useRouter()
+
+  const isTokenError = error.message === 'token'
 
   return (
     <div className='w-full h-screen flex items-center justify-center'>
       <div className='text-center flex flex-col gap-4 items-center justify-center'>
         <h1 className='text-lg font-medium'>
-          {error.message === 'unauthorized' ? t('unauthorized') : t('error')}
+          {isTokenError ? t('erorrs.sneaky') : t('errors.error')}
         </h1>
 
         {process.env.NODE_ENV === 'development' && (
@@ -32,21 +33,23 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
 
         <div className='flex items-center justify-center gap-2'>
           <Link href='/'>
-            <Button>{t('go-to-home')}</Button>
+            <Button>{t('common.go-to-home')}</Button>
           </Link>
 
-          <Button
-            color='secondary'
-            onClick={async () => {
-              await SessionAPIManager.delete()
+          {isTokenError && (
+            <Button
+              color='secondary'
+              onClick={async () => {
+                await SessionAPIManager.delete()
 
-              toast(t('success'))
+                toast(t('common.success'))
 
-              router.refresh()
-            }}
-          >
-            {t_auth('logout')}
-          </Button>
+                router.push('/')
+              }}
+            >
+              {t('auth.logout')}
+            </Button>
+          )}
         </div>
       </div>
     </div>

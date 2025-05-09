@@ -5,12 +5,11 @@ import { MetadataManager } from '@/lib/metadata-manager'
 import { unauthenticatedRoute } from '@/lib/auth/client'
 import { Link, routing } from '@/lib/i18n/routing'
 import { SignUpClientPage } from './page.client'
+import { Secrets } from '@/lib/secrets'
 import { cookies } from 'next/headers'
-import { Env } from '@/lib/env'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
-import { Secrets } from '@/lib/secrets'
 
 const SignUpPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params

@@ -1,41 +1,37 @@
 'use client'
 
 import type React from 'react'
-import type { ComponentProps } from 'react'
 
-import { cn } from '@/lib/cn'
+import { Checkbox as HeadlessCheckbox, type CheckboxProps } from '@headlessui/react'
 import { Check } from 'lucide-react'
-
-export type CheckboxProps = {
-  label: React.ReactNode
-} & ComponentProps<'input'>
+import { cn } from '@/lib/cn'
 
 export const Checkbox: React.FC<CheckboxProps> = ({
   className,
-  checked,
-  onChange,
-  label,
+  checked = false,
+  onChange = () => { },
   ...props
 }: CheckboxProps): React.ReactNode => (
-  <label className='flex items-center gap-2'>
-    <input {...props} checked={checked} onChange={onChange} className={cn('sr-only', className)} />
-
-    <div
-      className={cn(
+  <HeadlessCheckbox
+    {...props}
+    checked={checked}
+    onChange={onChange}
+    className={({ checked }) =>
+      cn(
         'size-8 flex items-center justify-center bg-background-secondary hover:bg-background-tertiary relative transition-all duration-150 border border-border rounded-full p-1',
         checked &&
-          'bg-background-accent-primary hover:bg-background-accent-secondary border-border-accent'
-      )}
-    >
+        'bg-background-accent-primary hover:bg-background-accent-secondary border-border-accent'
+      )
+    }
+  >
+    {({ checked }) => (
       <Check
         className={cn(
           'size-4 text-text-primary transition-all duration-150 opacity-0 invisible',
           checked && 'opacity-100 visible'
         )}
       />
-    </div>
-
-    {label}
-  </label>
+    )}
+  </HeadlessCheckbox>
 )
 Checkbox.displayName = 'Checkbox'

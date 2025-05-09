@@ -1,6 +1,7 @@
 import type React from 'react'
-import { Dialog } from './dialog'
-import { Button } from './button'
+
+import { Dialog } from '@/components/dialog'
+import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
 
 type AreYouSureDialogProps = {

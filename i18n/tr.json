@@ -5,38 +5,46 @@
     "go-to-chat": "Sohbete git"
   },
   "chat": {
-    "delete": "Sohbeti sil",
-    "are-you-sure": "Emin misin?",
-    "upload-fail": "Ek yüklenemedi",
-    "file-too-big": "Bu dosya çok büyük",
-    "only-image": "Bu model sadece görsel kabul etmektedir",
-    "credit-error": "Yetersiz kredi!",
-    "error": "İçerik oluşturulurken hata oluştu. Lütfen tekrar deneyin.",
     "text": "Sohbet",
     "description": "Favori yapay zeka modelin ile sohbet et!",
+    "errors": {
+      "not-found": "Sohbet bulunamadı",
+      "upload-fail": "Ek yüklenemedi",
+      "file-too-big": "Bu dosya çok büyük",
+      "only-image": "Bu model sadece görsel kabul etmektedir",
+      "credit-error": "Yetersiz kredi!",
+      "api-error": "İçerik oluşturulurken hata oluştu. Lütfen tekrar deneyin."
+    },
+    "reasoning-effort": {
+      "low": "Düşük",
+      "medium": "Orta",
+      "high": "Yüksek"
+    },
+    "reasoning": "Düşünceler",
+    "sources": "Kaynaklar",
+    "delete": "Sohbeti sil",
+    "are-you-sure": "Emin misin?",
     "say-something": "Bir şeyler yaz",
     "start": "Çekinme. Bir sohbet başlat.",
-    "you": "Sen",
-    "ai": "Yapay Zeka",
     "system": "Sistem",
-    "not-found": "Sohbet bulunamadı",
     "new-chat": "Yeni sohbet"
+  },
+  "ui": {
+    "footer": "Can Kolay tarafından ❤️ ile yapıldı"
+  },
+  "errors": {
+    "error": "Hata",
+    "not-found": "Sayfa bulunamadı",
+    "unauthorized": "İzinsiz erişim"
   },
   "common": {
     "cancel": "İptal",
-    "invalid-token": "Geçersiz anahtar",
-    "unauthorized": "İzinsiz erişim",
+    "go-to-home": "Ana sayfaya git",
     "copied": "Kopyalandı",
     "submit": "Gönder",
     "loading": "Yükleniyor...",
     "success": "Başarılı",
-    "error": "Hata",
-    "update": "Güncelle",
-    "not-found": "Sayfa bulunamadı",
-    "footer": "Can Kolay tarafından ❤️ ile yapıldı",
-    "dark": "Koyu",
-    "light": "Açık",
-    "system": "Sistem"
+    "update": "Güncelle"
   },
   "auth": {
     "danger-zone": "Tehlikeli alan",
@@ -46,6 +54,7 @@
     "username": "Kullanıcı adı",
     "email": "E-Posta",
     "password": "Şifre",
+    "logout": "Çıkış yap",
     "signin": {
       "text": "Giriş yap",
       "description": "Giriş yap",
@@ -57,37 +66,45 @@
       "signin": "Giriş yapmak için buraya tıklayın"
     },
     "verify": {
-      "go-to-home": "Ana sayfaya git",
       "sent": "E-Posta başarıyla gönderildi",
       "verified": "E-Posta adresiniz başarıyla doğrulandı 🥳",
       "invalid-token": "Geçersiz doğrulama anahtarı",
       "resend": "Doğrulama e-postasını yeniden gönder"
-    },
-    "logout": "Çıkış yap"
+    }
   },
   "settings": {
-    "text": "Ayarlar"
-  },
-  "account": {
-    "text": "Hesap",
-    "description": "Hesap",
-    "delete": "Hesabı sil",
-    "profile-picture": "Profil Resmi",
-    "verify-warning": "E-Posta adresiniz doğrulanmamış. Lütfen doğrulayın"
-  },
-  "customization": {
-    "text": "Özelleştirme",
-    "description": "Özelleştirme",
-    "prompt": "Yapay zeka özelleştirme",
-    "share-info": "Yapay zeka ile bilgilerimi paylaş"
-  },
-  "usages": {
-    "text": "Kullanımlar",
-    "description": "Kullanımlar",
-    "credits": "Kredi",
-    "premium-credits": "Premium kredi",
-    "reset": "Kullanım haklarınız {date} tarihinde yenilenecektir",
-    "verify-warning": "E-Posta adresinizi doğrulayarak limitleriniz arttırın"
+    "text": "Ayarlar",
+    "account": {
+      "text": "Hesap",
+      "description": "Hesap",
+      "delete": "Hesabı sil",
+      "profile-picture": "Profil Resmi",
+      "verify-warning": "E-Posta adresiniz doğrulanmamış. Lütfen doğrulayın",
+      "profile": "Profil"
+    },
+    "customization": {
+      "text": "Özelleştirme",
+      "description": "Özelleştirme",
+      "prompt": "Yapay zeka özelleştirme",
+      "share-info": "Yapay zeka ile bilgilerimi paylaş"
+    },
+    "usages": {
+      "text": "Kullanımlar",
+      "description": "Kullanımlar",
+      "credits": "Kredi",
+      "premium-credits": "Premium kredi",
+      "reset": "Kullanım haklarınız {date} tarihinde yenilenecektir",
+      "verify-warning": "E-Posta adresinizi doğrulayarak limitleriniz arttırın"
+    },
+    "appearance": {
+      "text": "Görünüm",
+      "description": "Görünüm",
+      "themes": {
+        "dark": "Koyu",
+        "light": "Açık",
+        "system": "Sistem"
+      }
+    }
   },
   "legal": {
     "privacy-policy": {

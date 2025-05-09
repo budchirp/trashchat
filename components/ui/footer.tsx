@@ -1,20 +1,19 @@
 import type React from 'react'
 
-import { Container } from '@/components/container'
-import { Logo } from '@/components/logo'
 import { getTranslations } from 'next-intl/server'
+import { Container } from '@/components/container'
 import { Link } from '@/lib/i18n/routing'
+import { Logo } from '@/components/logo'
 
 import type { RouteMap } from '@/types/route-map'
 
 export const Footer: React.FC = async () => {
-  const t = await getTranslations('common')
-  const t_all = await getTranslations()
+  const t = await getTranslations()
 
   const routes: RouteMap = [
     {
       location: '/legal/privacy-policy',
-      title: t_all('legal.privacy-policy.text')
+      title: t('legal.privacy-policy.text')
     }
   ]
 
@@ -25,7 +24,7 @@ export const Footer: React.FC = async () => {
           <Logo />
 
           <Link className='font-medium text-text-accent-secondary' href='https://cankolay.com'>
-            {t('footer')}
+            {t('ui.footer')}
           </Link>
         </div>
 

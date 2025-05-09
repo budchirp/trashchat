@@ -79,14 +79,13 @@ export const DELETE = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { name, username, email, password } = await request.json()
-    if (!name || !username || !email || !password) {
-      throw new Error('`name`, `username`, `email` and `password` field is required')
+    const { name, email, password } = await request.json()
+    if (!name || !email || !password) {
+      throw new Error('`name`, `email` and `password` field is required')
     }
 
     const user = await prisma.user.findUnique({
       where: {
-        username,
         email
       }
     })
@@ -98,7 +97,6 @@ export const POST = async (request: NextRequest) => {
     await prisma.user.create({
       data: {
         name,
-        username,
         email,
         verificationToken: randomUUID(),
         password: await Encrypt.encrypt(password)
@@ -140,29 +138,15 @@ export const PATCH = async (request: NextRequest) => {
       )
     }
 
-    const { name, username, email, systemPrompt, shareInfoWithAI } = (await request.json()) as User
-
-    if (username && user.username !== username) {
-      if (
-        await prisma.user.findUnique({
-          where: {
-            username
-          }
-        })
-      ) {
-        throw new Error('User with that username exists!')
-      }
-    }
+    const { name, email, systemPrompt, shareInfoWithAI } = (await request.json()) as User
 
     await prisma.user.update({
       where: {
-        username,
         email,
         id: user.id
       },
       data: {
         name,
-        username,
         email,
         systemPrompt,
         shareInfoWithAI

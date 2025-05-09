@@ -1,22 +1,23 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:db.sqlite"
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
   id Int @id @unique @default(autoincrement())
 
   name     String
-  username String @unique
 
   email    String  @unique
   verified Boolean @default(false)
 
-  verificationToken String?
+  verificationToken String @default(uuid())
 
   password String
 
@@ -35,6 +36,7 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   chats Chat[]
+  messages Message[]
 
   @@map("users")
 }
@@ -44,7 +46,7 @@ model Chat {
 
   title String
 
-  model String?
+  model String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -57,12 +59,21 @@ model Chat {
   @@map("chats")
 }
 
-model Message {
-  id String @id @unique @default(uuid())
+enum MessageRole {
+  user
+  assistant
+  system
+}
 
-  role String
+model Message {
+  id Int @id @unique @default(autoincrement())
+
+  role MessageRole
+
+  model String
 
   content String
+  parts MessagePart[]
 
   files File[]
 
@@ -72,7 +83,29 @@ model Message {
   chatId String
   chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
+  userId Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("messages")
+}
+
+enum MessagePartType {
+  text
+  reasoning
+  source
+}
+
+model MessagePart {
+  id Int @id @unique @default(autoincrement())
+
+  messageId Int
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  type MessagePartType
+
+  text String
+
+  @@map("message_parts")
 }
 
 model File {
@@ -83,7 +116,7 @@ model File {
 
   contentType String
 
-  messageId String
+  messageId Int
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@map("files")

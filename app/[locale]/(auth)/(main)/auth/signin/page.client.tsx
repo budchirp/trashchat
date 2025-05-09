@@ -7,15 +7,16 @@ import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { signInValidator } from '@/lib/validators/signin'
 import { UserContext } from '@/providers/context/user'
 import { SessionAPIManager } from '@/lib/api/session'
+import { UserAPIManager } from '@/lib/api/user'
 import { useRouter } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
 import { Input } from '@/components/input'
 import { toast } from '@/components/toast'
+import { Field } from '@headlessui/react'
 import { Lock, Mail } from 'lucide-react'
 import { Box } from '@/components/box'
 import { useFormik } from 'formik'
-import { UserAPIManager } from '@/lib/api/user'
 
 export const SignInClientPage: React.FC = (): React.ReactNode => {
   const router = useRouter()
@@ -67,7 +68,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
       )}
 
       <div className='grid gap-2 w-full'>
-        <div>
+        <Field>
           <Input
             id='email'
             name='email'
@@ -83,9 +84,9 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
           {formik.errors.email && formik.touched.email && (
             <p className='text-red-500 ms-2'>{formik.errors.email}</p>
           )}
-        </div>
+        </Field>
 
-        <div>
+        <Field>
           <Input
             id='password'
             name='password'
@@ -101,7 +102,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
           {formik.errors.password && formik.touched.password && (
             <p className='text-red-500 ms-2'>{formik.errors.password}</p>
           )}
-        </div>
+        </Field>
       </div>
 
       <div>

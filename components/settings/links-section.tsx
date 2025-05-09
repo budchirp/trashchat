@@ -2,15 +2,15 @@
 
 import type React from 'react'
 
-import { Heading } from '@/components/heading'
-import { cn } from '@/lib/cn'
 import { Link, usePathname } from '@/lib/i18n/routing'
+import { Heading } from '@/components/heading'
 import { useTranslations } from 'next-intl'
+import { cn } from '@/lib/cn'
 
 import type { RouteMap } from '@/types/route-map'
 
 export const SettingsLinksSection: React.FC = (): React.ReactNode => {
-  const t = useTranslations()
+  const t = useTranslations('settings')
 
   const routes: RouteMap = [
     {
@@ -24,6 +24,10 @@ export const SettingsLinksSection: React.FC = (): React.ReactNode => {
     {
       location: '/customization',
       title: t('customization.text')
+    },
+    {
+      location: '/appearance',
+      title: t('appearance.text')
     }
   ]
 
@@ -31,7 +35,7 @@ export const SettingsLinksSection: React.FC = (): React.ReactNode => {
 
   return (
     <div className='grid'>
-      <Heading className='text-lg mt-0'>{t('settings.text')}</Heading>
+      <Heading className='text-lg mt-0'>{t('text')}</Heading>
 
       {routes.map((route) => {
         const location = `/settings${route.location}`

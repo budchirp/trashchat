@@ -3,6 +3,8 @@ import 'server-only'
 export const Secrets = {
   appSecret: process.env.APP_SECRET || 'something safe',
 
+  databaseUrl: process.env.DATABASE_URL || '',
+
   cloudflareToken: process.env.CLOUDFLARE_TOKEN || '',
 
   awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID || null,

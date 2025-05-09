@@ -1,9 +1,10 @@
 import type React from 'react'
 
+import { CopyButton } from '@/components/markdown/code/copy-button'
 import { Box } from '@/components/box'
 
-import { createJavaScriptRegexEngine } from 'shiki'
 import { bundledLanguages, createHighlighter } from 'shiki/bundle/web'
+import { createJavaScriptRegexEngine } from 'shiki'
 import {
   transformerNotationDiff,
   transformerNotationErrorLevel,
@@ -13,7 +14,6 @@ import {
 
 import githubDarkDefault from '@shikijs/themes/github-dark-default'
 import githubLightDefault from '@shikijs/themes/github-light-default'
-import { CopyButton } from './copy-button'
 
 const engine = createJavaScriptRegexEngine()
 

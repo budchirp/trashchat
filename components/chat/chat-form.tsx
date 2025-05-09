@@ -1,50 +1,81 @@
 'use client'
 
 import type React from 'react'
-import { useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { use, useEffect, useRef, useState, type ChangeEvent } from 'react'
 
+import { Brain, FileIcon, Loader2, Paperclip, Search, Send, Square, Trash } from 'lucide-react'
+import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
+import { ReasoningEffortSelector } from '@/components/chat/reasoning-effort-selector'
 import { ModelSelector } from '@/components/chat/model-selector'
-import { FileIcon, Loader2, Paperclip, Search, Send, Square, Trash } from 'lucide-react'
+import { Button, buttonVariants } from '@/components/button'
+import { SidebarContext } from '@/providers/context/sidebar'
+import { UserContext } from '@/providers/context/user'
 import { Container } from '@/components/container'
+import { useTranslations } from 'next-intl'
+import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
-import { Button, buttonVariants } from '@/components/button'
-import { useTranslations } from 'next-intl'
-import { AIModels, type AIModelID } from '@/lib/ai/models'
-import { toast } from '../toast'
 
 export type ChatFormProps = {
-  placeholder?: boolean
+  isSkeleton?: boolean
+
   loading: boolean
   isUploading: boolean
+
   stop: () => void
   handleSubmit: any
+
   input: string
+
   files: File[]
+
   modelId: AIModelID
+
+  reasoningEffort: AIModelReasoningOption | null
+
+  useReasoning: boolean
+  useSearch: boolean
+
+  handleReasoningEffortChange: (reasoningEffort: AIModelReasoningOption | null) => void
+
+  handleUseReasoningChange: (useReasoning: boolean) => void
+  handleUseSearchChange: (useSearch: boolean) => void
+
   handleFilesChange: (files: File[]) => void
-  handleModelChange: (model: AIModelID) => void
+
+  handleModelIdChange: (modelId: AIModelID) => void
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const models = AIModels.get(false)
 
 export const ChatForm: React.FC<ChatFormProps> = ({
-  placeholder = false,
+  isSkeleton = false,
+
   loading,
   isUploading,
+
   stop,
   handleSubmit,
+
   input,
   files,
+
   modelId,
+
+  reasoningEffort,
+
+  useReasoning,
+  useSearch,
+
+  handleReasoningEffortChange,
+  handleUseReasoningChange,
+  handleUseSearchChange,
   handleFilesChange,
-  handleModelChange,
+  handleModelIdChange,
   handleInputChange
 }: ChatFormProps): React.ReactNode => {
-  const t = useTranslations('chat')
-
   const ref = useRef<HTMLDivElement>(null)
 
   const [height, setHeight] = useState<number>(0)
@@ -65,6 +96,11 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   const model = models[modelId]
   const supportsAttachments = model.imageUpload || model.fileUpload
 
+  const { user } = use(UserContext)
+  const { showSidebar } = use(SidebarContext)
+
+  const t = useTranslations('chat')
+
   return (
     <>
       <div
@@ -76,7 +112,10 @@ export const ChatForm: React.FC<ChatFormProps> = ({
       <form onSubmit={handleSubmit}>
         <div
           ref={ref}
-          className='flex min-h-26 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center z-20 right-0 w-full md:w-3/4 py-2 border-t border-border bottom-0'
+          className={cn(
+            'flex min-h-24 right-0 py-2 border-t border-border bottom-0 transition-all duration-300 items-center bg-background-primary/50 backdrop-blur-sm fixed select-none justify-center z-20',
+            showSidebar ? 'w-full md:w-3/4 ease-out' : 'w-full ease-in'
+          )}
         >
           <Container className='grid gap-2'>
             <div className='w-full rounded-xl overflow-x-auto'>
@@ -160,7 +199,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                     })
 
                     if (error) {
-                      toast(t('only-image'))
+                      toast(t('errors.only-image'))
                     }
 
                     handleFilesChange(filesArray)
@@ -179,16 +218,57 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                   }
                 }}
               >
-                {loading && !placeholder ? <Square size={16} /> : <Send size={16} />}
+                {loading && !isSkeleton ? <Square size={16} /> : <Send size={16} />}
               </Button>
             </div>
 
-            <div className='flex items-center'>
+            <div className='flex items-center gap-2'>
+              {model.reasoning && (
+                <Button
+                  disabled={!user.plus}
+                  aria-label='Toggle reasoning'
+                  variant='round'
+                  color={useReasoning || model.company === 'deepseek' ? 'primary' : 'secondary'}
+                  onClick={() => {
+                    handleUseReasoningChange(!useReasoning)
+
+                    if (!useReasoning) {
+                      if (!reasoningEffort) {
+                        handleReasoningEffortChange('low')
+                      }
+                    } else {
+                      handleReasoningEffortChange(null)
+                    }
+                  }}
+                >
+                  <Brain size={16} />
+                </Button>
+              )}
+
+              {model.reasoning && useReasoning && user.plus && (
+                <ReasoningEffortSelector
+                  height={height}
+                  reasoningEffort={reasoningEffort}
+                  onReasoningEffortChange={handleReasoningEffortChange}
+                />
+              )}
+
+              {model.search && (
+                <Button
+                  disabled={!user.plus}
+                  variant='round'
+                  color={useSearch ? 'primary' : 'secondary'}
+                  onClick={() => handleUseSearchChange(!useSearch)}
+                >
+                  <Search size={16} />
+                </Button>
+              )}
+
               <ModelSelector
                 height={height}
                 models={models}
                 model={modelId}
-                onChange={handleModelChange}
+                onModelChange={handleModelIdChange}
               />
             </div>
           </Container>

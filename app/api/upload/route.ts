@@ -29,44 +29,28 @@ export const POST = async (request: NextRequest) => {
       )
     }
 
-    let response: {
-      [filename: string]: {
-        url: string
-        fields: any
+    const {
+      file: { name, contentType },
+      randomize = true
+    } = await request.json()
+
+    const { url, fields } = await createPresignedPost(client, {
+      Bucket: Secrets.S3Bucket!,
+      Key: randomize
+        ? `${user.id}-${new Date().getTime()}-${randomUUID()}-${slugify(name)}`
+        : slugify(name),
+      Fields: {
+        'Content-Type': contentType
       }
-    } = {}
-
-    const { files, randomize = true } = await request.json()
-    await Promise.all(
-      files.map(
-        async ({
-          name,
-          contentType
-        }: {
-          name: string
-          contentType: string
-        }) => {
-          const { url, fields } = await createPresignedPost(client, {
-            Bucket: Secrets.S3Bucket!,
-            Key: randomize
-              ? `${user.id}-${new Date().getTime()}-${randomUUID()}-${slugify(name)}`
-              : slugify(name),
-            Fields: {
-              'Content-Type': contentType
-            }
-          })
-
-          response = {
-            ...response,
-            [name]: { url, fields }
-          }
-        }
-      )
-    )
+    })
 
     return NextResponse.json({
       message: 'Success',
-      data: response
+      data: {
+        name,
+        url,
+        fields
+      }
     })
   } catch (error) {
     console.log(error)

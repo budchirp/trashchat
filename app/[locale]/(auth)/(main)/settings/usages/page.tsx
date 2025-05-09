@@ -25,7 +25,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
   const premium_credits = CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
 
   const t = await getTranslations({
-    namespace: 'usages',
+    namespace: 'settings.usages',
     locale
   })
 
@@ -95,7 +95,7 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   const { locale } = await params
 
   const t = await getTranslations({
-    namespace: 'usages',
+    namespace: 'settings.usages',
     locale
   })
   return MetadataManager.generate(t('text'), t('description'))

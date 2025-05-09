@@ -16,7 +16,7 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
   if (token) {
     const user = await UserAPIManager.get(token)
     if (!user) {
-      throw new Error('unauthorized')
+      throw new Error('token')
     }
 
     return <UserProvider initialUser={user}>{children}</UserProvider>

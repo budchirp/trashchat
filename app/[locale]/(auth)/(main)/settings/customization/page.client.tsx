@@ -8,6 +8,7 @@ import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { UserContext } from '@/providers/context/user'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { Checkbox } from '@/components/checkbox'
+import { Field, Label } from '@headlessui/react'
 import { UserAPIManager } from '@/lib/api/user'
 import { useRouter } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
@@ -24,7 +25,7 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
 
   const { user } = use(UserContext)
 
-  const t = useTranslations('customization')
+  const t = useTranslations('settings.customization')
   const t_common = useTranslations('common')
 
   const cookieMonster = new CookieMonster()
@@ -63,7 +64,7 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
       )}
 
       <div className='grid gap-2 w-full'>
-        <div>
+        <Field>
           <Input
             id='systemPrompt'
             name='systemPrompt'
@@ -79,18 +80,20 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
           {formik.errors.systemPrompt && formik.touched.systemPrompt && (
             <p className='text-red-500 ms-2'>{formik.errors.systemPrompt}</p>
           )}
-        </div>
+        </Field>
+      </div>
 
-        <div>
+      <div>
+        <Field className='flex items-center gap-2'>
           <Checkbox
             id='shareInfoWithAI'
             name='shareInfoWithAI'
-            type='checkbox'
             checked={formik.values.shareInfoWithAI}
-            onChange={formik.handleChange}
-            label={t('share-info')}
+            onChange={(checked) => formik.setFieldValue('shareInfoWithAI', checked)}
           />
-        </div>
+
+          <Label htmlFor="shareInfoWithAI">{t('share-info')}</Label>
+        </Field>
       </div>
 
       <div>

@@ -85,7 +85,6 @@ export class UserAPIManager {
 
   public static new = async (user: {
     name: string
-    username: string
     email: string
     password: string
   }): Promise<[boolean, string | null]> => {

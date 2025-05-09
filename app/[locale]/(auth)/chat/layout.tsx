@@ -1,10 +1,10 @@
 import type React from 'react'
 
 import { authenticatedRoute } from '@/lib/auth/client'
+import { SidebarProvider } from '@/providers/sidebar'
 import { setRequestLocale } from 'next-intl/server'
-import { Header } from '@/components/ui/header'
+import { ChatClientLayout } from './layout.client'
 import { ChatAPIManager } from '@/lib/api/chat'
-import { Sidebar } from '@/components/ui/sidebar'
 import { cookies } from 'next/headers'
 
 import type { DynamicLayoutProps } from '@/types/layout'
@@ -20,17 +20,9 @@ const ChatLayout: React.FC<DynamicLayoutProps> = async ({
   const chats = await ChatAPIManager.getAll(token)
 
   return (
-    <div className='flex size-full'>
-      <div className='w-0 md:w-1/4 h-full relative hidden md:block'>
-        <Sidebar initialChats={chats || []} />
-      </div>
-
-      <div id='main' className='w-full md:w-3/4 h-full'>
-        <Header sidebar />
-
-        <main className='w-full page-min-h-screen relative'>{children}</main>
-      </div>
-    </div>
+    <SidebarProvider initialChats={chats || []}>
+      <ChatClientLayout>{children}</ChatClientLayout>
+    </SidebarProvider>
   )
 }
 

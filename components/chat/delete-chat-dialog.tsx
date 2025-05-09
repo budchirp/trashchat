@@ -7,8 +7,8 @@ import { useRouter } from '@/lib/i18n/routing'
 import { useTranslations } from 'next-intl'
 import { AreYouSureDialog } from '@/components/r-u-sure'
 import { ChatAPIManager } from '@/lib/api/chat'
-import { toast } from 'sonner'
 import { CONSTANTS } from '@/lib/constants'
+import { toast } from '@/components/toast'
 
 type DeleteChatDialogProps = {
   id: string

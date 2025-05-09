@@ -14,8 +14,8 @@
 - [x] Add Auth
 - [x] Save messages to db
 - [ ] Add more models
-- [ ] Search
-- [ ] Reasoning options
+- [x] Search
+- [x] Reasoning
 - [x] Code highlighting
 - [x] Sidebar for chats
 - [x] Ability to delete chats
@@ -24,6 +24,7 @@
 - [x] Better profile page
 - [x] File uploads
 - [x] Add capctha
+- [x] Save reasoning, sources and generated images
 - [ ] Profile picture upload
 - [ ] Share feature
 - [x] Copy message feature
@@ -33,6 +34,5 @@
 - [ ] Translate API routes
 - [ ] SEO
 - [ ] Payments
-- [ ] Appearance page
+- [x] Appearance page
 - [ ] Add an option to disable/enable blur
-- [ ] Improve privacy and security

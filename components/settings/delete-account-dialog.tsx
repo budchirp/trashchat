@@ -5,6 +5,7 @@ import { useState } from 'react'
 
 import { deleteAccountValidator } from '@/lib/validators/delete-account'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
+import { AreYouSureDialog } from '@/components/r-u-sure'
 import { SessionAPIManager } from '@/lib/api/session'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { UserAPIManager } from '@/lib/api/user'
@@ -16,7 +17,6 @@ import { toast } from '@/components/toast'
 import { Box } from '@/components/box'
 import { Lock } from 'lucide-react'
 import { useFormik } from 'formik'
-import { AreYouSureDialog } from '@/components/r-u-sure'
 
 type DeleteAccountDialogProps = {
   open: boolean
@@ -29,9 +29,7 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
 }: DeleteAccountDialogProps): React.ReactNode => {
   const [error, setError] = useState<string | null>(null)
 
-  const t = useTranslations('account')
-  const t_auth = useTranslations('auth')
-  const t_common = useTranslations('common')
+  const t = useTranslations()
 
   const cookieMonster = new CookieMonster()
 
@@ -55,16 +53,16 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
           if (success) {
             await SessionAPIManager.delete()
 
-            toast(t_common('success'))
+            toast(t('common.success'))
 
             onClose()
 
             router.push('/')
           } else {
-            setError(message || t_common('error'))
+            setError(message || t('errors.error'))
           }
         } else {
-          setError(verify_message || t_common('error'))
+          setError(verify_message || t('errors.error'))
         }
 
         setSubmitting(false)
@@ -78,7 +76,7 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
       open={open}
       onClose={onClose}
       onSubmit={formik.handleSubmit}
-      title={t('delete')}
+      title={t('settings.account.delete')}
     >
       <form className='grid gap-2' onSubmit={formik.handleSubmit}>
         {error && (
@@ -95,7 +93,7 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
               type='password'
               autoComplete='name'
               icon={<Lock size={16} />}
-              placeholder={t_auth('password')}
+              placeholder={t('auth.password')}
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

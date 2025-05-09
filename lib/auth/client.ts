@@ -1,4 +1,5 @@
 import { CookieMonster } from '@/lib/cookie-monster'
+import { unauthorized } from 'next/navigation'
 import { redirect } from '@/lib/i18n/routing'
 import { CONSTANTS } from '@/lib/constants'
 
@@ -11,10 +12,7 @@ export const getToken = (cookieStore: ReadonlyRequestCookies): string | undefine
 export const authenticatedRoute = (cookieStore: ReadonlyRequestCookies, locale: string): string => {
   const token = getToken(cookieStore)
   if (!token) {
-    redirect({
-      href: '/auth/signin',
-      locale
-    })
+    return unauthorized()
   }
 
   return token!

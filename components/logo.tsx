@@ -1,9 +1,9 @@
 import type React from 'react'
 import type { ComponentProps } from 'react'
 
-import { cn } from '@/lib/cn'
 import { Link } from '@/lib/i18n/routing'
 import { Env } from '@/lib/env'
+import { cn } from '@/lib/cn'
 
 export type LogoProps = Omit<ComponentProps<'h1'>, 'children'>
 

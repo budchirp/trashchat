@@ -1,10 +1,13 @@
-import type { User } from '@/types/user'
 import { createContext } from 'react'
 
-export const UserContext = createContext<{
+import type { User } from '@/types/user'
+
+type UserContextProps = {
   user: User
   setUser: any
-}>({
+}
+
+export const UserContext = createContext<UserContextProps>({
   user: null as any,
   setUser: () => {}
 })

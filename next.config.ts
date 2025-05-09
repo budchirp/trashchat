@@ -5,6 +5,9 @@ import type { NextConfig } from 'next'
 const withNextIntl = createNextIntlPlugin('./lib/i18n/request.ts')
 const config = withNextIntl({
   reactStrictMode: true,
+  experimental: {
+    authInterrupts: true
+  },
   images: {
     remotePatterns: [
       {

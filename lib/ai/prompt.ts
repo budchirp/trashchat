@@ -1,7 +1,7 @@
 import { Env } from '@/lib/env'
 
-import type { User } from '@/types/user'
 import type { AIModel } from '@/lib/ai/models'
+import type { User } from '@/types/user'
 
 export const constructSystemPrompt = (model: AIModel, user: User): string => {
   const prompt = []

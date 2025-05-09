@@ -1,62 +1,75 @@
 'use client'
 
 import type React from 'react'
+import { use } from 'react'
 
+import { SidebarContext } from '@/providers/context/sidebar'
+import { UserContext } from '@/providers/context/user'
 import { Container } from '@/components/container'
-import { Logo } from '@/components/logo'
-import { cn } from '@/lib/cn'
-import { ThemeSwitcher } from '@/components/ui/theme-switcher'
-import { ProfileMenu } from '@/components/ui/profile-menu'
-import { Sidebar } from '@/components/ui/sidebar'
-import { useEffect, useState } from 'react'
 import { Button } from '@/components/button'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/lib/i18n/routing'
+import { Logo } from '@/components/logo'
 import { MenuIcon } from 'lucide-react'
-import { createPortal } from 'react-dom'
-import { Backdrop } from '@/components/backdrop'
-import { Transition } from '@headlessui/react'
-import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/cn'
+
+type HeaderLinkProps = {
+  href: string
+  children: React.ReactNode
+}
+
+const HeaderLink: React.FC<HeaderLinkProps> = ({
+  href,
+  children
+}: HeaderLinkProps): React.ReactNode => {
+  return (
+    <Link
+      className='text-lg text-text-tertiary font-medium hover:font-bold transition-all duration-300 hover:text-text-primary '
+      href={href}
+    >
+      {children}
+    </Link>
+  )
+}
 
 type HeaderProps = {
-  sidebar?: boolean
+  isSidebarLayout?: boolean
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  sidebar = false
+  isSidebarLayout = false
 }: HeaderProps): React.ReactNode => {
-  const [showSidebar, setShowSidebar] = useState<boolean>(false)
+  const t = useTranslations('auth')
 
-  const [mounted, setMounted] = useState<boolean>(false)
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const pathname = usePathname()
-  useEffect(() => {
-    setShowSidebar(false)
-  }, [pathname])
+  const { user } = use(UserContext)
+  const { showSidebar, setShowSidebar } = use(SidebarContext)
 
   return (
     <>
       <header
         className={cn(
-          'select-none bg-background-primary/50 border-b border-border fixed top-0 z-20 flex h-16 items-center justify-center backdrop-blur-sm',
-          sidebar ? 'right-0 w-full md:w-3/4' : 'w-full'
+          'select-none bg-background-primary/50 border-b right-0 border-border transition-all duration-300 fixed top-0 z-20 flex h-16 items-center justify-center backdrop-blur-sm',
+          showSidebar ? 'w-full md:w-3/4 ease-out' : 'w-full ease-in'
         )}
       >
         <Container className='flex items-center h-16 justify-between gap-2'>
           <Logo />
 
           <div className='flex h-full items-center gap-2'>
-            <ProfileMenu sidebar={sidebar} />
-            <ThemeSwitcher sidebar={sidebar} />
+            {!user && (
+              <>
+                <HeaderLink href='/auth/signin'>{t('signin.text')}</HeaderLink>
 
-            {sidebar && (
+                <HeaderLink href='/auth/signup'>{t('signup.text')}</HeaderLink>
+              </>
+            )}
+
+            {isSidebarLayout && (
               <Button
-                className='md:hidden'
-                aria-label='Open menu'
+                aria-label='Toggle sidebar'
                 variant='round'
                 color='secondary'
-                onClick={() => setShowSidebar(true)}
+                onClick={() => setShowSidebar(!showSidebar)}
               >
                 <MenuIcon />
               </Button>
@@ -64,22 +77,6 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </Container>
       </header>
-
-      {mounted &&
-        sidebar &&
-        createPortal(
-          <Transition show={showSidebar}>
-            <Sidebar onClose={() => setShowSidebar(false)} />
-          </Transition>,
-          document.body
-        )}
-
-      {mounted &&
-        sidebar &&
-        createPortal(
-          <Backdrop open={showSidebar} onClose={() => setShowSidebar(false)} />,
-          document.body
-        )}
 
       <div className='h-16' />
     </>

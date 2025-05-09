@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server'
+import { CONSTANTS } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
 export const POST = async (request: NextRequest) => {
@@ -39,6 +40,8 @@ export const POST = async (request: NextRequest) => {
       chat = await prisma.chat.create({
         data: {
           title: 'New chat',
+
+          model: CONSTANTS.AI.DEFAULT_MODEL,
 
           userId: user.id
         }

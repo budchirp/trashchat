@@ -4,9 +4,11 @@ import type React from 'react'
 import { useEffect, useState, use } from 'react'
 import { createPortal } from 'react-dom'
 
+import { SidebarContext } from '@/providers/context/sidebar'
+import { UserContext } from '@/providers/context/user'
+import { Container } from '@/components/container'
 import { Backdrop } from '@/components/backdrop'
 import { Box } from '@/components/box'
-import { Container } from '@/components/container'
 import { cn } from '@/lib/cn'
 import {
   Listbox,
@@ -15,23 +17,37 @@ import {
   ListboxOptions,
   Transition
 } from '@headlessui/react'
-import { UserContext } from '@/providers/context/user'
-import { ChevronDown, Crown, DollarSign, FlaskConical, ThumbsUp, Camera, File } from 'lucide-react'
+import {
+  ChevronDown,
+  Crown,
+  DollarSign,
+  FlaskConical,
+  ThumbsUp,
+  Camera,
+  File,
+  Brain,
+  Search,
+  SprayCan
+} from 'lucide-react'
 
 import type { AIModelID, AIModelMap } from '@/lib/ai/models'
 
 export type ModelSelectorProps = {
-  model: AIModelID
-  models: AIModelMap
   height: number
-  onChange: (model: AIModelID) => void
+
+  models: AIModelMap
+
+  model: AIModelID
+  onModelChange: (model: AIModelID) => void
 }
 
 export const ModelSelector: React.FC<ModelSelectorProps> = ({
-  model,
-  models,
   height,
-  onChange
+
+  models,
+
+  model,
+  onModelChange
 }: ModelSelectorProps): React.ReactNode => {
   const [mounted, setMounted] = useState<boolean>(false)
   useEffect(() => {
@@ -39,49 +55,52 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   }, [])
 
   const { user } = use(UserContext)
+  const { showSidebar } = use(SidebarContext)
 
   return (
-    <Listbox value={model} onChange={onChange}>
-      {({ open }) => {
-        return (
-          <div>
-            {mounted &&
-              createPortal(<Backdrop open={open} />, document.querySelector('#main') as Element)}
+    <Listbox value={model} onChange={onModelChange}>
+      {({ open }) => (
+        <div>
+          {mounted &&
+            createPortal(<Backdrop open={open} />, document.querySelector('#main') as Element)}
 
-            <ListboxButton className='cursor-pointer' aria-label='Open model selector menu'>
-              <span className='px-3 py-1 transition-all duration-150 rounded-lg bg-transparent hover:bg-background-secondary flex items-center gap-1'>
-                {models[model].name}
+          <ListboxButton
+            className='px-4 h-10 transition-all duration-150 rounded-lg bg-transparent hover:bg-background-secondary flex items-center gap-1 cursor-pointer'
+            aria-label='Open model selector menu'
+          >
+            {models[model].name}
 
-                <ChevronDown />
-              </span>
-            </ListboxButton>
+            <ChevronDown />
+          </ListboxButton>
 
-            {mounted &&
-              createPortal(
-                <Transition
-                  show={open}
-                  as='div'
-                  className={cn(
-                    'w-full md:w-3/4 right-0 h-screen_ flex justify-center bottom-0 items-center origin-[25%_100%] md:origin-[5%_100%] z-20 mx-auto fixed',
-                    'transition-all scale-100 opacity-100',
-                    'data-closed:scale-90 data-closed:opacity-0',
-                    'data-enter:ease-out data-enter:duration-400',
-                    'data-leave:ease-in data-leave:duration-200'
-                  )}
+          {mounted &&
+            createPortal(
+              <Transition
+                show={open}
+                as='div'
+                className={cn(
+                  'bottom-0 h-screen_ flex justify-center items-center origin-[25%_100%] md:origin-[25%_100%] z-20 mx-auto fixed',
+                  'transition-all scale-100 opacity-100',
+                  'data-closed:scale-90 data-closed:opacity-0',
+                  'data-enter:ease-out data-enter:duration-400',
+                  'data-leave:ease-in data-leave:duration-200',
+                  showSidebar ? 'w-full right-0 md:w-3/4' : 'w-full'
+                )}
+              >
+                <Container
+                  style={{
+                    bottom: `calc(${height}px + 1rem)`
+                  }}
+                  className='fixed h-min flex justify-start items-center'
                 >
-                  <Container
-                    style={{
-                      bottom: `calc(${height}px + 1rem)`
-                    }}
-                    className='fixed h-min flex justify-start items-center'
+                  <ListboxOptions
+                    static
+                    as={Box}
+                    variant='primary'
+                    padding='none'
+                    className='min-w-32 w-fit max-h-96 overflow-y-auto'
                   >
-                    <ListboxOptions
-                      static
-                      as={Box}
-                      variant='primary'
-                      padding='none'
-                      className='min-w-32 overflow-y-auto max-h-96 w-fit grid grid-cols-2 md:grid-cols-3 gap-4 p-4'
-                    >
+                    <div className='grid grid-cols-2 md:grid-cols-3 gap-4 p-4'>
                       {(Object.keys(models) as AIModelID[]).map((modelId: AIModelID) => {
                         const model = models[modelId]
 
@@ -142,6 +161,18 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                       </div>
                                     )}
 
+                                    {model.reasoning && (
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <Brain />
+                                      </div>
+                                    )}
+
+                                    {model.search && (
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <Search />
+                                      </div>
+                                    )}
+
                                     {model.imageUpload && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Camera />
@@ -153,6 +184,12 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                         <File />
                                       </div>
                                     )}
+
+                                    {model.imageGeneration && (
+                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
+                                        <SprayCan />
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               )
@@ -160,14 +197,14 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                           </ListboxOption>
                         )
                       })}
-                    </ListboxOptions>
-                  </Container>
-                </Transition>,
-                document.querySelector('#main') as Element
-              )}
-          </div>
-        )
-      }}
+                    </div>
+                  </ListboxOptions>
+                </Container>
+              </Transition>,
+              document.querySelector('#main') as Element
+            )}
+        </div>
+      )}
     </Listbox>
   )
 }

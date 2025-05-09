@@ -1,9 +1,10 @@
 import type React from 'react'
 import type { ComponentProps } from 'react'
 
-import { cn } from '@/lib/cn'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { Button as HeadlessButton } from '@headlessui/react'
 import { Loader2 } from 'lucide-react'
+import { cn } from '@/lib/cn'
 
 export const buttonVariants = cva(
   [
@@ -43,15 +44,20 @@ export const Button: React.FC<ButtonProps> = ({
   className,
   variant,
   color,
+  type,
   ...props
 }: ButtonProps): React.ReactNode => {
   if (!children) loading = true
 
   return (
-    <button {...props} className={cn(buttonVariants({ className, variant, color }))}>
+    <HeadlessButton
+      {...props}
+      type={type || 'button'}
+      className={cn(buttonVariants({ className, variant, color }))}
+    >
       {loading && <Loader2 className={cn('animate-spin text-xs', children ? 'mr-2' : '')} />}
       {children ?? ''}
-    </button>
+    </HeadlessButton>
   )
 }
 Button.displayName = 'Button'

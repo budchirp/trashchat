@@ -1,6 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server'
+import { CONSTANTS } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
+
+import type { Message, MessagePart } from '@prisma/client'
 
 export const DELETE = async (
   request: NextRequest,
@@ -77,6 +80,36 @@ export const GET = async (
 
     const { id } = await params
 
+    const convertToUIMessage = (message: Message & { parts: MessagePart[] }) => {
+      return {
+        ...message,
+        parts: message.parts.map((part) => {
+          if (part.type === 'text') {
+            return {
+              ...part,
+              text: part.text
+            }
+          }
+
+          if (part.type === 'reasoning') {
+            return {
+              ...part,
+              reasoning: part.text
+            }
+          }
+
+          if (part.type === 'source') {
+            const [url, title] = part.text.split(';') || [part.text, null]
+
+            return {
+              ...part,
+              source: { url, title }
+            }
+          }
+        })
+      }
+    }
+
     if (id === '-1') {
       const chats = await prisma.chat.findMany({
         take: 1,
@@ -86,7 +119,8 @@ export const GET = async (
         include: {
           messages: {
             include: {
-              files: true
+              files: true,
+              parts: true
             }
           }
         },
@@ -100,6 +134,8 @@ export const GET = async (
         chat = await prisma.chat.create({
           data: {
             title: 'New chat',
+
+            model: CONSTANTS.AI.DEFAULT_MODEL,
 
             userId: user.id
           },
@@ -117,7 +153,10 @@ export const GET = async (
 
       return NextResponse.json({
         message: 'Success',
-        data: chat
+        data: {
+          ...chat,
+          messages: chat.messages.map(convertToUIMessage)
+        }
       })
     }
 
@@ -130,7 +169,8 @@ export const GET = async (
       include: {
         messages: {
           include: {
-            files: true
+            files: true,
+            parts: true
           }
         }
       }
@@ -142,7 +182,10 @@ export const GET = async (
 
     return NextResponse.json({
       message: 'Success',
-      data: chat
+      data: {
+        ...chat,
+        messages: chat.messages.map(convertToUIMessage)
+      }
     })
   } catch (error) {
     return NextResponse.json(

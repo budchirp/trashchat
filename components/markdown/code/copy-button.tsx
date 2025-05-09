@@ -3,8 +3,8 @@
 import type React from 'react'
 import { useState } from 'react'
 
-import { Button } from '@/components/button'
 import { Check, Clipboard } from 'lucide-react'
+import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 

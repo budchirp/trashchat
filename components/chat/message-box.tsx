@@ -1,23 +1,52 @@
 import type React from 'react'
-import type { Ref } from 'react'
 
 import { CopyButton } from '@/components/markdown/code/copy-button'
+import { FileIcon } from 'lucide-react'
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
-import { FileIcon } from 'lucide-react'
 import Image from 'next/image'
 
 import type { UIMessage } from 'ai'
-import type { File } from '@prisma/client'
+import type { File, Message } from '@prisma/client'
+import { useTranslations } from 'next-intl'
+import { AIModels, type AIModelID } from '@/lib/ai/models'
+import { CONSTANTS } from '@/lib/constants'
 
 type MessageBoxProps = {
   className?: string
-  message: Partial<UIMessage> & {
-    text: string
+  message: Partial<UIMessage> &
+  Message & {
     content?: any
     files?: File[]
   }
-  ref?: Ref<HTMLDivElement>
+  ref?: React.Ref<HTMLDivElement>
+}
+
+const models = AIModels.get(false)
+
+type FileItemProps = {
+  file: File
+}
+
+const FileItem: React.FC<FileItemProps> = ({ file }: FileItemProps): React.ReactNode => {
+  return (
+    <Box
+      className='size-24 flex shrink-0 items-center aspect-square overflow-hidden justify-center rounded-2xl p-1'
+      padding='none'
+    >
+      {file.contentType.startsWith('image/') ? (
+        <Image
+          height={256}
+          width={256}
+          className='size-full rounded-xl object-cover'
+          alt={file.name}
+          src={file.url}
+        />
+      ) : (
+        <FileIcon size={16} />
+      )}
+    </Box>
+  )
 }
 
 export const MessageBox: React.FC<MessageBoxProps> = ({
@@ -25,6 +54,8 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
   message,
   ref
 }: MessageBoxProps): React.ReactNode => {
+  const t = useTranslations('chat')
+
   return (
     <div
       className={cn(
@@ -33,51 +64,109 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
       )}
     >
       {message.files && message.files.length > 0 && (
-        <div className='rounded-xl w-full flex flex-row-reverse overflow-x-auto'>
-          <div className='flex justify-end flex-row-reverse gap-2 items-center'>
+        <div
+          className={cn(
+            'rounded-xl w-full flex overflow-x-auto',
+            message.role === 'user' && 'flex-row-reverse'
+          )}
+        >
+          <div
+            className={cn(
+              'flex gap-2 items-center',
+              message.role === 'user' && 'justify-end flex-row-reverse'
+            )}
+          >
             {message.files.map((file, index) => {
-              return (
-                <Box
-                  className='size-16 flex shrink-0 items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
-                  key={index}
-                  padding='none'
-                >
-                  {file.contentType.startsWith('image/') ? (
-                    <Image
-                      height={256}
-                      width={256}
-                      className='size-full rounded-lg object-cover'
-                      alt={file.name}
-                      src={file.url}
-                    />
-                  ) : (
-                    <FileIcon size={16} />
-                  )}
-                </Box>
-              )
+              return <FileItem key={index} file={file} />
             })}
           </div>
         </div>
       )}
 
-      <Box
-        variant='primary'
-        padding='none'
-        className={cn(
-          message.role === 'user'
-            ? 'md:max-w-3/4 py-2 px-4 bg-background-primary/50 backdrop-blur-sm w-fit'
-            : 'max-w-full bg-transparent rounded-none border-none',
-          className
-        )}
-        ref={ref}
-      >
-        <article className='prose dark:prose-dark w-full !max-w-none break-words text-text-primary select-text'>
-          {message.content || message.text}
-        </article>
-      </Box>
+      {message.parts && (
+        <div
+          className={cn(
+            'w-full min-w-0 flex flex-col gap-2',
+            message.role === 'user' ? 'items-end' : 'items-start'
+          )}
+        >
+          <Box
+            variant='primary'
+            padding='none'
+            className={cn(
+              'grid gap-2',
+              message.role === 'user'
+                ? 'md:max-w-3/4 py-2 px-4 bg-background-primary/50 backdrop-blur-sm w-fit'
+                : 'max-w-full bg-transparent rounded-none border-none',
+              className
+            )}
+            ref={ref}
+          >
+            {message.parts
+              .filter((part) => part.type !== 'source')
+              .map((part, index) => {
+                if (part.type === 'reasoning') {
+                  return (
+                    <details key={index}>
+                      <summary className='text-text-primary font-medium'>{t('reasoning')}</summary>
 
-      <div className='pe-2 invisible opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:visible'>
-        <CopyButton variant='small' content={message.text} />
+                      <p>{part.reasoning}</p>
+                    </details>
+                  )
+                }
+
+                if (part.type === 'text') {
+                  return (
+                    <article
+                      key={index}
+                      className='prose dark:prose-dark w-full !max-w-none break-words text-text-primary select-text'
+                    >
+                      {part.text}
+                    </article>
+                  )
+                }
+
+                if (part.type === 'file' && part.mimeType.startsWith('image/')) {
+                  return (
+                    <FileItem
+                      key={index}
+                      file={
+                        {
+                          name: 'Generated',
+                          contentType: part.mimeType,
+                          url: `data:${part.mimeType};base64,${part.data}`
+                        } as any
+                      }
+                    />
+                  )
+                }
+              })}
+
+            {message.parts.filter((part) => part.type === 'source').length > 0 && (
+              <div className='grid gap-1'>
+                <h2 className='text-text-primary font-medium'>{t('sources')}</h2>
+
+                <div className='flex gap-2'>
+                  {message.parts
+                    .filter((part) => part.type === 'source')
+                    .map((part, index) => (
+                      <a key={index} href={part.source.url} target='_blank' rel='noreferrer'>
+                        <Box hover padding='tag'>
+                          {part.source.title ?? new URL(part.source.url).hostname}
+                        </Box>
+                      </a>
+                    ))}
+                </div>
+              </div>
+            )}
+          </Box>
+        </div>
+      )}
+
+      <div className='pe-2 invisible opacity-0 transition-all duration-300 gap-2 flex group-hover:opacity-100 group-hover:visible'>
+        <CopyButton variant='small' content={message.content} />
+
+        {message.role === 'assistant' && <p>{models[message.model as AIModelID]?.name || ''}</p>}
       </div>
     </div>
   )

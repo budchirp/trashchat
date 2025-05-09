@@ -16,7 +16,10 @@ export const VerticalPage: React.FC<VerticalPageProps> = ({
   items,
   ...props
 }: VerticalPageProps): React.ReactNode => (
-  <div {...props} className={cn('size-full flex flex-col flex-1 justify-center gap-4', className)}>
+  <div
+    {...props}
+    className={cn('w-full page-min-h-screen flex flex-col flex-1 justify-center gap-4', className)}
+  >
     <h2 className='text-text-accent-primary text-5xl font-bold'>{title}</h2>
 
     <div className='grid gap-1'>

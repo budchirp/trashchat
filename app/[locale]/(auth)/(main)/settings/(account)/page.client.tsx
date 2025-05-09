@@ -8,9 +8,10 @@ import { DeleteAccountDialog } from '@/components/settings/delete-account-dialog
 import { updateAccountValidator } from '@/lib/validators/update-account'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { UserContext } from '@/providers/context/user'
-import { SessionAPIManager } from '@/lib/api/session'
+import { useLogout } from '@/lib/helpers/use-logout'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { UserAPIManager } from '@/lib/api/user'
+import { Heading } from '@/components/heading'
 import { useRouter } from '@/lib/i18n/routing'
 import { Mail, UserIcon } from 'lucide-react'
 import { Button } from '@/components/button'
@@ -18,17 +19,17 @@ import { CONSTANTS } from '@/lib/constants'
 import { useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
+import { Field } from '@headlessui/react'
 import { Box } from '@/components/box'
 import { useFormik } from 'formik'
-import { Heading } from '@/components/heading'
 
 export const AccountClientPage: React.FC = (): React.ReactNode => {
   const router = useRouter()
 
-  const { user, setUser } = use(UserContext)
+  const { user } = use(UserContext)
 
   const t = useTranslations('auth')
-  const t_account = useTranslations('account')
+  const t_account = useTranslations('settings.account')
   const t_common = useTranslations('common')
 
   const cookieMonster = new CookieMonster()
@@ -37,7 +38,6 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
   const formik = useFormik({
     initialValues: {
       name: user.name,
-      username: user.username,
       email: user.email
     },
     onSubmit: async (values, { setSubmitting }) => {
@@ -61,6 +61,8 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false)
 
+  const logout = useLogout()
+
   return (
     <>
       <form className='grid text-start gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
@@ -71,7 +73,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
         )}
 
         <div className='grid gap-2 w-full'>
-          <div>
+          <Field>
             <Input
               id='name'
               name='name'
@@ -87,27 +89,9 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
             {formik.errors.name && formik.touched.name && (
               <p className='text-red-500 ms-2'>{formik.errors.name}</p>
             )}
-          </div>
+          </Field>
 
-          <div>
-            <Input
-              id='username'
-              name='username'
-              type='text'
-              autoComplete='off'
-              icon={<UserIcon size={16} />}
-              placeholder={t('username')}
-              value={formik.values.username}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
-
-            {formik.errors.username && formik.touched.username && (
-              <p className='text-red-500 ms-2'>{formik.errors.username}</p>
-            )}
-          </div>
-
-          <div className='grid gap-2'>
+          <Field className='grid gap-2'>
             <Input
               readOnly
               id='email'
@@ -134,7 +118,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
                 </div>
               </div>
             )}
-          </div>
+          </Field>
         </div>
 
         <div>
@@ -154,18 +138,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
             {t_account('delete')}
           </Button>
 
-          <Button
-            color='secondary'
-            onClick={async () => {
-              await SessionAPIManager.delete()
-
-              setUser(null)
-
-              toast(t_common('success'))
-
-              router.push('/')
-            }}
-          >
+          <Button color='secondary' onClick={logout}>
             {t('logout')}
           </Button>
         </div>
