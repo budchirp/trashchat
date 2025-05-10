@@ -185,7 +185,7 @@ type ChatChipProps = {
 const ChatChip: React.FC<ChatChipProps> = ({
   selected = false,
   chat,
-  onDelete = () => { }
+  onDelete = () => {}
 }: ChatChipProps): React.ReactNode => {
   const [showDeleteChatDialog, setShowDeleteChatDialog] = useState<boolean>(false)
 
@@ -318,28 +318,28 @@ const SidebarContent: React.FC = (): React.ReactNode => {
       <div className='flex flex-col-reverse w-full gap-2'>
         {chats
           ? chats.map((chat, index) => {
-            return (
-              <ChatChip
-                onDelete={() => {
-                  setChats(chats.filter((_chat) => _chat.id !== chat.id))
+              return (
+                <ChatChip
+                  onDelete={() => {
+                    setChats(chats.filter((_chat) => _chat.id !== chat.id))
 
-                  fetchChats()
+                    fetchChats()
 
-                  setShowSidebar(false)
-                }}
-                selected={
-                  index === chats.length - 1 && pathname.endsWith('chat')
-                    ? true
-                    : pathname.includes(chat.id)
-                }
-                key={chat.id}
-                chat={chat}
-              />
-            )
-          })
+                    setShowSidebar(false)
+                  }}
+                  selected={
+                    index === chats.length - 1 && pathname.endsWith('chat')
+                      ? true
+                      : pathname.includes(chat.id)
+                  }
+                  key={chat.id}
+                  chat={chat}
+                />
+              )
+            })
           : [...Array(2)].map((_, index) => {
-            return <ChatChip key={index} />
-          })}
+              return <ChatChip key={index} />
+            })}
       </div>
     </Container>
   )

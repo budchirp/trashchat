@@ -60,7 +60,7 @@ export const useUpload = async (
 
       try {
         await Fetch.post(url, formData)
-      } catch { }
+      } catch {}
 
       onUpload(file, `${url}${fields.key}`)
     }

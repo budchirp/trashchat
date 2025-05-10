@@ -92,7 +92,7 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
             onChange={(checked) => formik.setFieldValue('shareInfoWithAI', checked)}
           />
 
-          <Label htmlFor="shareInfoWithAI">{t('share-info')}</Label>
+          <Label htmlFor='shareInfoWithAI'>{t('share-info')}</Label>
         </Field>
       </div>
 

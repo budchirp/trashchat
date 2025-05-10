@@ -15,10 +15,10 @@ import { CONSTANTS } from '@/lib/constants'
 type MessageBoxProps = {
   className?: string
   message: Partial<UIMessage> &
-  Message & {
-    content?: any
-    files?: File[]
-  }
+    Message & {
+      content?: any
+      files?: File[]
+    }
   ref?: React.Ref<HTMLDivElement>
 }
 

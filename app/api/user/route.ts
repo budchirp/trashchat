@@ -98,7 +98,6 @@ export const POST = async (request: NextRequest) => {
       data: {
         name,
         email,
-        verificationToken: randomUUID(),
         password: await Encrypt.encrypt(password)
       }
     })

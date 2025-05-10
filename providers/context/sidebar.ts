@@ -12,7 +12,7 @@ type SidebarContextProps = {
 
 export const SidebarContext = createContext<SidebarContextProps>({
   showSidebar: false,
-  setShowSidebar: () => { },
+  setShowSidebar: () => {},
   chats: [],
-  setChats: () => { }
+  setChats: () => {}
 })

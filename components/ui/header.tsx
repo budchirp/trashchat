@@ -39,7 +39,7 @@ type HeaderProps = {
 export const Header: React.FC<HeaderProps> = ({
   isSidebarLayout = false
 }: HeaderProps): React.ReactNode => {
-  const t = useTranslations('auth')
+  const t = useTranslations()
 
   const { user } = use(UserContext)
   const { showSidebar, setShowSidebar } = use(SidebarContext)
@@ -58,10 +58,14 @@ export const Header: React.FC<HeaderProps> = ({
           <div className='flex h-full items-center gap-2'>
             {!user && (
               <>
-                <HeaderLink href='/auth/signin'>{t('signin.text')}</HeaderLink>
+                <HeaderLink href='/auth/signin'>{t('auth.signin.text')}</HeaderLink>
 
-                <HeaderLink href='/auth/signup'>{t('signup.text')}</HeaderLink>
+                <HeaderLink href='/auth/signup'>{t('auth.signup.text')}</HeaderLink>
               </>
+            )}
+
+            {user && !isSidebarLayout && (
+              <HeaderLink href='/chat'>{t('landing.go-to-chat')}</HeaderLink>
             )}
 
             {isSidebarLayout && (

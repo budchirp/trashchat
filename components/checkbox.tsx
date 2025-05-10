@@ -9,7 +9,7 @@ import { cn } from '@/lib/cn'
 export const Checkbox: React.FC<CheckboxProps> = ({
   className,
   checked = false,
-  onChange = () => { },
+  onChange = () => {},
   ...props
 }: CheckboxProps): React.ReactNode => (
   <HeadlessCheckbox
@@ -20,7 +20,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       cn(
         'size-8 flex items-center justify-center bg-background-secondary hover:bg-background-tertiary relative transition-all duration-150 border border-border rounded-full p-1',
         checked &&
-        'bg-background-accent-primary hover:bg-background-accent-secondary border-border-accent'
+          'bg-background-accent-primary hover:bg-background-accent-secondary border-border-accent'
       )
     }
   >

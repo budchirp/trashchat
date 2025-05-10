@@ -2,14 +2,17 @@
 
 import type React from 'react'
 
+import { Link, useRouter } from '@/lib/i18n/routing'
 import { useLogout } from '@/lib/helpers/use-logout'
-import type { ErrorProps } from '@/types/error'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/button'
-import { Link } from '@/lib/i18n/routing'
+
+import type { ErrorProps } from '@/types/error'
 
 const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => {
   const t = useTranslations()
+
+  const router = useRouter()
 
   const logout = useLogout()
 
@@ -17,7 +20,7 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
     <div className='w-full h-screen flex items-center justify-center'>
       <div className='text-center flex flex-col gap-4 items-center justify-center'>
         <h1 className='text-lg font-medium'>
-          {error.message === 'token' ? t('erorrs.sneaky') : t('errors.error')}
+          {error.message === 'token' ? t('errors.token') : t('errors.error')}
         </h1>
 
         {process.env.NODE_ENV === 'development' && (
@@ -33,11 +36,18 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
             <Button>{t('common.go-to-home')}</Button>
           </Link>
 
+          <Button color='secondary' onClick={logout}>
+            {t('auth.logout')}
+          </Button>
+
           <Button
             color='secondary'
-            onClick={logout}
+            onClick={() => {
+              router.refresh()
+              window?.location?.reload()
+            }}
           >
-            {t('auth.logout')}
+            {t('common.refresh')}
           </Button>
         </div>
       </div>

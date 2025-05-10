@@ -111,8 +111,28 @@ export const POST = async (
       throw new Error(t('chat.errors.not-found'))
     }
 
+    const model = models[modelName]
+
+    if (
+      !user.plus &&
+      (model.premium || model.plus || model.imageGeneration || useReasoning || useSearch)
+    ) {
+      throw new Error()
+    }
+
+    if (model.premium) {
+      if (user.premiumCredits < 1) {
+        throw new Error(t('chat.errors.credit-error'))
+      }
+    } else {
+      if (user.credits < 1) {
+        throw new Error(t('chat.errors.credit-error'))
+      }
+    }
+
     const message = messages[messages.length - 1]
     messages.pop()
+
     const { id: messageId } = await prisma.message.create({
       data: {
         role: message.role as 'user',
@@ -135,8 +155,6 @@ export const POST = async (
         messageId
       }
     })
-
-    const model = models[modelName]
 
     await Promise.all(
       (model.imageUpload || model.fileUpload ? files : []).map(async (file) => {
@@ -176,20 +194,6 @@ export const POST = async (
       })
     }
 
-    if (!user.plus && (model.premium || model.reasoning || model.search || model.imageGeneration)) {
-      throw new Error()
-    }
-
-    if (model.premium) {
-      if (user.premiumCredits < 1) {
-        throw new Error(t('chat.errors.credit-error'))
-      }
-    } else {
-      if (user.credits < 1) {
-        throw new Error(t('chat.errors.credit-error'))
-      }
-    }
-
     await prisma.chat.update({
       where: {
         id: chat.id,
@@ -207,35 +211,35 @@ export const POST = async (
       model:
         model.company === 'deepseek'
           ? wrapLanguageModel({
-            model: model.provider(),
-            middleware: [extractReasoningMiddleware({ tagName: 'think' })]
-          })
+              model: model.provider(),
+              middleware: [extractReasoningMiddleware({ tagName: 'think' })]
+            })
           : model.provider(
-            model.company === 'google' && model.search && useSearch
-              ? {
-                useSearchGrounding: true
-              }
-              : undefined
-          ),
+              model.company === 'google' && model.search && useSearch
+                ? {
+                    useSearchGrounding: true
+                  }
+                : undefined
+            ),
       providerOptions: {
         openai:
           model.reasoning && useReasoning
             ? ({
-              reasoningEffort
-            } satisfies OpenAIResponsesProviderOptions)
+                reasoningEffort
+              } satisfies OpenAIResponsesProviderOptions)
             : {},
         google: {
           responseModalities: model.imageGeneration ? ['TEXT', 'IMAGE'] : ['TEXT'],
           ...(model.reasoning
             ? {
-              thinkingBudget: useReasoning
-                ? reasoningEffort === 'low'
-                  ? 1024
-                  : reasoningEffort === 'medium'
-                    ? 2048
-                    : 4096
-                : 0
-            }
+                thinkingBudget: useReasoning
+                  ? reasoningEffort === 'low'
+                    ? 1024
+                    : reasoningEffort === 'medium'
+                      ? 2048
+                      : 4096
+                  : 0
+              }
             : {})
         } satisfies GoogleGenerativeAIProviderOptions
       },
@@ -321,7 +325,7 @@ export const POST = async (
         )
 
         await Promise.all(
-          (model.imageGeneration ? files : []).map(async (file) => {
+          (model.imageGeneration ? files || [] : []).map(async (file) => {
             await prisma.file.create({
               data: {
                 name: randomUUID(),

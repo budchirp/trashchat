@@ -19,7 +19,6 @@ const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
   unauthenticatedRoute(await cookies(), locale)
 
   const t = await getTranslations({
-    namespace: 'landing',
     locale
   })
 
@@ -29,12 +28,18 @@ const LandingPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
         <div className='text-lg flex items-center justify-center text-center gap-1 flex-col font-medium'>
           <Logo />
 
-          <p className=''>{t('description')}</p>
+          <p className=''>{t('landing.description')}</p>
         </div>
 
-        <Link href='/chat'>
-          <Button>{t('go-to-chat')}</Button>
-        </Link>
+        <div className='flex items-center justify-center gap-2'>
+          <Link href='/auth/signin'>
+            <Button>{t('auth.signin.text')}</Button>
+          </Link>
+
+          <Link href='/auth/signup'>
+            <Button color='secondary'>{t('auth.signup.text')}</Button>
+          </Link>
+        </div>
       </div>
     </div>
   )

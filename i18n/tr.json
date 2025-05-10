@@ -36,7 +36,7 @@
     "error": "Hata",
     "not-found": "Sayfa bulunamadı",
     "unauthorized": "İzinsiz erişim",
-    "sneakt": "Geçersiz anahtar"
+    "token": "Geçersiz anahtar"
   },
   "common": {
     "cancel": "İptal",
@@ -45,7 +45,8 @@
     "submit": "Gönder",
     "loading": "Yükleniyor...",
     "success": "Başarılı",
-    "update": "Güncelle"
+    "update": "Güncelle",
+    "refresh": "Yenile"
   },
   "auth": {
     "danger-zone": "Tehlikeli alan",

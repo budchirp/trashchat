@@ -36,7 +36,7 @@
     "error": "Error",
     "not-found": "Page not found",
     "unauthorized": "Unauthorized",
-    "sneaky": "Invalid token"
+    "token": "Invalid token"
   },
   "common": {
     "cancel": "Cancel",
@@ -45,7 +45,8 @@
     "submit": "Submit",
     "loading": "Loading...",
     "success": "Success",
-    "update": "Update"
+    "update": "Update",
+    "refresh": "Refresh"
   },
   "auth": {
     "danger-zone": "Danger zone",
