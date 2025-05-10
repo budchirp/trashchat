@@ -4,6 +4,7 @@ import { CONSTANTS } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
 import type { Message, MessagePart } from '@prisma/client'
+import { getTranslations } from 'next-intl/server'
 
 export const DELETE = async (
   request: NextRequest,
@@ -16,11 +17,14 @@ export const DELETE = async (
   }
 ) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -40,7 +44,7 @@ export const DELETE = async (
     })
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {}
     })
   } catch (error) {
@@ -65,11 +69,14 @@ export const GET = async (
   }
 ) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -152,7 +159,7 @@ export const GET = async (
       }
 
       return NextResponse.json({
-        message: 'Success',
+        message: t('common.success'),
         data: {
           ...chat,
           messages: chat.messages.map(convertToUIMessage)
@@ -177,11 +184,11 @@ export const GET = async (
     })
 
     if (!chat) {
-      throw new Error('Chat with this id not found!')
+      throw new Error(t('chat.errors.not-found'))
     }
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {
         ...chat,
         messages: chat.messages.map(convertToUIMessage)

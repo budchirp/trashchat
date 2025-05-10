@@ -96,7 +96,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   const { user } = use(UserContext)
   const { showSidebar } = use(SidebarContext)
 
-  const isPlus = user?.plus
+  const isPlus = user?.isPlus
 
   const model = models[modelId]
   const supportsAttachments = isPlus && (model.imageUpload || model.fileUpload)

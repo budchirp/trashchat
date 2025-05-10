@@ -64,4 +64,3 @@ export const Dialog: React.FC<DialogProps> = ({
     </HeadlessDialog>
   )
 }
-Dialog.displayName = 'Dialog'

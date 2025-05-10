@@ -33,4 +33,3 @@ export const VerticalPage: React.FC<VerticalPageProps> = ({
     {children && <div>{children}</div>}
   </div>
 )
-VerticalPage.displayName = 'VerticalPage'

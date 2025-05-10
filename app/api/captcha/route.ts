@@ -1,12 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { Secrets } from '@/lib/secrets'
 import { Fetch } from '@/lib/fetch'
+import { getTranslations } from 'next-intl/server'
 
 export const POST = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const { captcha } = await request.json()
     if (!captcha) {
-      throw new Error('`captcha` field is required')
+      throw new Error(t('api.required-fields', { fields: 'captcha' }))
     }
 
     const response = await Fetch.post<{
@@ -17,7 +21,7 @@ export const POST = async (request: NextRequest) => {
     const json = await response.json()
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {
         success: json.success
       }

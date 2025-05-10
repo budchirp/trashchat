@@ -18,7 +18,7 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
   setRequestLocale(locale)
 
   const token = authenticatedRoute(await cookies(), locale)
-  const chat = await ChatAPIManager.get(token, id)
+  const chat = await ChatAPIManager.get({ token, locale }, id)
   if (!chat) return notFound()
 
   return <ChatClientPage token={token} chat={chat} />

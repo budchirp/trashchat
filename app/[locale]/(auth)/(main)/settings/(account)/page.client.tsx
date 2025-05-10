@@ -16,7 +16,7 @@ import { useRouter } from '@/lib/i18n/routing'
 import { Mail, UserIcon } from 'lucide-react'
 import { Button } from '@/components/button'
 import { CONSTANTS } from '@/lib/constants'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
 import { Field } from '@headlessui/react'
@@ -28,6 +28,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
   const { user } = use(UserContext)
 
+  const locale = useLocale()
   const t = useTranslations('auth')
   const t_account = useTranslations('settings.account')
   const t_common = useTranslations('common')
@@ -45,7 +46,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        const [ok, message] = await UserAPIManager.update(token, values)
+        const [ok, message] = await UserAPIManager.update({ token, locale }, values)
         if (ok) {
           toast(t_common('success'))
 
@@ -66,7 +67,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
   return (
     <>
-      <form className='grid text-start gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
+      <form className='grid gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
         {error && (
           <Box variant='primary'>
             <p className='text-red-500'>{error}</p>
@@ -110,7 +111,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
               <p className='text-red-500 ms-2'>{formik.errors.email}</p>
             )}
 
-            {!user.verified && (
+            {!user.isEmailVerified && (
               <div className='border-b-4 border-border-hover mb-2 pb-4 grid gap-2'>
                 <p>{t_account('verify-warning')}</p>
 

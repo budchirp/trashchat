@@ -9,16 +9,18 @@ CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "verified" BOOLEAN NOT NULL DEFAULT false,
-    "verificationToken" TEXT NOT NULL,
+    "isEmailVerified" BOOLEAN NOT NULL DEFAULT false,
+    "emailVerificationToken" TEXT NOT NULL,
+    "lastEmailSentAt" TIMESTAMP(3),
     "password" TEXT NOT NULL,
     "profilePicture" TEXT,
-    "plus" BOOLEAN NOT NULL DEFAULT false,
+    "isPlus" BOOLEAN NOT NULL DEFAULT false,
+    "plusExpiresAt" TIMESTAMP(3),
     "credits" INTEGER NOT NULL DEFAULT 10,
     "premiumCredits" INTEGER NOT NULL DEFAULT 0,
     "systemPrompt" TEXT NOT NULL DEFAULT '',
     "shareInfoWithAI" BOOLEAN NOT NULL DEFAULT true,
-    "firstUsage" TIMESTAMP(3),
+    "firstUsageAt" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -54,9 +56,9 @@ CREATE TABLE "messages" (
 -- CreateTable
 CREATE TABLE "message_parts" (
     "id" SERIAL NOT NULL,
-    "messageId" INTEGER NOT NULL,
     "type" "MessagePartType" NOT NULL,
     "text" TEXT NOT NULL,
+    "messageId" INTEGER NOT NULL,
 
     CONSTRAINT "message_parts_pkey" PRIMARY KEY ("id")
 );
@@ -67,6 +69,8 @@ CREATE TABLE "files" (
     "name" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "contentType" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
     "messageId" INTEGER NOT NULL,
 
     CONSTRAINT "files_pkey" PRIMARY KEY ("id")

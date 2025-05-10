@@ -34,4 +34,3 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     )}
   </HeadlessCheckbox>
 )
-Checkbox.displayName = 'Checkbox'

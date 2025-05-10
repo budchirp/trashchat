@@ -8,7 +8,6 @@ import { signInValidator } from '@/lib/validators/signin'
 import { UserContext } from '@/providers/context/user'
 import { SessionAPIManager } from '@/lib/api/session'
 import { UserAPIManager } from '@/lib/api/user'
-import { useRouter } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
 import { useLocale, useTranslations } from 'next-intl'
 import { Input } from '@/components/input'
@@ -19,8 +18,6 @@ import { Box } from '@/components/box'
 import { useFormik } from 'formik'
 
 export const SignInClientPage: React.FC = (): React.ReactNode => {
-  const router = useRouter()
-
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
@@ -37,9 +34,9 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const [ok, message, token] = await SessionAPIManager.new(values)
+      const [ok, message, token] = await SessionAPIManager.new({ locale }, values)
       if (ok) {
-        const user = await UserAPIManager.get(token!)
+        const user = await UserAPIManager.get({ token: token!, locale })
         if (!user) {
           setError(t_common('error'))
           return

@@ -2,17 +2,20 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
-import { randomUUID } from 'crypto'
 
 import type { User } from '@/types/user'
+import { getTranslations } from 'next-intl/server'
 
 export const GET = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -23,7 +26,7 @@ export const GET = async (request: NextRequest) => {
 
     return NextResponse.json(
       {
-        message: 'Success',
+        message: t('common.success'),
         data: {
           ...user,
           password: undefined,
@@ -47,11 +50,14 @@ export const GET = async (request: NextRequest) => {
 
 export const DELETE = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -63,7 +69,7 @@ export const DELETE = async (request: NextRequest) => {
     await prisma.user.delete({ where: user })
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {}
     })
   } catch (error) {
@@ -79,9 +85,12 @@ export const DELETE = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const { name, email, password } = await request.json()
     if (!name || !email || !password) {
-      throw new Error('`name`, `email` and `password` field is required')
+      throw new Error(t('api.required-fields', { fields: 'name, email, password' }))
     }
 
     const user = await prisma.user.findUnique({
@@ -91,7 +100,7 @@ export const POST = async (request: NextRequest) => {
     })
 
     if (user) {
-      throw new Error('User with these stuff already exists!')
+      throw new Error(t('api.user.already-exists'))
     }
 
     await prisma.user.create({
@@ -104,7 +113,7 @@ export const POST = async (request: NextRequest) => {
 
     return NextResponse.json(
       {
-        message: 'Success',
+        message: t('common.success'),
         data: {}
       },
       {
@@ -124,11 +133,14 @@ export const POST = async (request: NextRequest) => {
 
 export const PATCH = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -155,7 +167,7 @@ export const PATCH = async (request: NextRequest) => {
     })
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {}
     })
   } catch (error) {

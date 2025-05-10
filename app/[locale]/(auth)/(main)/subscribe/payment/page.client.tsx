@@ -3,19 +3,22 @@
 import type React from 'react'
 
 import { Button } from '@/components/button'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Fetch } from '@/lib/fetch'
 import { CookieMonster } from '@/lib/cookie-monster'
+import { Seperator } from '@/components/seperator'
+import { CardForm } from './card-form'
 import { toast } from '@/components/toast'
 
 import type { APIResponse } from '@/types/api'
 
-export const SubscribePageClient: React.FC = (): React.ReactNode => {
+export const PaymentPageClient: React.FC = (): React.ReactNode => {
+  const locale = useLocale()
   const t = useTranslations()
 
   const cookieMonster = new CookieMonster()
 
-  const handlePay = async () => {
+  const payWithCrypto = async () => {
     toast(t('common.wait'))
 
     const token = cookieMonster.get('token')
@@ -25,10 +28,11 @@ export const SubscribePageClient: React.FC = (): React.ReactNode => {
           hosted_url: string
         }>
       >(
-        '/api/payment',
+        '/api/payment/crypto',
         {},
         {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'accept-language': locale || 'en'
         }
       )
 
@@ -42,8 +46,16 @@ export const SubscribePageClient: React.FC = (): React.ReactNode => {
   }
 
   return (
-    <div className='flex justify-center w-full'>
-      <Button onClick={handlePay}>{t('subscribe.pay')}</Button>
+    <div className='max-w-96 w-full'>
+      <div className='w-full flex items-center justify-center'>
+        <Button onClick={payWithCrypto}>{t('subscribe.payment.pay-with-crypto')}</Button>
+      </div>
+
+      <Seperator text='or' />
+
+      <div className='w-full flex items-center justify-center'>
+        <CardForm />
+      </div>
     </div>
   )
 }

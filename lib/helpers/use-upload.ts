@@ -1,8 +1,10 @@
 import imageCompression from 'browser-image-compression'
 import { Fetch } from '@/lib/fetch'
 
+import type { Metadata } from '@/lib/api/user'
+
 export const useUpload = async (
-  token: string,
+  metadata: Metadata,
   file: File,
   onUpload: (file: File, url: string) => void
 ): Promise<'size' | 'upload' | undefined> => {
@@ -26,7 +28,8 @@ export const useUpload = async (
         }
       },
       {
-        authorization: `Bearer ${token}`
+        authorization: `Bearer ${metadata.token}`,
+        'accept-language': metadata.locale || 'en'
       }
     )
 

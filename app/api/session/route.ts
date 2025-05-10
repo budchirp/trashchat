@@ -9,12 +9,16 @@ import { prisma } from '@/lib/prisma'
 import jwt from 'jsonwebtoken'
 
 import type { JWTPayload } from '@/types/jwt'
+import { getTranslations } from 'next-intl/server'
 
 export const POST = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const { email, password } = await request.json()
     if (!email || !password) {
-      throw new Error('`email` and `password` password field is required')
+      throw new Error(t('api.required-fields', { fields: 'email, password' }))
     }
 
     const user = await prisma.user.findUnique({
@@ -24,12 +28,12 @@ export const POST = async (request: NextRequest) => {
     })
 
     if (!user) {
-      throw new Error('User not found!')
+      throw new Error(t('api.user.not-found'))
     }
 
     const passwordMatch = await Encrypt.compare(password, user.password)
     if (!passwordMatch) {
-      throw new Error('Invalid password!')
+      throw new Error(t('api.user.invalid-password'))
     }
 
     const token = jwt.sign(
@@ -43,7 +47,7 @@ export const POST = async (request: NextRequest) => {
       }
     )
 
-    if (!user.verified) await UserAPIManager.sendEmail(token)
+    if (!user.isEmailVerified) await UserAPIManager.sendEmail({ token, locale })
 
     const expires = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
 
@@ -53,7 +57,7 @@ export const POST = async (request: NextRequest) => {
     })
 
     const response = NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {
         token
       }
@@ -75,13 +79,16 @@ export const POST = async (request: NextRequest) => {
   }
 }
 
-export const DELETE = async () => {
+export const DELETE = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const cookieMonster = new CookieMonster(await cookies())
     cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
 
     const response = NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {}
     })
 

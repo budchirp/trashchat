@@ -49,5 +49,3 @@ export const Footer: React.FC = async () => {
     </footer>
   )
 }
-
-Footer.displayName = 'Footer'

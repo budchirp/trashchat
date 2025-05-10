@@ -65,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
 
             {user && !isSidebarLayout && (
-              <HeaderLink href='/chat'>{t('landing.go-to-chat')}</HeaderLink>
+              <HeaderLink href='/chat'>{t('common.go-to-chat')}</HeaderLink>
             )}
 
             {isSidebarLayout && (
@@ -86,4 +86,3 @@ export const Header: React.FC<HeaderProps> = ({
     </>
   )
 }
-Header.displayName = 'Header'

@@ -44,5 +44,3 @@ export const Box: React.FC<BoxProps> = ({
     {children}
   </div>
 )
-
-Box.displayName = 'Box'

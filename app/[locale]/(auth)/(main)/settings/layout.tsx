@@ -2,24 +2,29 @@ import type React from 'react'
 
 import { Container } from '@/components/container'
 
+import { SettingsProfilePicture } from '@/components/settings/profile-picture'
 import { SettingsLinksSection } from '@/components/settings/links-section'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { authenticatedRoute } from '@/lib/auth/client'
+import { CreditCard, Crown } from 'lucide-react'
 import { UserAPIManager } from '@/lib/api/user'
+import { Button } from '@/components/button'
+import { Link } from '@/lib/i18n/routing'
 import { cookies } from 'next/headers'
-import { Crown } from 'lucide-react'
-import Image from 'next/image'
 
 import type { DynamicLayoutProps } from '@/types/layout'
 import type { User } from '@/types/user'
-import { SettingsProfilePicture } from '@/components/settings/profile-picture'
 
 const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: DynamicLayoutProps) => {
   const { locale } = await params
   setRequestLocale(locale)
 
   const token = authenticatedRoute(await cookies(), locale)
-  const user = (await UserAPIManager.get(token)) as User
+  const user = (await UserAPIManager.get({ token, locale })) as User
+
+  const t = await getTranslations({
+    locale
+  })
 
   return (
     <Container className='flex flex-col md:flex-row'>
@@ -28,10 +33,19 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
           <SettingsProfilePicture user={user} />
 
           <h1 className='font-bold text-xl flex gap-2 items-center'>
-            {user?.plus && <Crown size={16} className='text-text-accent-primary' />}
+            {user?.isPlus && <Crown size={16} className='text-text-accent-primary' />}
 
             <span>{user?.name}</span>
           </h1>
+
+          {!user.isPlus && (
+            <Link href='/subscribe'>
+              <Button className='flex gap-2 items-center'>
+                <CreditCard size={16} />
+                <span>{t('subscribe.text')}</span>
+              </Button>
+            </Link>
+          )}
         </div>
 
         <SettingsLinksSection />

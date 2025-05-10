@@ -28,4 +28,3 @@ export const Heading: React.FC<HeadingProps> = ({
     </div>
   </div>
 )
-Heading.displayName = 'PageHeader'

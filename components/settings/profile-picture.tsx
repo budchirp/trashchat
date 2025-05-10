@@ -26,6 +26,7 @@ export const SettingsProfilePicture: React.FC<SettingsProfilePictureProps> = ({
 }: SettingsProfilePictureProps): React.ReactNode => {
   const router = useRouter()
 
+  const locale = useLocale()
   const t = useTranslations()
 
   const [uploading, setUploading] = useState(false)
@@ -43,10 +44,13 @@ export const SettingsProfilePicture: React.FC<SettingsProfilePictureProps> = ({
 
       toast(t('settings.account.uploading'))
 
-      const error = await useUpload(token, file, async (file, url) => {
-        await UserAPIManager.update(token, {
-          profilePicture: url
-        })
+      const error = await useUpload({ token, locale }, file, async (file, url) => {
+        await UserAPIManager.update(
+          { token, locale },
+          {
+            profilePicture: url
+          }
+        )
       })
 
       if (error) {

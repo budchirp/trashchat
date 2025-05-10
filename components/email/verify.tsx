@@ -4,16 +4,16 @@ import { Env } from '@/lib/env'
 
 type VerifyEmailTemplateProps = {
   token: string
+  t: (key: string) => string
 }
 
 export const VerifyEmailTemplate: React.FC<VerifyEmailTemplateProps> = ({
-  token
-}: VerifyEmailTemplateProps) => {
-  return (
-    <div>
-      <h1>Welcome to Trash Chat</h1>
-      <p>Please click the link bellow to verify your email.</p>
-      <a href={`${Env.appUrl}/en/auth/verify/email/${token}`}>Click here</a>
-    </div>
-  )
-}
+  token,
+  t
+}: VerifyEmailTemplateProps) => (
+  <div>
+    <h1>{t('email.verify.title')}</h1>
+    <p>{t('email.verify.description')}</p>
+    <a href={`${Env.appUrl}/en/auth/verify/email/${token}`}>{t('email.verify.button')}</a>
+  </div>
+)

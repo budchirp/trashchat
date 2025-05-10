@@ -37,7 +37,6 @@ export const POST = async (
 ) => {
   try {
     const locale = request.headers.get('accept-language') || 'en'
-
     const t = await getTranslations({ locale })
 
     const [isTokenValid, payload, user] = await authenticate(request.headers)
@@ -69,26 +68,28 @@ export const POST = async (
       useSearch: boolean
     } = await request.json()
 
-    if (!user.firstUsage) {
+    if (!user.firstUsageAt) {
       await prisma.user.update({
         where: {
           id: user.id
         },
         data: {
-          firstUsage: new Date(Date.now())
+          firstUsageAt: new Date(Date.now())
         }
       })
     } else {
-      if (new Date(user.firstUsage).getTime() < new Date(Date.now()).getTime()) {
+      if (new Date(user.firstUsageAt).getTime() < new Date(Date.now()).getTime()) {
         await prisma.user.update({
           where: {
             id: user.id
           },
           data: {
-            firstUsage: new Date(Date.now()),
+            firstUsageAt: new Date(Date.now()),
 
-            credits: user.verified ? CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS : 10,
-            premiumCredits: CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+            credits: user.isEmailVerified
+              ? CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].CREDITS
+              : 10,
+            premiumCredits: CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
           }
         })
       }
@@ -114,7 +115,7 @@ export const POST = async (
     const model = models[modelName]
 
     if (
-      !user.plus &&
+      !user.isPlus &&
       (model.premium || model.plus || model.imageGeneration || useReasoning || useSearch)
     ) {
       throw new Error()
@@ -175,10 +176,10 @@ export const POST = async (
       const { object } = await generateObject({
         model: models['gemini-2.0-flash'].provider(),
         schema: z.object({
-          title: z.string().max(50)
+          title: z.string().max(75)
         }),
         system:
-          "Generate a concise and relevant title (max 50 characters) based on the user's query or conversation",
+          "Generate a concise and relevant title (max 75 characters) based on the user's query or conversation",
         prompt: message.content
       })
 

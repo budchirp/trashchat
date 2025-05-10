@@ -16,4 +16,3 @@ export const Logo: React.FC<LogoProps> = ({ className, ...props }: LogoProps): R
     </Link>
   )
 }
-Logo.displayName = 'Logo'

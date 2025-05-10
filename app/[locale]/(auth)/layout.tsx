@@ -1,7 +1,7 @@
 import type React from 'react'
 
 import { setRequestLocale } from 'next-intl/server'
-import { UserProvider } from '@/providers/user'
+import { UserContextProvider } from '@/providers/user'
 import { UserAPIManager } from '@/lib/api/user'
 import { getToken } from '@/lib/auth/client'
 import { cookies } from 'next/headers'
@@ -14,15 +14,15 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
 
   const token = getToken(await cookies())
   if (token) {
-    const user = await UserAPIManager.get(token)
+    const user = await UserAPIManager.get({ token, locale })
     if (!user) {
       throw new Error('token')
     }
 
     return (
-      <UserProvider token={token} initialUser={user}>
+      <UserContextProvider token={token} initialUser={user}>
         {children}
-      </UserProvider>
+      </UserContextProvider>
     )
   }
 

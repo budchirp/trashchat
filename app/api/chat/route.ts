@@ -2,14 +2,18 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server'
 import { CONSTANTS } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
+import { getTranslations } from 'next-intl/server'
 
 export const POST = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -39,7 +43,7 @@ export const POST = async (request: NextRequest) => {
     if (!chat || (chat && chat.messages.length > 1)) {
       chat = await prisma.chat.create({
         data: {
-          title: 'New chat',
+          title: t('chat.new-chat'),
 
           model: CONSTANTS.AI.DEFAULT_MODEL,
 
@@ -49,7 +53,7 @@ export const POST = async (request: NextRequest) => {
     }
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: chat
     })
   } catch (error) {
@@ -65,11 +69,14 @@ export const POST = async (request: NextRequest) => {
 
 export const GET = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -85,7 +92,7 @@ export const GET = async (request: NextRequest) => {
     })
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: chats
     })
   } catch (error) {

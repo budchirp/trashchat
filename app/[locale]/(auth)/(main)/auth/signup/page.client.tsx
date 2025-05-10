@@ -10,7 +10,7 @@ import { Lock, Mail, User } from 'lucide-react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useRouter } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
 import { Field } from '@headlessui/react'
@@ -28,6 +28,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
 }: SignUpClientPageProps): React.ReactNode => {
   const router = useRouter()
 
+  const locale = useLocale()
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
@@ -54,9 +55,15 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
           data: {
             success: boolean
           }
-        }>(`${Env.appUrl}/api/captcha`, {
-          captcha
-        })
+        }>(
+          `${Env.appUrl}/api/captcha`,
+          {
+            captcha
+          },
+          {
+            'accept-language': locale || 'en'
+          }
+        )
 
         if (response.ok) {
           const json = await response.json()
@@ -70,7 +77,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
         }
       }
 
-      const [ok, message] = await UserAPIManager.new(values)
+      const [ok, message] = await UserAPIManager.new({ locale }, values)
       if (ok) {
         toast(t_common('success'))
 

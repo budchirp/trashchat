@@ -5,11 +5,11 @@ import type { User } from '@/types/user'
 type UserContextProps = {
   user: User
   setUser: any
-  refetchUser: () => void
+  refreshUser: () => void
 }
 
 export const UserContext = createContext<UserContextProps>({
   user: null as any,
   setUser: () => {},
-  refetchUser: () => {}
+  refreshUser: () => {}
 })

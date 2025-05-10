@@ -19,17 +19,19 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
 
   const token = authenticatedRoute(await cookies(), locale)
 
-  const user = (await UserAPIManager.get(token)) as User
+  const user = (await UserAPIManager.get({ token, locale })) as User
 
-  const credits = user.verified ? CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS : 10
-  const premium_credits = CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+  const credits = user.isEmailVerified
+    ? CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].CREDITS
+    : 10
+  const premium_credits = CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
 
   const t = await getTranslations({
     namespace: 'settings.usages',
     locale
   })
 
-  const resetDate = new Date(user.firstUsage || Date.now())
+  const resetDate = new Date(user.firstUsageAt || Date.now())
   resetDate.setDate(resetDate.getDate() + 10)
 
   return (
@@ -37,8 +39,8 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
       <Heading
         description={
           <div>
-            {!user.verified && <p>{t('verify-warning')}</p>}
-            {user.firstUsage && user.verified && (
+            {!user.isEmailVerified && <p>{t('verify-warning')}</p>}
+            {user.firstUsageAt && user.isEmailVerified && (
               <p>{t('reset', { date: resetDate.toLocaleDateString() })}</p>
             )}
           </div>

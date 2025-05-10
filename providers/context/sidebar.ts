@@ -8,11 +8,16 @@ type SidebarContextProps = {
 
   showSidebar: boolean
   setShowSidebar: (showSidebar: boolean) => void
+
+  refreshChats: () => void
 }
 
 export const SidebarContext = createContext<SidebarContextProps>({
   showSidebar: false,
   setShowSidebar: () => {},
+
   chats: [],
-  setChats: () => {}
+  setChats: () => {},
+
+  refreshChats: () => {}
 })

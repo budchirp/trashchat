@@ -9,7 +9,6 @@ import { Button } from '@/components/button'
 import { cookies } from 'next/headers'
 
 import type { DynamicPageProps } from '@/types/page'
-import { toast } from '@/components/toast'
 
 const VerifyEmailPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale, token: verificationToken } = await params
@@ -18,35 +17,28 @@ const VerifyEmailPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPa
   const token = authenticatedRoute(await cookies(), locale)!
 
   const t = await getTranslations({
-    namespace: 'auth.verify',
     locale
   })
 
-  const t_common = await getTranslations({
-    namespace: 'common',
-    locale
-  })
-
-  const user = await UserAPIManager.get(token)
-  if (user && user.verified)
+  const user = await UserAPIManager.get({ token, locale })
+  if (user && user.isEmailVerified)
     redirect({
       href: '/',
       locale
     })
 
-  const [ok, message] = await UserAPIManager.verifyEmail(token, verificationToken)
-  if (!ok) {
-    toast(message || t_common('error'))
-  }
+  const [ok] = await UserAPIManager.verifyEmail({ token, locale }, verificationToken)
 
   return (
     <div className='w-full page-h-screen mt-4 flex items-center justify-center'>
       <div className='text-center flex flex-col gap-4 items-center justify-center'>
-        <h1 className='font-bold text-2xl'>{t(ok ? 'verified' : 'invalid-token')}</h1>
+        <h1 className='font-bold text-2xl'>
+          {t(ok ? 'auth.verify.verified' : 'auth.verify.invalid-token')}
+        </h1>
 
         {ok ? (
-          <Link href='/'>
-            <Button>{t_common('go-to-home')}</Button>
+          <Link href='/chat'>
+            <Button>{t('common.go-to-chat')}</Button>
           </Link>
         ) : (
           <ResendVerificationEmailButton />

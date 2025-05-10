@@ -1,6 +1,8 @@
 import type React from 'react'
 
 import { CopyButton } from '@/components/markdown/code/copy-button'
+import { AIModels, type AIModelID } from '@/lib/ai/models'
+import { useTranslations } from 'next-intl'
 import { FileIcon } from 'lucide-react'
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
@@ -8,19 +10,6 @@ import Image from 'next/image'
 
 import type { UIMessage } from 'ai'
 import type { File, Message } from '@prisma/client'
-import { useTranslations } from 'next-intl'
-import { AIModels, type AIModelID } from '@/lib/ai/models'
-import { CONSTANTS } from '@/lib/constants'
-
-type MessageBoxProps = {
-  className?: string
-  message: Partial<UIMessage> &
-    Message & {
-      content?: any
-      files?: File[]
-    }
-  ref?: React.Ref<HTMLDivElement>
-}
 
 const models = AIModels.get(false)
 
@@ -47,6 +36,16 @@ const FileItem: React.FC<FileItemProps> = ({ file }: FileItemProps): React.React
       )}
     </Box>
   )
+}
+
+type MessageBoxProps = {
+  className?: string
+  message: Partial<UIMessage> &
+    Message & {
+      content?: any
+      files?: File[]
+    }
+  ref?: React.Ref<HTMLDivElement>
 }
 
 export const MessageBox: React.FC<MessageBoxProps> = ({

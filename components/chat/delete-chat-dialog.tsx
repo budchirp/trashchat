@@ -4,7 +4,7 @@ import type React from 'react'
 
 import { CookieMonster } from '@/lib/cookie-monster'
 import { useRouter } from '@/lib/i18n/routing'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { AreYouSureDialog } from '@/components/r-u-sure'
 import { ChatAPIManager } from '@/lib/api/chat'
 import { CONSTANTS } from '@/lib/constants'
@@ -25,6 +25,7 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
   onClose,
   onDelete
 }: DeleteChatDialogProps): React.ReactNode => {
+  const locale = useLocale()
   const t = useTranslations('chat')
   const t_common = useTranslations('common')
 
@@ -39,14 +40,14 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
         const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
         if (token) {
           try {
-            const ok = await ChatAPIManager.delete(token, id)
+            const ok = await ChatAPIManager.delete({ token, locale }, id)
             if (!ok) {
               toast(t_common('error'))
               return
             }
 
             if (redirect) {
-              const chat = await ChatAPIManager.get(token, '-1')
+              const chat = await ChatAPIManager.get({ token, locale }, '-1')
 
               if (chat) {
                 router.push(`/chat/${chat.id}`)

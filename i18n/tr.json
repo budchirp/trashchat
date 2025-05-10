@@ -1,4 +1,24 @@
 {
+  "api": {
+    "required-fields": "`{fields}` alanları zorunludur",
+    "required-header": "`{header}` başlığı zorunludur",
+    "env-error": "`{env}` ortam değişkeni ayarlanmamış",
+    "invalid-signature": "Geçersiz imza",
+    "user": {
+      "already-exists": "Bu bilgilere sahip kullanıcı zaten mevcut!",
+      "not-found": "Kullanıcı bulunamadı",
+      "invalid-password": "Geçersiz şifre",
+      "invalid-verification-token": "Geçersiz doğrulama anahtarı",
+      "email-already-sent": "E-posta zaten gönderildi. Lütfen yenisini talep etmeden önce 1 saat bekleyin."
+    }
+  },
+  "email": {
+    "verify": {
+      "title": "Trash Chat'e Hoş Geldiniz",
+      "description": "Devam etmek için lütfen e-postanızı doğrulayın",
+      "button": "E-postayı doğrula"
+    }
+  },
   "landing": {
     "text": "Giriş",
     "description": "Favori yapay zeka modelin ile sohbet et!",
@@ -41,6 +61,7 @@
   "common": {
     "cancel": "İptal",
     "go-to-home": "Ana sayfaya git",
+    "go-to-chat": "Sohbete git",
     "copied": "Kopyalandı",
     "submit": "Gönder",
     "loading": "Yükleniyor...",
@@ -113,7 +134,25 @@
   "subscribe": {
     "text": "Abone Ol",
     "description": "Trash Chat'e Abone Ol",
+    "price": "Abone ol: ${price}",
     "pay": "Coinbase ile Öde",
+    "payment": {
+      "text": "Ödeme",
+      "description": "Ödeme",
+      "pay-with-crypto": "Kripto ile Öde",
+      "pay-with-card": "Kart ile Öde",
+      "form": {
+        "card": "Kart",
+        "cvc": "CVC",
+        "expiry": "Son Kullanma Tarihi",
+        "name": "Ad",
+        "phone": "Telefon",
+        "address": "Adres",
+        "city": "İl",
+        "zip": "Posta Kodu",
+        "country": "Ülke"
+      }
+    },
     "features": {
       "basic-models": "Temel modeller",
       "plus-models": "Plus modeller",

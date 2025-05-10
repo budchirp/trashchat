@@ -3,19 +3,23 @@ import { Secrets } from '@/lib/secrets'
 import { createHmac } from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { CONSTANTS } from '@/lib/constants'
+import { getTranslations } from 'next-intl/server'
 
 export const POST = async (request: NextRequest) => {
   try {
     const rawBody = await request.text()
 
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const signature = request.headers.get('x-cc-webhook-signature')
     if (!signature) {
-      throw new Error('`x-cc-webhook-signature` header is required')
+      throw new Error(t('api.required-header', { header: 'x-cc-webhook-signature' }))
     }
 
     const coinbaseWebhookSecret = Secrets.coinbaseWebhookSecret
     if (!coinbaseWebhookSecret) {
-      throw new Error('`COINBASE_WEBHOOK_SECRET` is not set')
+      throw new Error(t('api.env-error', { env: 'COINBASE_WEBHOOK_SECRET' }))
     }
 
     const hmac = createHmac('sha256', coinbaseWebhookSecret)
@@ -23,7 +27,7 @@ export const POST = async (request: NextRequest) => {
     const digest = hmac.digest('hex')
 
     if (digest !== signature) {
-      throw new Error('Invalid signature')
+      throw new Error(t('api.invalid-signature'))
     }
 
     const json = JSON.parse(rawBody)
@@ -55,7 +59,7 @@ export const POST = async (request: NextRequest) => {
               id: Number(id)
             },
             data: {
-              plus: true,
+              isPlus: true,
 
               credits: CONSTANTS.USAGES.PLUS.CREDITS,
               premiumCredits: CONSTANTS.USAGES.PLUS.PREMIUM_CREDITS
@@ -71,7 +75,10 @@ export const POST = async (request: NextRequest) => {
       }
     }
 
-    return NextResponse.json({})
+    return NextResponse.json({
+      message: t('common.success'),
+      data: {}
+    })
   } catch (error) {
     return NextResponse.json(
       {

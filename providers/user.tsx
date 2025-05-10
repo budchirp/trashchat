@@ -4,29 +4,26 @@ import type React from 'react'
 import { useState } from 'react'
 
 import { UserContext } from '@/providers/context/user'
-import { useLogout } from '@/lib/helpers/use-logout'
 import { UserAPIManager } from '@/lib/api/user'
 
 import type { User } from '@/types/user'
 
-type UserProviderProps = {
+type UserContextProviderProps = {
   children: React.ReactNode
   initialUser: User
   token: string
 }
 
-export const UserProvider: React.FC<UserProviderProps> = ({
+export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   children,
   initialUser,
   token
-}: UserProviderProps): React.ReactNode => {
+}: UserContextProviderProps): React.ReactNode => {
   const [user, setUser] = useState<User>(initialUser)
 
-  const refetchUser = async () => {
+  const refreshUser = async () => {
     const user = await UserAPIManager.get(token!)
-    if (user) {
-      setUser(user)
-    }
+    if (user) setUser(user)
   }
 
   return (
@@ -34,7 +31,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({
       value={{
         user,
         setUser,
-        refetchUser
+        refreshUser
       }}
     >
       {children}

@@ -13,25 +13,27 @@ model User {
   id Int @id @unique @default(autoincrement())
 
   name     String
-
   email    String  @unique
-  verified Boolean @default(false)
+  
+  isEmailVerified Boolean @default(false)
 
-  verificationToken String @default(uuid())
-  lastEmailSent     DateTime?
+  emailVerificationToken String @default(uuid())
+  lastEmailSentAt        DateTime?
 
   password String
 
   profilePicture String?
 
-  plus           Boolean @default(false)
+  isPlus           Boolean @default(false)
+  plusExpiresAt    DateTime?
+
   credits        Int     @default(10)
   premiumCredits Int     @default(0)
 
   systemPrompt    String  @default("")
   shareInfoWithAI Boolean @default(true)
 
-  firstUsage DateTime?
+  firstUsageAt DateTime?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -99,12 +101,12 @@ enum MessagePartType {
 model MessagePart {
   id Int @id @unique @default(autoincrement())
 
-  messageId Int
-  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
-
   type MessagePartType
 
   text String
+
+  messageId Int
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
   @@map("message_parts")
 }
@@ -116,6 +118,9 @@ model File {
   url  String
 
   contentType String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   messageId Int
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)

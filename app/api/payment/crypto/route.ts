@@ -2,14 +2,19 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { Secrets } from '@/lib/secrets'
 import { Fetch } from '@/lib/fetch'
 import { authenticate } from '@/lib/auth/server'
+import { getTranslations } from 'next-intl/server'
+import { CONSTANTS } from '@/lib/constants'
 
 export const POST = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -20,7 +25,7 @@ export const POST = async (request: NextRequest) => {
 
     const coinbaseApiKey = Secrets.coinbaseApiKey
     if (!coinbaseApiKey) {
-      throw new Error('`COINBASE_API_KEY` is not set')
+      throw new Error(t('api.env-error', { env: 'COINBASE_API_KEY' }))
     }
 
     const response = await Fetch.post<any>(
@@ -29,7 +34,7 @@ export const POST = async (request: NextRequest) => {
         name: 'Trash Chat Subscription',
         description: 'Trash Chat Subscription',
         local_price: {
-          amount: '0.01',
+          amount: CONSTANTS.PLUS_PRICE.toString(),
           currency: 'USD'
         },
         pricing_type: 'fixed_price',
@@ -44,9 +49,8 @@ export const POST = async (request: NextRequest) => {
     )
 
     const json = await response.json()
-
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: json.data
     })
   } catch (error) {

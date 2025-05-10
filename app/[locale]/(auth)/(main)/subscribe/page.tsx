@@ -2,15 +2,15 @@ import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
+import { Link, routing } from '@/lib/i18n/routing'
 import { Heading } from '@/components/heading'
-import { routing } from '@/lib/i18n/routing'
+import { Button } from '@/components/button'
+import { CONSTANTS } from '@/lib/constants'
+import { Check, X } from 'lucide-react'
+import { cn } from '@/lib/cn'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
-import { SubscribePageClient } from './page.client'
-import { Check, X } from 'lucide-react'
-import { cn } from '@/lib/cn'
-import { CONSTANTS } from '@/lib/constants'
 
 const tiers = ['Normal', 'Plus'] as const
 const features = [
@@ -121,7 +121,15 @@ const SubscribePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPage
           </tbody>
         </table>
 
-        <SubscribePageClient />
+        <div className='flex w-full items-center justify-center'>
+          <Link href='/subscribe/payment'>
+            <Button>
+              {t('price', {
+                price: CONSTANTS.PLUS_PRICE
+              })}
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   )

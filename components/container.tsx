@@ -20,4 +20,3 @@ export const Container: React.FC<ContainerProps> = ({
     {children}
   </div>
 )
-Container.displayName = 'Container'

@@ -4,9 +4,14 @@ import { Env } from '@/lib/env'
 import type { User } from '@/types/user'
 import type { APIResponse } from '@/types/api'
 
+export type Metadata = {
+  token: string
+  locale?: string
+}
+
 export class UserAPIManager {
   public static verifyPassword = async (
-    token: string,
+    metadata: Metadata,
     password: string
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
@@ -16,7 +21,8 @@ export class UserAPIManager {
           password
         },
         {
-          Authorization: `Bearer ${token}`
+          authorization: `Bearer ${metadata.token}`,
+          'accept-language': metadata.locale || 'en'
         }
       )
 
@@ -30,12 +36,13 @@ export class UserAPIManager {
   }
 
   public static update = async (
-    token: string,
+    metadata: Metadata,
     user: Partial<User>
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.patch<APIResponse>(`${Env.appUrl}/api/user`, user, {
-        Authorization: `Bearer ${token}`
+        authorization: `Bearer ${metadata.token}`,
+        'accept-language': metadata.locale || 'en'
       })
 
       if (response.ok) return [true, undefined]
@@ -47,10 +54,11 @@ export class UserAPIManager {
     }
   }
 
-  public static get = async (token: string): Promise<User | null> => {
+  public static get = async (metadata: Metadata): Promise<User | null> => {
     try {
       const response = await Fetch.get<APIResponse<User>>(`${Env.appUrl}/api/user`, {
-        Authorization: `Bearer ${token}`
+        authorization: `Bearer ${metadata.token}`,
+        'accept-language': metadata.locale || 'en'
       })
 
       if (response.ok) {
@@ -65,11 +73,12 @@ export class UserAPIManager {
   }
 
   public static delete = async (
-    token: string
+    metadata: Metadata
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.delete<APIResponse>(`${Env.appUrl}/api/user`, {
-        Authorization: `Bearer ${token}`
+        authorization: `Bearer ${metadata.token}`,
+        'accept-language': metadata.locale || 'en'
       })
 
       if (response.ok) return [true, undefined]
@@ -81,13 +90,18 @@ export class UserAPIManager {
     }
   }
 
-  public static new = async (user: {
-    name: string
-    email: string
-    password: string
-  }): Promise<[true, undefined] | [false, string | null]> => {
+  public static new = async (
+    metadata: Partial<Metadata>,
+    user: {
+      name: string
+      email: string
+      password: string
+    }
+  ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.post<APIResponse>(`${Env.appUrl}/api/user`, user)
+      const response = await Fetch.post<APIResponse>(`${Env.appUrl}/api/user`, user, {
+        'accept-language': metadata.locale || 'en'
+      })
 
       if (response.ok) {
         return [true, undefined]
@@ -101,11 +115,12 @@ export class UserAPIManager {
   }
 
   public static sendEmail = async (
-    token: string
+    metadata: Metadata
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.get<APIResponse>(`${Env.appUrl}/api/user/verify/email`, {
-        Authorization: `Bearer ${token}`
+        authorization: `Bearer ${metadata.token}`,
+        'accept-language': metadata.locale || 'en'
       })
 
       if (response.ok) {
@@ -120,7 +135,7 @@ export class UserAPIManager {
   }
 
   public static verifyEmail = async (
-    token: string,
+    metadata: Metadata,
     verificationToken: string
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
@@ -130,7 +145,8 @@ export class UserAPIManager {
           token: verificationToken
         },
         {
-          Authorization: `Bearer ${token}`
+          authorization: `Bearer ${metadata.token}`,
+          'accept-language': metadata.locale || 'en'
         }
       )
 

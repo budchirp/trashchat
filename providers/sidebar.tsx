@@ -4,20 +4,28 @@ import type React from 'react'
 import { useState } from 'react'
 
 import { SidebarContext } from '@/providers/context/sidebar'
+import { ChatAPIManager } from '@/lib/api/chat'
 
 import type { Chat } from '@/types/chat'
 
-type SidebarProviderProps = {
+type SidebarContextProviderProps = {
   children: React.ReactNode
   initialChats: Chat[]
+  token: string
 }
 
-export const SidebarProvider: React.FC<SidebarProviderProps> = ({
+export const SidebarContextProvider: React.FC<SidebarContextProviderProps> = ({
   children,
-  initialChats
-}: SidebarProviderProps): React.ReactNode => {
+  initialChats,
+  token
+}: SidebarContextProviderProps): React.ReactNode => {
   const [showSidebar, setShowSidebar] = useState<boolean>(false)
   const [chats, setChats] = useState<Chat[]>(initialChats)
+
+  const refreshChats = async () => {
+    const chats = await ChatAPIManager.getAll(token)
+    if (chats) setChats(chats)
+  }
 
   return (
     <SidebarContext.Provider
@@ -25,7 +33,8 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
         showSidebar,
         setShowSidebar,
         chats,
-        setChats
+        setChats,
+        refreshChats
       }}
     >
       {children}

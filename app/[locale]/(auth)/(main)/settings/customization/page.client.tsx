@@ -13,7 +13,7 @@ import { UserAPIManager } from '@/lib/api/user'
 import { useRouter } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
 import { CONSTANTS } from '@/lib/constants'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
 import { Box } from '@/components/box'
@@ -25,6 +25,7 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
 
   const { user } = use(UserContext)
 
+  const locale = useLocale()
   const t = useTranslations('settings.customization')
   const t_common = useTranslations('common')
 
@@ -41,7 +42,7 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        const [ok, message] = await UserAPIManager.update(token, values)
+        const [ok, message] = await UserAPIManager.update({ token, locale }, values)
         if (ok) {
           toast(t_common('success'))
           router.refresh()
@@ -56,7 +57,7 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
   })
 
   return (
-    <form className='grid text-start gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
+    <form className='grid gap-2 max-w-96 w-full' onSubmit={formik.handleSubmit}>
       {error && (
         <Box variant='primary'>
           <p className='text-red-500'>{error}</p>

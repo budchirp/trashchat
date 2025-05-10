@@ -1,7 +1,7 @@
 import type React from 'react'
 
 import { authenticatedRoute } from '@/lib/auth/client'
-import { SidebarProvider } from '@/providers/sidebar'
+import { SidebarContextProvider } from '@/providers/sidebar'
 import { setRequestLocale } from 'next-intl/server'
 import { ChatClientLayout } from './layout.client'
 import { ChatAPIManager } from '@/lib/api/chat'
@@ -17,12 +17,12 @@ const ChatLayout: React.FC<DynamicLayoutProps> = async ({
   setRequestLocale(locale)
 
   const token = authenticatedRoute(await cookies(), locale)
-  const chats = await ChatAPIManager.getAll(token)
+  const chats = await ChatAPIManager.getAll({ token, locale })
 
   return (
-    <SidebarProvider initialChats={chats || []}>
+    <SidebarContextProvider token={token} initialChats={chats || []}>
       <ChatClientLayout>{children}</ChatClientLayout>
-    </SidebarProvider>
+    </SidebarContextProvider>
   )
 }
 

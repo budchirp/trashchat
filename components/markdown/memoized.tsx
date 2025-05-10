@@ -21,7 +21,6 @@ const MemoizedMarkdownBlock: React.MemoExoticComponent<(props: MarkdownProps) =>
       return true
     }
   )
-MemoizedMarkdownBlock.displayName = 'MemoizedMarkdownBlock'
 
 export const MemoizedMarkdown: React.MemoExoticComponent<
   (props: MarkdownProps) => React.ReactNode
@@ -32,4 +31,3 @@ export const MemoizedMarkdown: React.MemoExoticComponent<
     <MemoizedMarkdownBlock content={block} key={`block_${index}`} />
   ))
 })
-MemoizedMarkdown.displayName = 'MemoizedMarkdown'

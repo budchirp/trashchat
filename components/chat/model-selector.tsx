@@ -98,7 +98,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     as={Box}
                     variant='primary'
                     padding='none'
-                    className='min-w-32 w-fit max-h-96 overflow-y-auto'
+                    className='min-w-32 w-fit max-w-128 max-h-96 overflow-y-auto'
                   >
                     <div className='grid grid-cols-2 md:grid-cols-3 gap-4 p-4'>
                       {(Object.keys(models) as AIModelID[]).map((modelId: AIModelID) => {
@@ -106,8 +106,9 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
                         return (
                           <ListboxOption
-                            disabled={model.plus && !user?.plus}
+                            disabled={model.plus && !user?.isPlus}
                             key={modelId}
+                            value={modelId}
                             className={({ selected }) =>
                               cn(
                                 'border-border data-disabled:opacity-50 data-disabled:pointer-events-none p-4 cursor-pointer rounded-2xl w-full transition border duration-300',
@@ -116,7 +117,6 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                   : 'bg-background-primary hover:bg-background-secondary'
                               )
                             }
-                            value={modelId}
                           >
                             {({ selected }) => {
                               return (

@@ -14,5 +14,6 @@ export const CONSTANTS = {
   },
   AI: {
     DEFAULT_MODEL: 'gemini-2.5-flash'
-  }
+  },
+  PLUS_PRICE: 0.01
 } as const

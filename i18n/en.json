@@ -1,8 +1,27 @@
 {
+  "api": {
+    "required-fields": "`{fields}` are required",
+    "required-header": "`{header}` header is required",
+    "env-error": "`{env}` environment variable is not set",
+    "invalid-signature": "Invalid signature",
+    "user": {
+      "already-exists": "User with these stuff already exists!",
+      "not-found": "User not found",
+      "invalid-password": "Invalid password",
+      "invalid-verification-token": "Invalid verification token",
+      "email-already-sent": "E-Mail is already sent. Please wait 1 hour before requesting another."
+    }
+  },
+  "email": {
+    "verify": {
+      "title": "Welcome to Trash Chat",
+      "description": "Please verify your e-mail to continue",
+      "button": "Verify e-mail"
+    }
+  },
   "landing": {
     "text": "Landing",
-    "description": "Chat with your favourite AI model!",
-    "go-to-chat": "Go to chat"
+    "description": "Chat with your favourite AI model!"
   },
   "chat": {
     "text": "Chat",
@@ -41,6 +60,7 @@
   "common": {
     "cancel": "Cancel",
     "go-to-home": "Go to home",
+    "go-to-chat": "Go to chat",
     "copied": "Copied",
     "submit": "Submit",
     "loading": "Loading...",
@@ -113,7 +133,24 @@
   "subscribe": {
     "text": "Subscribe",
     "description": "Subscribe to Trash Chat",
-    "pay": "Pay with Coinbase",
+    "price": "Subscribe for ${price}",
+    "payment": {
+      "text": "Payment",
+      "description": "Payment",
+      "pay-with-crypto": "Pay with Crypto",
+      "pay-with-card": "Pay with Card",
+      "form": {
+        "card": "Card",
+        "cvc": "CVC",
+        "expiry": "Expiry",
+        "name": "Name",
+        "phone": "Phone",
+        "address": "Address",
+        "city": "City",
+        "zip": "Zip",
+        "country": "Country"
+      }
+    },
     "features": {
       "basic-models": "Basic models",
       "plus-models": "Plus models",

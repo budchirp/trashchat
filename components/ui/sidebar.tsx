@@ -15,7 +15,7 @@ import { Container } from '@/components/container'
 import { Backdrop } from '@/components/backdrop'
 import { ChatAPIManager } from '@/lib/api/chat'
 import { usePathname } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Button } from '@/components/button'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/components/toast'
@@ -242,29 +242,26 @@ const ChatChip: React.FC<ChatChipProps> = ({
   )
 }
 
-type NewChatButtonProps = {
-  fetchChats: () => void
-}
-
-const NewChatButton: React.FC<NewChatButtonProps> = ({
-  fetchChats
-}: NewChatButtonProps): React.ReactNode => {
+const NewChatButton: React.FC = (): React.ReactNode => {
   const router = useRouter()
 
+  const locale = useLocale()
   const t = useTranslations()
+
+  const { refreshChats } = use(SidebarContext)
 
   const cookieMonster = new CookieMonster()
 
   const newChat = async () => {
     const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
     if (token) {
-      const created = await ChatAPIManager.new(token)
+      const created = await ChatAPIManager.new({ token, locale })
       if (created) {
         router.push(`/chat/${created.id}`)
-        fetchChats()
+        refreshChats()
       } else {
         toast(t('errors.error'))
-        fetchChats()
+        refreshChats()
       }
     }
   }
@@ -292,26 +289,16 @@ const NewChatButton: React.FC<NewChatButtonProps> = ({
 }
 
 const SidebarContent: React.FC = (): React.ReactNode => {
-  const { chats, setChats, setShowSidebar } = use(SidebarContext)
-
-  const cookieMonster = new CookieMonster()
-
-  const fetchChats = async () => {
-    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-    if (token) {
-      const chats = await ChatAPIManager.getAll(token)
-      if (chats) setChats(chats)
-    }
-  }
+  const { chats, setChats, setShowSidebar, refreshChats } = use(SidebarContext)
 
   const pathname = usePathname()
   useEffect(() => {
-    fetchChats()
+    refreshChats()
   }, [pathname])
 
   return (
     <Container className='grid gap-2 h-full overflow-y-auto py-4'>
-      <NewChatButton fetchChats={fetchChats} />
+      <NewChatButton />
 
       <div className='flex flex-col-reverse w-full gap-2'>
         {chats
@@ -321,7 +308,7 @@ const SidebarContent: React.FC = (): React.ReactNode => {
                   onDelete={() => {
                     setChats(chats.filter((_chat) => _chat.id !== chat.id))
 
-                    fetchChats()
+                    refreshChats()
 
                     setShowSidebar(false)
                   }}
@@ -363,4 +350,3 @@ export const Sidebar: React.FC = (props): React.ReactNode => {
     </div>
   )
 }
-Sidebar.displayName = 'Sidebar'

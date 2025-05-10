@@ -11,7 +11,7 @@ import { CookieMonster } from '@/lib/cookie-monster'
 import { UserAPIManager } from '@/lib/api/user'
 import { useRouter } from '@/lib/i18n/routing'
 import { CONSTANTS } from '@/lib/constants'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Input } from '@/components/input'
 import { toast } from '@/components/toast'
 import { Box } from '@/components/box'
@@ -29,6 +29,7 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
 }: DeleteAccountDialogProps): React.ReactNode => {
   const [error, setError] = useState<string | null>(null)
 
+  const locale = useLocale()
   const t = useTranslations()
 
   const cookieMonster = new CookieMonster()
@@ -45,14 +46,14 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
         const [verify_ok, verify_message] = await UserAPIManager.verifyPassword(
-          token,
+          { token, locale },
           values.password
         )
 
         if (verify_ok) {
-          const [ok, message] = await UserAPIManager.delete(token)
+          const [ok, message] = await UserAPIManager.delete({ token, locale })
           if (ok) {
-            await SessionAPIManager.delete()
+            await SessionAPIManager.delete({ locale })
 
             toast(t('common.success'))
 

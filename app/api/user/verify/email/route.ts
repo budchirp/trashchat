@@ -5,16 +5,20 @@ import { CONSTANTS } from '@/lib/constants'
 import { Secrets } from '@/lib/secrets'
 import { prisma } from '@/lib/prisma'
 import { Resend } from 'resend'
+import { getTranslations } from 'next-intl/server'
 
 const resend = new Resend(Secrets.resendApiKey!)
 
 export const POST = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -25,11 +29,11 @@ export const POST = async (request: NextRequest) => {
 
     const { token } = await request.json()
     if (!token) {
-      throw new Error('`token` field is required')
+      throw new Error(t('api.required-fields', { fields: 'token' }))
     }
 
-    if (user.verificationToken !== token) {
-      throw new Error('Invalid verification token')
+    if (user.emailVerificationToken !== token) {
+      throw new Error(t('api.user.invalid-verification-token'))
     }
 
     await prisma.user.update({
@@ -37,15 +41,15 @@ export const POST = async (request: NextRequest) => {
         id: user.id
       },
       data: {
-        verified: true,
+        isEmailVerified: true,
 
-        credits: CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].CREDITS,
-        premiumCredits: CONSTANTS.USAGES[user.plus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+        credits: CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].CREDITS,
+        premiumCredits: CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
       }
     })
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {}
     })
   } catch (error) {
@@ -61,11 +65,14 @@ export const POST = async (request: NextRequest) => {
 
 export const GET = async (request: NextRequest) => {
   try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
     const [isTokenValid, payload, user] = await authenticate(request.headers)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
-          message: 'Unauthorized',
+          message: t('errors.unauthorized'),
           data: {}
         },
         {
@@ -74,11 +81,18 @@ export const GET = async (request: NextRequest) => {
       )
     }
 
+    if (user.isEmailVerified) {
+      return NextResponse.json({
+        message: 'Success',
+        data: {}
+      })
+    }
+
     if (
-      user.lastEmailSent &&
-      new Date(user.lastEmailSent).getTime() > Date.now() - 1000 * 60 * 60 * 1
+      user.lastEmailSentAt &&
+      new Date(user.lastEmailSentAt).getTime() > Date.now() - 1000 * 60 * 60 * 1
     ) {
-      throw new Error('Email already sent. Please wait 1 hour before requesting another.')
+      throw new Error(t('api.user.email-already-sent'))
     }
 
     const { error } = await resend.emails.send({
@@ -86,7 +100,8 @@ export const GET = async (request: NextRequest) => {
       to: user.email,
       subject: 'Verify email',
       react: VerifyEmailTemplate({
-        token: user.verificationToken
+        token: user.emailVerificationToken,
+        t
       }) as any
     })
 
@@ -99,12 +114,12 @@ export const GET = async (request: NextRequest) => {
         id: user.id
       },
       data: {
-        lastEmailSent: new Date()
+        lastEmailSentAt: new Date()
       }
     })
 
     return NextResponse.json({
-      message: 'Success',
+      message: t('common.success'),
       data: {}
     })
   } catch (error) {

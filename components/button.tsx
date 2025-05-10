@@ -60,4 +60,3 @@ export const Button: React.FC<ButtonProps> = ({
     </HeadlessButton>
   )
 }
-Button.displayName = 'Button'
