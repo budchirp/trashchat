@@ -45,9 +45,10 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        const [success, message] = await UserAPIManager.update(token, values as any)
-        if (success) {
+        const [ok, message] = await UserAPIManager.update(token, values)
+        if (ok) {
           toast(t_common('success'))
+
           router.refresh()
         } else {
           setError(message || t_common('error'))

@@ -13,9 +13,6 @@
 
 - [x] Add Auth
 - [x] Save messages to db
-- [ ] Add more models
-- [x] Search
-- [x] Reasoning
 - [x] Code highlighting
 - [x] Sidebar for chats
 - [x] Ability to delete chats
@@ -24,15 +21,16 @@
 - [x] Better profile page
 - [x] File uploads
 - [x] Add capctha
+- [x] Search
+- [x] Reasoning
 - [x] Save reasoning, sources and generated images
-- [ ] Profile picture upload
+- [x] Profile picture upload
 - [ ] Share feature
 - [x] Copy message feature
 - [ ] Landing page
-- [ ] Google OAuth maybe
+- [ ] Github OAuth maybe
 - [ ] Forgot password feature
 - [ ] Translate API routes
 - [ ] SEO
 - [ ] Payments
 - [x] Appearance page
-- [ ] Add an option to disable/enable blur

@@ -19,7 +19,11 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
       throw new Error('token')
     }
 
-    return <UserProvider initialUser={user}>{children}</UserProvider>
+    return (
+      <UserProvider token={token} initialUser={user}>
+        {children}
+      </UserProvider>
+    )
   }
 
   return children

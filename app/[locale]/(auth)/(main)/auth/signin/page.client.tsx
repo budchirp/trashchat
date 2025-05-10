@@ -10,7 +10,7 @@ import { SessionAPIManager } from '@/lib/api/session'
 import { UserAPIManager } from '@/lib/api/user'
 import { useRouter } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Input } from '@/components/input'
 import { toast } from '@/components/toast'
 import { Field } from '@headlessui/react'
@@ -24,6 +24,8 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations('auth')
   const t_common = useTranslations('common')
 
+  const locale = useLocale()
+
   const { setUser } = use(UserContext)
 
   const [error, setError] = useState<string | null>(null)
@@ -35,8 +37,8 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const [success, message, token] = await SessionAPIManager.new(values)
-      if (success) {
+      const [ok, message, token] = await SessionAPIManager.new(values)
+      if (ok) {
         const user = await UserAPIManager.get(token!)
         if (!user) {
           setError(t_common('error'))
@@ -47,7 +49,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
 
         toast(t_common('success'))
 
-        router.push('/chat')
+        window?.location?.replace(new URL(`/${locale}/chat`, window.location.origin))
       } else {
         setUser(null)
 

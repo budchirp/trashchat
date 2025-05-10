@@ -137,7 +137,8 @@ export const PATCH = async (request: NextRequest) => {
       )
     }
 
-    const { name, email, systemPrompt, shareInfoWithAI } = (await request.json()) as User
+    const { name, email, profilePicture, systemPrompt, shareInfoWithAI } =
+      (await request.json()) as User
 
     await prisma.user.update({
       where: {
@@ -147,6 +148,7 @@ export const PATCH = async (request: NextRequest) => {
       data: {
         name,
         email,
+        profilePicture,
         systemPrompt,
         shareInfoWithAI
       }

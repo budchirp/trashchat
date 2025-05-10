@@ -9,6 +9,7 @@ import { Button } from '@/components/button'
 import { cookies } from 'next/headers'
 
 import type { DynamicPageProps } from '@/types/page'
+import { toast } from '@/components/toast'
 
 const VerifyEmailPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale, token: verificationToken } = await params
@@ -33,14 +34,17 @@ const VerifyEmailPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPa
       locale
     })
 
-  const success = await UserAPIManager.verifyEmail(token, verificationToken)
+  const [ok, message] = await UserAPIManager.verifyEmail(token, verificationToken)
+  if (!ok) {
+    toast(message || t_common('error'))
+  }
 
   return (
     <div className='w-full page-h-screen mt-4 flex items-center justify-center'>
       <div className='text-center flex flex-col gap-4 items-center justify-center'>
-        <h1 className='font-bold text-2xl'>{t(success ? 'verified' : 'invalid-token')}</h1>
+        <h1 className='font-bold text-2xl'>{t(ok ? 'verified' : 'invalid-token')}</h1>
 
-        {success ? (
+        {ok ? (
           <Link href='/'>
             <Button>{t_common('go-to-home')}</Button>
           </Link>

@@ -10,7 +10,7 @@ import { CookieMonster } from '@/lib/cookie-monster'
 import { CONSTANTS } from '@/lib/constants'
 
 export const ResendVerificationEmailButton: React.FC = (): React.ReactNode => {
-  const t = useTranslations('auth.verify')
+  const t = useTranslations()
 
   const cookieMonster = new CookieMonster()
 
@@ -20,13 +20,16 @@ export const ResendVerificationEmailButton: React.FC = (): React.ReactNode => {
       onClick={async () => {
         const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
         if (token) {
-          await UserAPIManager.sendEmail(token)
-
-          toast(t('sent'))
+          const [ok, message] = await UserAPIManager.sendEmail(token)
+          if (ok) {
+            toast(t('auth.verify.sent'))
+          } else {
+            toast(message || t('errors.error'))
+          }
         }
       }}
     >
-      {t('resend')}
+      {t('auth.verify.resend')}
     </Button>
   )
 }

@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn'
 
 export const buttonVariants = cva(
   [
-    'flex ease-out disabled:opacity-75 border dark:disabled:opacity-50 disabled:animate-pulse active:scale-95 cursor-pointer items-center justify-center font-medium transition duration-300'
+    'flex ease-out disabled:opacity-50 border active:scale-95 cursor-pointer items-center justify-center font-medium transition duration-300'
   ],
   {
     variants: {

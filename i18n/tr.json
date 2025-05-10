@@ -82,7 +82,8 @@
       "delete": "Hesabı sil",
       "profile-picture": "Profil Resmi",
       "verify-warning": "E-Posta adresiniz doğrulanmamış. Lütfen doğrulayın",
-      "profile": "Profil"
+      "profile": "Profil",
+      "uploading": "Yükleniyor..."
     },
     "customization": {
       "text": "Özelleştirme",

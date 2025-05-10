@@ -44,13 +44,14 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        const [verify_success, verify_message] = await UserAPIManager.verifyPassword(
+        const [verify_ok, verify_message] = await UserAPIManager.verifyPassword(
           token,
           values.password
         )
-        if (verify_success) {
-          const [success, message] = await UserAPIManager.delete(token)
-          if (success) {
+
+        if (verify_ok) {
+          const [ok, message] = await UserAPIManager.delete(token)
+          if (ok) {
             await SessionAPIManager.delete()
 
             toast(t('common.success'))

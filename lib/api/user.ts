@@ -2,16 +2,15 @@ import { Fetch } from '@/lib/fetch'
 import { Env } from '@/lib/env'
 
 import type { User } from '@/types/user'
+import type { APIResponse } from '@/types/api'
 
 export class UserAPIManager {
   public static verifyPassword = async (
     token: string,
     password: string
-  ): Promise<[boolean, string | null]> => {
+  ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.post<{
-        message: string
-      }>(
+      const response = await Fetch.post<APIResponse>(
         `${Env.appUrl}/api/user/password/verify`,
         {
           password
@@ -21,7 +20,7 @@ export class UserAPIManager {
         }
       )
 
-      if (response.ok) return [true, null]
+      if (response.ok) return [true, undefined]
 
       const json = await response.json()
       return [false, json.message]
@@ -30,15 +29,16 @@ export class UserAPIManager {
     }
   }
 
-  public static update = async (token: string, user: User): Promise<[boolean, string | null]> => {
+  public static update = async (
+    token: string,
+    user: Partial<User>
+  ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.patch<{
-        message: string
-      }>(`${Env.appUrl}/api/user`, user, {
+      const response = await Fetch.patch<APIResponse>(`${Env.appUrl}/api/user`, user, {
         Authorization: `Bearer ${token}`
       })
 
-      if (response.ok) return [true, null]
+      if (response.ok) return [true, undefined]
 
       const json = await response.json()
       return [false, json.message]
@@ -49,9 +49,7 @@ export class UserAPIManager {
 
   public static get = async (token: string): Promise<User | null> => {
     try {
-      const response = await Fetch.get<{
-        data: User
-      }>(`${Env.appUrl}/api/user`, {
+      const response = await Fetch.get<APIResponse<User>>(`${Env.appUrl}/api/user`, {
         Authorization: `Bearer ${token}`
       })
 
@@ -66,15 +64,15 @@ export class UserAPIManager {
     }
   }
 
-  public static delete = async (token: string): Promise<[boolean, string | null]> => {
+  public static delete = async (
+    token: string
+  ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.delete<{
-        message: string
-      }>('/api/user', {
+      const response = await Fetch.delete<APIResponse>(`${Env.appUrl}/api/user`, {
         Authorization: `Bearer ${token}`
       })
 
-      if (response.ok) return [true, null]
+      if (response.ok) return [true, undefined]
 
       const json = await response.json()
       return [false, json.message]
@@ -87,14 +85,12 @@ export class UserAPIManager {
     name: string
     email: string
     password: string
-  }): Promise<[boolean, string | null]> => {
+  }): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.post<{
-        message: string
-      }>(`${Env.appUrl}/api/user`, user)
+      const response = await Fetch.post<APIResponse>(`${Env.appUrl}/api/user`, user)
 
       if (response.ok) {
-        return [true, null]
+        return [true, undefined]
       }
 
       const json = await response.json()
@@ -104,28 +100,31 @@ export class UserAPIManager {
     }
   }
 
-  public static sendEmail = async (token: string): Promise<boolean> => {
+  public static sendEmail = async (
+    token: string
+  ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.get(`${Env.appUrl}/api/user/verify/email`, {
+      const response = await Fetch.get<APIResponse>(`${Env.appUrl}/api/user/verify/email`, {
         Authorization: `Bearer ${token}`
       })
 
       if (response.ok) {
-        return true
+        return [true, undefined]
       }
 
-      return false
+      const json = await response.json()
+      return [false, json?.message]
     } catch {
-      return false
+      return [false, null]
     }
   }
 
   public static verifyEmail = async (
     token: string,
     verificationToken: string
-  ): Promise<boolean> => {
+  ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.post(
+      const response = await Fetch.post<APIResponse>(
         `${Env.appUrl}/api/user/verify/email`,
         {
           token: verificationToken
@@ -136,12 +135,13 @@ export class UserAPIManager {
       )
 
       if (response.ok) {
-        return true
+        return [true, undefined]
       }
 
-      return false
+      const json = await response.json()
+      return [false, json?.message]
     } catch {
-      return false
+      return [false, null]
     }
   }
 }

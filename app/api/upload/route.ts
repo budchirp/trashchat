@@ -30,15 +30,12 @@ export const POST = async (request: NextRequest) => {
     }
 
     const {
-      file: { name, contentType },
-      randomize = true
+      file: { name, contentType }
     } = await request.json()
 
     const { url, fields } = await createPresignedPost(client, {
       Bucket: Secrets.S3Bucket!,
-      Key: randomize
-        ? `${user.id}-${new Date().getTime()}-${randomUUID()}-${slugify(name)}`
-        : slugify(name),
+      Key: `${user.id}-${new Date().getTime()}-${randomUUID()}-${slugify(name)}`,
       Fields: {
         'Content-Type': contentType
       }

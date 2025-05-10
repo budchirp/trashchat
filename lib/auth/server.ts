@@ -33,6 +33,12 @@ export const authenticate = async (
       return [false, undefined, undefined]
     }
 
+    if (user.email !== decoded.email) {
+      await SessionAPIManager.delete(await cookies())
+
+      return [false, undefined, undefined]
+    }
+
     return [true, decoded, user]
   } catch {
     return [false, undefined, undefined]

@@ -39,8 +39,8 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
         const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
         if (token) {
           try {
-            const deleted = await ChatAPIManager.delete(token, id)
-            if (!deleted) {
+            const ok = await ChatAPIManager.delete(token, id)
+            if (!ok) {
               toast(t_common('error'))
               return
             }

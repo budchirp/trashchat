@@ -2,19 +2,20 @@
 
 import type React from 'react'
 
-import { Link, useRouter } from '@/lib/i18n/routing'
 import { useLogout } from '@/lib/helpers/use-logout'
-import { useTranslations } from 'next-intl'
 import { Button } from '@/components/button'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/lib/i18n/routing'
 
 import type { ErrorProps } from '@/types/error'
 
 const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => {
   const t = useTranslations()
 
-  const router = useRouter()
-
   const logout = useLogout()
+  if (error.message === 'token') {
+    logout()
+  }
 
   return (
     <div className='w-full h-screen flex items-center justify-center'>
@@ -24,11 +25,10 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
         </h1>
 
         {process.env.NODE_ENV === 'development' && (
-          <div>
+          <>
             <p>{error.message}</p>
             <p>{error.stack}</p>
-            <p>{JSON.stringify(error.cause)}</p>
-          </div>
+          </>
         )}
 
         <div className='flex items-center justify-center gap-2'>
@@ -36,14 +36,9 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
             <Button>{t('common.go-to-home')}</Button>
           </Link>
 
-          <Button color='secondary' onClick={logout}>
-            {t('auth.logout')}
-          </Button>
-
           <Button
             color='secondary'
             onClick={() => {
-              router.refresh()
               window?.location?.reload()
             }}
           >

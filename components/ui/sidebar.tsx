@@ -80,12 +80,12 @@ const SidebarFooter: React.FC = (): React.ReactNode => {
           <Image
             height={128}
             width={128}
-            className='size-10 rounded-full border border-border aspect-square object-cover'
+            className='size-10 p-1 rounded-full border border-border aspect-square object-cover'
             alt={useTranslations('settings.account')('profile-picture')}
-            src={user.profilePicture || '/images/placeholder.png'}
+            src={user?.profilePicture || '/images/placeholder.png'}
           />
 
-          <h2 className='text-text-primary font-medium text-lg'>{user.name}</h2>
+          <h2 className='text-text-primary font-medium text-lg'>{user?.name}</h2>
         </div>
 
         <ChevronDown size={16} />
@@ -101,16 +101,14 @@ const ProfileMenu = () => {
 
   return (
     <Menu>
-      {({ open, close }) => {
+      {({ open }) => {
         return (
           <div>
-            {open && (
-              <Backdrop
-                fullscreen={false}
-                open={open}
-                className='backdrop-h-screen absolute top-0 z-10 w-full'
-              />
-            )}
+            <Backdrop
+              fullscreen={false}
+              open={open}
+              className='backdrop-h-screen absolute top-0 z-10 w-full'
+            />
 
             <MenuButton className='w-full'>
               <SidebarFooter />

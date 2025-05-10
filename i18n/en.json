@@ -82,7 +82,8 @@
       "delete": "Delete account",
       "profile-picture": "Profile Picture",
       "verify-warning": "Your e-mail is not verified. Please verify it",
-      "profile": "Profile"
+      "profile": "Profile",
+      "uploading": "Uploading..."
     },
     "customization": {
       "text": "Customization",

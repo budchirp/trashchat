@@ -93,11 +93,13 @@ export const ChatForm: React.FC<ChatFormProps> = ({
     updateHeight()
   }, [input, files])
 
-  const model = models[modelId]
-  const supportsAttachments = model.imageUpload || model.fileUpload
-
   const { user } = use(UserContext)
   const { showSidebar } = use(SidebarContext)
+
+  const isPlus = user?.plus
+
+  const model = models[modelId]
+  const supportsAttachments = isPlus && (model.imageUpload || model.fileUpload)
 
   const t = useTranslations('chat')
 
@@ -172,7 +174,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                   buttonVariants({
                     variant: 'round',
                     color: 'secondary',
-                    className: !supportsAttachments ? '!opacity-75 pointer-events-none' : ''
+                    className: !supportsAttachments ? '!opacity-50 pointer-events-none' : ''
                   })
                 )}
                 htmlFor='upload'
@@ -225,7 +227,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
             <div className='flex items-center gap-2'>
               {model.reasoning && (
                 <Button
-                  disabled={!user.plus}
+                  disabled={!isPlus}
                   aria-label='Toggle reasoning'
                   variant='round'
                   color={useReasoning || model.company === 'deepseek' ? 'primary' : 'secondary'}
@@ -245,7 +247,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                 </Button>
               )}
 
-              {model.reasoning && useReasoning && user.plus && (
+              {model.reasoning && useReasoning && isPlus && (
                 <ReasoningEffortSelector
                   height={height}
                   reasoningEffort={reasoningEffort}
@@ -255,7 +257,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
 
               {model.search && (
                 <Button
-                  disabled={!user.plus}
+                  disabled={!isPlus}
                   variant='round'
                   color={useSearch ? 'primary' : 'secondary'}
                   onClick={() => handleUseSearchChange(!useSearch)}

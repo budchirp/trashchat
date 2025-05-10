@@ -2,9 +2,8 @@ import { VerifyEmailTemplate } from '@/components/email/verify'
 import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server'
 import { CONSTANTS } from '@/lib/constants'
-import { prisma } from '@/lib/prisma'
 import { Secrets } from '@/lib/secrets'
-import { randomUUID } from 'crypto'
+import { prisma } from '@/lib/prisma'
 import { Resend } from 'resend'
 
 const resend = new Resend(Secrets.resendApiKey!)
@@ -75,18 +74,11 @@ export const GET = async (request: NextRequest) => {
       )
     }
 
-    let token = user.verificationToken
-    if (!token) {
-      token = randomUUID()
-
-      await prisma.user.update({
-        where: {
-          id: user.id
-        },
-        data: {
-          verificationToken: token
-        }
-      })
+    if (
+      user.lastEmailSent &&
+      new Date(user.lastEmailSent).getTime() > Date.now() - 1000 * 60 * 60 * 1
+    ) {
+      throw new Error('Email already sent. Please wait 1 hour before requesting another.')
     }
 
     const { error } = await resend.emails.send({
@@ -94,13 +86,22 @@ export const GET = async (request: NextRequest) => {
       to: user.email,
       subject: 'Verify email',
       react: VerifyEmailTemplate({
-        token: token
+        token: user.verificationToken
       }) as any
     })
 
     if (error) {
       throw new Error(error.message)
     }
+
+    await prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        lastEmailSent: new Date()
+      }
+    })
 
     return NextResponse.json({
       message: 'Success',

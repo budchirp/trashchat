@@ -8,6 +8,8 @@ import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import jwt from 'jsonwebtoken'
 
+import type { JWTPayload } from '@/types/jwt'
+
 export const POST = async (request: NextRequest) => {
   try {
     const { email, password } = await request.json()
@@ -32,19 +34,22 @@ export const POST = async (request: NextRequest) => {
 
     const token = jwt.sign(
       {
-        id: user.id
-      },
+        id: user.id,
+        email: user.email
+      } as JWTPayload,
       Secrets.appSecret,
       {
-        expiresIn: '30d'
+        expiresIn: '14d'
       }
     )
 
     if (!user.verified) await UserAPIManager.sendEmail(token)
 
+    const expires = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+
     const cookieMonster = new CookieMonster(await cookies())
     cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      expires
     })
 
     const response = NextResponse.json({
@@ -55,7 +60,7 @@ export const POST = async (request: NextRequest) => {
     })
 
     response.cookies.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      expires
     })
 
     return response
@@ -75,10 +80,14 @@ export const DELETE = async () => {
     const cookieMonster = new CookieMonster(await cookies())
     cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: 'Success',
       data: {}
     })
+
+    response.cookies.delete(CONSTANTS.COOKIES.TOKEN_NAME)
+
+    return response
   } catch (error) {
     return NextResponse.json(
       {

@@ -18,6 +18,7 @@ model User {
   verified Boolean @default(false)
 
   verificationToken String @default(uuid())
+  lastEmailSent     DateTime?
 
   password String
 

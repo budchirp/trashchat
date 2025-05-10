@@ -106,7 +106,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
                         return (
                           <ListboxOption
-                            disabled={model.plus && !user.plus}
+                            disabled={model.plus && !user?.plus}
                             key={modelId}
                             className={({ selected }) =>
                               cn(

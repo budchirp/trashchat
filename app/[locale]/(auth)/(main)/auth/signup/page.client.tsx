@@ -70,8 +70,8 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
         }
       }
 
-      const [success, message] = await UserAPIManager.new(values)
-      if (success) {
+      const [ok, message] = await UserAPIManager.new(values)
+      if (ok) {
         toast(t_common('success'))
 
         router.push('/auth/signin')
