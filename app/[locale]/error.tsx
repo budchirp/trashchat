@@ -31,7 +31,7 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
           </>
         )}
 
-        <div className='flex items-center justify-center gap-2'>
+        <div className='grid gap-2'>
           <Link href='/'>
             <Button>{t('common.go-to-home')}</Button>
           </Link>
@@ -43,6 +43,10 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
             }}
           >
             {t('common.refresh')}
+          </Button>
+
+          <Button color='secondary' onClick={logout}>
+            {t('auth.logout')}
           </Button>
         </div>
       </div>

@@ -14,18 +14,20 @@ const Unauthorized: React.FC = (): React.ReactNode => {
       <div className='text-center flex flex-col gap-4 items-center justify-center'>
         <h1 className='text-lg font-medium'>{t('errors.unauthorized')}</h1>
 
-        <Link href='/auth/signin'>
-          <Button>{t('auth.signup.signin')}</Button>
-        </Link>
+        <div className='grid gap-2'>
+          <Link href='/auth/signin'>
+            <Button>{t('auth.signup.signin')}</Button>
+          </Link>
 
-        <Button
-          color='secondary'
-          onClick={() => {
-            window?.location?.reload()
-          }}
-        >
-          {t('common.refresh')}
-        </Button>
+          <Button
+            color='secondary'
+            onClick={() => {
+              window?.location?.reload()
+            }}
+          >
+            {t('common.refresh')}
+          </Button>
+        </div>
       </div>
     </div>
   )
