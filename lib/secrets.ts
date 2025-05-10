@@ -3,6 +3,9 @@ import 'server-only'
 export const Secrets = {
   appSecret: process.env.APP_SECRET || 'something safe',
 
+  coinbaseWebhookSecret: process.env.COINBASE_WEBHOOK_SECRET || null,
+  coinbaseApiKey: process.env.COINBASE_API_KEY || null,
+
   databaseUrl: process.env.DATABASE_URL || '',
 
   cloudflareToken: process.env.CLOUDFLARE_TOKEN || '',

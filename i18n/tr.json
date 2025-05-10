@@ -46,7 +46,8 @@
     "loading": "Yükleniyor...",
     "success": "Başarılı",
     "update": "Güncelle",
-    "refresh": "Yenile"
+    "refresh": "Yenile",
+    "wait": "Lütfen bekleyin..."
   },
   "auth": {
     "danger-zone": "Tehlikeli alan",
@@ -107,6 +108,22 @@
         "light": "Açık",
         "system": "Sistem"
       }
+    }
+  },
+  "subscribe": {
+    "text": "Abone Ol",
+    "description": "Trash Chat'e Abone Ol",
+    "pay": "Coinbase ile Öde",
+    "features": {
+      "basic-models": "Temel modeller",
+      "plus-models": "Plus modeller",
+      "premium-models": "Premium modeller",
+      "normal-model-limit": "Normal model limiti",
+      "premium-model-limit": "Premium model limiti",
+      "image-file-upload": "Resim dosyası yükleme",
+      "image-generation": "Resim oluşturma",
+      "search": "Ara",
+      "reasoning": "Akıl Yürütme"
     }
   },
   "legal": {

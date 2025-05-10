@@ -46,7 +46,8 @@
     "loading": "Loading...",
     "success": "Success",
     "update": "Update",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "wait": "Please wait..."
   },
   "auth": {
     "danger-zone": "Danger zone",
@@ -107,6 +108,22 @@
         "light": "Light",
         "system": "System"
       }
+    }
+  },
+  "subscribe": {
+    "text": "Subscribe",
+    "description": "Subscribe to Trash Chat",
+    "pay": "Pay with Coinbase",
+    "features": {
+      "basic-models": "Basic models",
+      "plus-models": "Plus models",
+      "premium-models": "Premium models",
+      "normal-model-limit": "Normal model limit",
+      "premium-model-limit": "Premium model limit",
+      "image-file-upload": "Image file upload",
+      "image-generation": "Image generation",
+      "search": "Search",
+      "reasoning": "Reasoning"
     }
   },
   "legal": {
