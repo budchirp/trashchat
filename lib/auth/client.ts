@@ -15,7 +15,7 @@ export const authenticatedRoute = (cookieStore: ReadonlyRequestCookies, locale: 
     return unauthorized()
   }
 
-  return token!
+  return token
 }
 
 export const unauthenticatedRoute = (cookieStore: ReadonlyRequestCookies, locale: string): void => {

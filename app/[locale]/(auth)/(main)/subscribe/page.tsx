@@ -2,11 +2,13 @@ import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
+import { authenticatedRoute } from '@/lib/auth/client'
 import { Link, routing } from '@/lib/i18n/routing'
 import { Heading } from '@/components/heading'
 import { Button } from '@/components/button'
 import { CONSTANTS } from '@/lib/constants'
 import { Check, X } from 'lucide-react'
+import { cookies } from 'next/headers'
 import { cn } from '@/lib/cn'
 
 import type { Metadata } from 'next'
@@ -15,7 +17,6 @@ import type { DynamicPageProps } from '@/types/page'
 const tiers = ['Normal', 'Plus'] as const
 const features = [
   'basic-models',
-  'plus-models',
   'premium-models',
   'image-file-upload',
   'image-generation',
@@ -29,7 +30,6 @@ const featureMap: Record<(typeof tiers)[number], (typeof features)[number][]> = 
   Normal: ['basic-models', 'normal-model-limit', 'premium-model-limit'],
   Plus: [
     'basic-models',
-    'plus-models',
     'premium-models',
     'normal-model-limit',
     'premium-model-limit',
@@ -47,7 +47,6 @@ const titles = (
 } => {
   return {
     'basic-models': t('features.basic-models'),
-    'plus-models': t('features.plus-models'),
     'premium-models': t('features.premium-models'),
     'normal-model-limit': t('features.normal-model-limit'),
     'premium-model-limit': t('features.premium-model-limit'),
@@ -61,6 +60,8 @@ const titles = (
 const SubscribePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
   setRequestLocale(locale)
+
+  authenticatedRoute(await cookies(), locale)
 
   const t = await getTranslations({
     namespace: 'subscribe',

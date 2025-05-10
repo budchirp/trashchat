@@ -67,7 +67,8 @@
     "success": "Success",
     "update": "Update",
     "refresh": "Refresh",
-    "wait": "Please wait..."
+    "wait": "Please wait...",
+    "or": "or"
   },
   "auth": {
     "danger-zone": "Danger zone",
@@ -153,11 +154,10 @@
     },
     "features": {
       "basic-models": "Basic models",
-      "plus-models": "Plus models",
-      "premium-models": "Premium models",
+      "premium-models": "Plus and premium models",
       "normal-model-limit": "Normal model limit",
       "premium-model-limit": "Premium model limit",
-      "image-file-upload": "Image file upload",
+      "image-file-upload": "Image / File upload",
       "image-generation": "Image generation",
       "search": "Search",
       "reasoning": "Reasoning"

@@ -2,9 +2,12 @@ import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
+import { authenticatedRoute } from '@/lib/auth/client'
 import { PaymentPageClient } from './page.client'
 import { Heading } from '@/components/heading'
 import { routing } from '@/lib/i18n/routing'
+import { cookies } from 'next/headers'
+
 import { CONSTANTS } from '@/lib/constants'
 import { Env } from '@/lib/env'
 
@@ -14,6 +17,8 @@ import type { DynamicPageProps } from '@/types/page'
 const PaymentPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
   setRequestLocale(locale)
+
+  authenticatedRoute(await cookies(), locale)
 
   return (
     <div className='flex size-full flex-col mt-4'>

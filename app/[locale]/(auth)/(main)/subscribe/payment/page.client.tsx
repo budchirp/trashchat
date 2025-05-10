@@ -51,7 +51,7 @@ export const PaymentPageClient: React.FC = (): React.ReactNode => {
         <Button onClick={payWithCrypto}>{t('subscribe.payment.pay-with-crypto')}</Button>
       </div>
 
-      <Seperator text='or' />
+      <Seperator text={t('common.or')} />
 
       <div className='w-full flex items-center justify-center'>
         <CardForm />

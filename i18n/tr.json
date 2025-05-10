@@ -21,8 +21,7 @@
   },
   "landing": {
     "text": "Giriş",
-    "description": "Favori yapay zeka modelin ile sohbet et!",
-    "go-to-chat": "Sohbete git"
+    "description": "Favori yapay zeka modelin ile sohbet et!"
   },
   "chat": {
     "text": "Sohbet",
@@ -68,7 +67,8 @@
     "success": "Başarılı",
     "update": "Güncelle",
     "refresh": "Yenile",
-    "wait": "Lütfen bekleyin..."
+    "wait": "Lütfen bekleyin...",
+    "or": "Veya"
   },
   "auth": {
     "danger-zone": "Tehlikeli alan",
@@ -135,7 +135,6 @@
     "text": "Abone Ol",
     "description": "Trash Chat'e Abone Ol",
     "price": "Abone ol: ${price}",
-    "pay": "Coinbase ile Öde",
     "payment": {
       "text": "Ödeme",
       "description": "Ödeme",
@@ -155,13 +154,12 @@
     },
     "features": {
       "basic-models": "Temel modeller",
-      "plus-models": "Plus modeller",
-      "premium-models": "Premium modeller",
+      "premium-models": "Plus ve premium modeller",
       "normal-model-limit": "Normal model limiti",
       "premium-model-limit": "Premium model limiti",
-      "image-file-upload": "Resim dosyası yükleme",
+      "image-file-upload": "Resim / Dosya yükleme",
       "image-generation": "Resim oluşturma",
-      "search": "Ara",
+      "search": "Arama özelliği",
       "reasoning": "Akıl Yürütme"
     }
   },
