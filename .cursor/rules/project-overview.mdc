@@ -1,0 +1,43 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Overview
+
+This is a Next.js project using TypeScript.
+
+## Key Files and Directories
+
+*   **Main Application Code**: [app](mdc:app)
+*   **Public Assets**: [public](mdc:public)
+*   **Components**: [components](mdc:components)
+*   **Styling**: [styles](mdc:styles)
+*   **Internationalization (i18n)**: [i18n](mdc:i18n)
+*   **Library Code/Utilities**: [lib](mdc:lib)
+*   **Type Definitions**: [types](mdc:types)
+*   **Providers**: [providers](mdc:providers)
+
+## Configuration Files
+
+*   **Package Management**: [package.json](mdc:package.json)
+*   **Next.js Configuration**: [next.config.ts](mdc:next.config.ts)
+*   **Tailwind CSS Configuration**: [tailwind.config.ts](mdc:tailwind.config.ts)
+*   **TypeScript Configuration**: [tsconfig.json](mdc:tsconfig.json)
+*   **Biome Linter/Formatter Configuration**: [biome.json](mdc:biome.json)
+*   **PostCSS Configuration**: [postcss.config.js](mdc:postcss.config.js)
+*   **Middleware**: [middleware.ts](mdc:middleware.ts)
+
+## Other Important Files
+
+*   **README**: [README.md](mdc:README.md)
+*   **License**: [LICENSE](mdc:LICENSE)
+*   **Git Ignore**: [.gitignore](mdc:.gitignore)
+
+## Database
+
+The project uses Prisma as an ORM with a PostgreSQL database. The schema can be found at [prisma/schema.prisma](mdc:prisma/schema.prisma).
+
+## Hosting
+
+The application is self-hosted on a private server.

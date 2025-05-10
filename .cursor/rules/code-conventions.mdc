@@ -1,0 +1,36 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Code Conventions
+
+This project uses [Biome](mdc:biome.json) for code formatting. Please ensure your code adheres to the Biome configuration as detailed below and in the `biome.json` file.
+
+## General Formatting (from Biome)
+
+*   **Indent Style**: Spaces
+*   **Indent Width**: 2
+*   **Line Ending**: LF (Unix-style)
+*   **Line Width**: 100 characters
+*   **JSX Quote Style**: Single quotes (`'`)
+*   **Object Property Quotes**: As needed (e.g., `{ prop: value }` vs. `{ 'has-hyphen': value }`)
+*   **Trailing Commas**: None
+*   **Semicolons**: As needed (Biome will add/remove them where appropriate)
+*   **Arrow Function Parentheses**: Always (e.g., `(param) => ...`)
+*   **Bracket Spacing**: Add spaces inside brackets (e.g., `import { example } from 'module';`)
+*   **Bracket Same Line**: Opening brackets for blocks on a new line.
+*   **String Quote Style**: Single quotes (`'`)
+
+## Import Order
+
+When importing modules, please adhere to the following order:
+
+1.  `import React from 'react';` (or similar React import)
+2.  Named imports from other modules (e.g., `import { Something } from 'some-module';`)
+3.  Default imports from other modules (e.g., `import SomethingElse from 'another-module';`)
+4.  Type imports (e.g., `import type { MyType } from 'my-types';`)
+
+Imports within each category should be sorted by the length of the module path (shortest first).
+
+Be consistent with this import order across all files.
