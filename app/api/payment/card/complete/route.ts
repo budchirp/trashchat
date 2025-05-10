@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { generateIyzicoHeaders } from '../init/route'
+import { generateIyzicoHeaders } from '../init/util'
 import { prisma } from '@/lib/prisma'
 import { CONSTANTS } from '@/lib/constants'
 import { Fetch } from '@/lib/fetch'

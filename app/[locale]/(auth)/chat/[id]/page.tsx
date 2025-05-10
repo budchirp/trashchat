@@ -33,7 +33,7 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   })
 
   const token = authenticatedRoute(await cookies(), locale)
-  const chat = await ChatAPIManager.get(token, id)
+  const chat = await ChatAPIManager.get({ token, locale }, id)
   if (!chat) notFound()
 
   return MetadataManager.generate(chat.title, t('description'))

@@ -5,6 +5,7 @@ import { useState } from 'react'
 
 import { UserContext } from '@/providers/context/user'
 import { UserAPIManager } from '@/lib/api/user'
+import { useLocale } from 'next-intl'
 
 import type { User } from '@/types/user'
 
@@ -21,8 +22,10 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
 }: UserContextProviderProps): React.ReactNode => {
   const [user, setUser] = useState<User>(initialUser)
 
+  const locale = useLocale()
+
   const refreshUser = async () => {
-    const user = await UserAPIManager.get(token!)
+    const user = await UserAPIManager.get({ token, locale })
     if (user) setUser(user)
   }
 

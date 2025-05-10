@@ -17,7 +17,7 @@ const ChatPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
   setRequestLocale(locale)
 
   const token = authenticatedRoute(await cookies(), locale)
-  const chat = await ChatAPIManager.get(token, '-1')
+  const chat = await ChatAPIManager.get({ token, locale }, '-1')
   if (!chat) return notFound()
 
   return <ChatClientPage token={token} chat={chat} />
@@ -32,7 +32,7 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
   })
 
   const token = authenticatedRoute(await cookies(), locale)
-  const chat = await ChatAPIManager.get(token, '-1')
+  const chat = await ChatAPIManager.get({ token, locale }, '-1')
   if (!chat) notFound()
 
   return MetadataManager.generate(chat.title, t('description'))

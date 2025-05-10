@@ -18,6 +18,8 @@ export const authenticate = async (
   const [_, token] = authorization.split(' ') || []
   if (!token) return [false, undefined, undefined]
 
+  const locale = headers.get('accept-language') || 'en'
+
   try {
     const decoded = jwt.verify(token, Secrets.appSecret) as JWTPayload
 
@@ -28,13 +30,13 @@ export const authenticate = async (
     })
 
     if (!user) {
-      await SessionAPIManager.delete(await cookies())
+      await SessionAPIManager.delete({ locale }, await cookies())
 
       return [false, undefined, undefined]
     }
 
     if (user.email !== decoded.email) {
-      await SessionAPIManager.delete(await cookies())
+      await SessionAPIManager.delete({ locale }, await cookies())
 
       return [false, undefined, undefined]
     }

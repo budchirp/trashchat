@@ -5,6 +5,7 @@ import { useState } from 'react'
 
 import { SidebarContext } from '@/providers/context/sidebar'
 import { ChatAPIManager } from '@/lib/api/chat'
+import { useLocale } from 'next-intl'
 
 import type { Chat } from '@/types/chat'
 
@@ -22,8 +23,10 @@ export const SidebarContextProvider: React.FC<SidebarContextProviderProps> = ({
   const [showSidebar, setShowSidebar] = useState<boolean>(false)
   const [chats, setChats] = useState<Chat[]>(initialChats)
 
+  const locale = useLocale()
+
   const refreshChats = async () => {
-    const chats = await ChatAPIManager.getAll(token)
+    const chats = await ChatAPIManager.getAll({ token, locale })
     if (chats) setChats(chats)
   }
 
