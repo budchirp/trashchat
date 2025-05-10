@@ -97,7 +97,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
               'grid gap-2',
               message.role === 'user'
                 ? 'md:max-w-3/4 py-2 px-4 bg-background-primary/50 backdrop-blur-sm w-fit'
-                : 'max-w-full bg-transparent rounded-none border-none',
+                : 'w-full bg-transparent rounded-none border-none',
               className
             )}
             ref={ref}
@@ -115,17 +115,6 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                   )
                 }
 
-                if (part.type === 'text') {
-                  return (
-                    <article
-                      key={index}
-                      className='prose dark:prose-dark w-full !max-w-none break-words text-text-primary select-text'
-                    >
-                      {part.text}
-                    </article>
-                  )
-                }
-
                 if (part.type === 'file' && part.mimeType.startsWith('image/')) {
                   return (
                     <FileItem
@@ -140,26 +129,37 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                     />
                   )
                 }
+
+                if (part.type === 'text') {
+                  return (
+                    <article
+                      key={index}
+                      className='prose dark:prose-dark w-full !max-w-none break-words text-text-primary select-text'
+                    >
+                      {part.text}
+                    </article>
+                  )
+                }
               })}
-
-            {message.parts.filter((part) => part.type === 'source').length > 0 && (
-              <div className='grid gap-1'>
-                <h2 className='text-text-primary font-medium'>{t('sources')}</h2>
-
-                <div className='flex gap-2'>
-                  {message.parts
-                    .filter((part) => part.type === 'source')
-                    .map((part, index) => (
-                      <a key={index} href={part.source.url} target='_blank' rel='noreferrer'>
-                        <Box hover padding='tag'>
-                          {part.source.title ?? new URL(part.source.url).hostname}
-                        </Box>
-                      </a>
-                    ))}
-                </div>
-              </div>
-            )}
           </Box>
+
+          {message.parts.filter((part) => part.type === 'source').length > 0 && (
+            <div className='grid gap-1'>
+              <h2 className='text-text-primary font-medium'>{t('sources')}</h2>
+
+              <div className='flex gap-2 min-w-0 w-full rounded-full overflow-x-auto'>
+                {message.parts
+                  .filter((part) => part.type === 'source')
+                  .map((part, index) => (
+                    <a key={index} href={part.source.url} target='_blank' rel='noreferrer'>
+                      <Box hover padding='tag'>
+                        {part.source.title ?? new URL(part.source.url).hostname}
+                      </Box>
+                    </a>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

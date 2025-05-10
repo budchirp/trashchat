@@ -15,7 +15,7 @@ const boxVariants = cva(
       padding: {
         default: 'px-4 py-3',
         small: 'p-2',
-        tag: 'px-4 py-1',
+        tag: 'px-4 py-1 rounded-full',
         none: ''
       },
       hover: {
