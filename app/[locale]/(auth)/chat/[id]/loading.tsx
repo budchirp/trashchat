@@ -11,7 +11,7 @@ const Loading: React.FC = () => {
   return (
     <div className='flex size-full flex-col mt-4'>
       <Container className='flex flex-col gap-2 h-full'>
-        {[...Array(6)].map((_, index) => (
+        {[...Array(4)].map((_, index) => (
           <MessageBox
             className={cn('animate-pulse', index % 2 === 0 ? 'w-2/4' : 'w-full')}
             key={index}

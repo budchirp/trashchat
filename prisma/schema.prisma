@@ -9,6 +9,11 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum PaymentMethod {
+  card
+  crypto
+}
+
 model User {
   id Int @id @unique @default(autoincrement())
 
@@ -23,6 +28,8 @@ model User {
   password String
 
   profilePicture String?
+
+  paymentMethod PaymentMethod?
 
   isPlus           Boolean @default(false)
   plusExpiresAt    DateTime?

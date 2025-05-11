@@ -134,12 +134,15 @@
   "subscribe": {
     "text": "Subscribe",
     "description": "Subscribe to Trash Chat",
-    "price": "Subscribe for ${price}",
+    "price": "Subscribe for ${price} / month",
+    "free": "Free",
+    "month": "month",
     "payment": {
       "text": "Payment",
       "description": "Payment",
       "pay-with-crypto": "Pay with Crypto",
       "pay-with-card": "Pay with Card",
+      "success": "Payment successful 🥳",
       "form": {
         "card": "Card",
         "cvc": "CVC",
@@ -160,7 +163,8 @@
       "image-file-upload": "Image / File upload",
       "image-generation": "Image generation",
       "search": "Search",
-      "reasoning": "Reasoning"
+      "reasoning": "Reasoning",
+      "price": "Price"
     }
   },
   "legal": {

@@ -29,9 +29,9 @@ export const GET = async (request: NextRequest) => {
         message: t('common.success'),
         data: {
           ...user,
-          password: undefined,
-          verificationToken: undefined
-        }
+          emailVerificationToken: undefined,
+          password: undefined
+        } as Partial<User>
       },
       {
         status: 201
