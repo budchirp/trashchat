@@ -18,7 +18,7 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
   }
 
   return (
-    <div className='w-full h-screen flex items-center justify-center'>
+    <div className='w-full min-h-screen flex items-center py-4 justify-center'>
       <div className='text-center flex flex-col gap-4 items-center justify-center'>
         <h1 className='text-lg font-medium'>
           {error.message === 'token' ? t('errors.token') : t('errors.error')}

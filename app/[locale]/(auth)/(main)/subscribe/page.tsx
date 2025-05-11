@@ -23,11 +23,12 @@ const features = [
   'search',
   'reasoning',
   'normal-model-limit',
-  'premium-model-limit'
+  'premium-model-limit',
+  'price'
 ] as const
 
 const featureMap: Record<(typeof tiers)[number], (typeof features)[number][]> = {
-  Normal: ['basic-models', 'normal-model-limit', 'premium-model-limit'],
+  Normal: ['basic-models', 'normal-model-limit', 'premium-model-limit', 'price'],
   Plus: [
     'basic-models',
     'premium-models',
@@ -36,7 +37,8 @@ const featureMap: Record<(typeof tiers)[number], (typeof features)[number][]> = 
     'image-file-upload',
     'image-generation',
     'search',
-    'reasoning'
+    'reasoning',
+    'price'
   ]
 } as const
 
@@ -53,7 +55,8 @@ const titles = (
     'image-file-upload': t('features.image-file-upload'),
     'image-generation': t('features.image-generation'),
     search: t('features.search'),
-    reasoning: t('features.reasoning')
+    reasoning: t('features.reasoning'),
+    price: t('features.price')
   } as const
 }
 
@@ -109,6 +112,12 @@ const SubscribePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPage
                         CONSTANTS.USAGES.PLUS.PREMIUM_CREDITS
                       ) : (
                         CONSTANTS.USAGES.NORMAL.PREMIUM_CREDITS
+                      )
+                    ) : feature === 'price' ? (
+                      tier === 'Normal' ? (
+                        t('free')
+                      ) : (
+                        `$${CONSTANTS.PLUS_PRICE} / ${t('month')}`
                       )
                     ) : featureMap[tier].includes(feature) ? (
                       <Check className='text-green-500' size={16} />

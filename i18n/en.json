@@ -134,7 +134,9 @@
   "subscribe": {
     "text": "Subscribe",
     "description": "Subscribe to Trash Chat",
-    "price": "Subscribe for ${price}",
+    "price": "Subscribe for ${price} / month",
+    "free": "Free",
+    "month": "month",
     "payment": {
       "text": "Payment",
       "description": "Payment",
@@ -150,7 +152,8 @@
       "image-file-upload": "Image / File upload",
       "image-generation": "Image generation",
       "search": "Search",
-      "reasoning": "Reasoning"
+      "reasoning": "Reasoning",
+      "price": "Price"
     }
   },
   "legal": {

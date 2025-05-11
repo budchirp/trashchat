@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "PaymentMethod" AS ENUM ('card', 'crypto');
+
+-- CreateEnum
 CREATE TYPE "MessageRole" AS ENUM ('user', 'assistant', 'system');
 
 -- CreateEnum
@@ -14,6 +17,7 @@ CREATE TABLE "users" (
     "lastEmailSentAt" TIMESTAMP(3),
     "password" TEXT NOT NULL,
     "profilePicture" TEXT,
+    "paymentMethod" "PaymentMethod",
     "isPlus" BOOLEAN NOT NULL DEFAULT false,
     "plusExpiresAt" TIMESTAMP(3),
     "credits" INTEGER NOT NULL DEFAULT 10,
@@ -108,3 +112,4 @@ ALTER TABLE "message_parts" ADD CONSTRAINT "message_parts_messageId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "files" ADD CONSTRAINT "files_messageId_fkey" FOREIGN KEY ("messageId") REFERENCES "messages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

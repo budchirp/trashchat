@@ -6,8 +6,8 @@ export const Secrets = {
   coinbaseWebhookSecret: process.env.COINBASE_WEBHOOK_SECRET || null,
   coinbaseApiKey: process.env.COINBASE_API_KEY || null,
 
-  iyzicoApiKey: process.env.IYZICO_API_KEY || null,
-  iyzicoSecretKey: process.env.IYZICO_SECRET_KEY || null,
+  paddleWebhookSecret: process.env.PADDLE_WEBHOOK_SECRET || null,
+  paddleApiKey: process.env.PADDLE_API_KEY || null,
 
   databaseUrl: process.env.DATABASE_URL || '',
 
