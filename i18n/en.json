@@ -140,17 +140,7 @@
       "description": "Payment",
       "pay-with-crypto": "Pay with Crypto",
       "pay-with-card": "Pay with Card",
-      "form": {
-        "card": "Card",
-        "cvc": "CVC",
-        "expiry": "Expiry",
-        "name": "Name",
-        "phone": "Phone",
-        "address": "Address",
-        "city": "City",
-        "zip": "Zip",
-        "country": "Country"
-      }
+      "success": "Payment successful 🥳"
     },
     "features": {
       "basic-models": "Basic models",

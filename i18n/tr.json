@@ -68,7 +68,7 @@
     "update": "Güncelle",
     "refresh": "Yenile",
     "wait": "Lütfen bekleyin...",
-    "or": "Veya"
+    "or": "veya"
   },
   "auth": {
     "danger-zone": "Tehlikeli alan",
@@ -135,22 +135,14 @@
     "text": "Abone Ol",
     "description": "Trash Chat'e Abone Ol",
     "price": "Abone ol: ${price}",
+    "free": "Ücretsiz",
+    "month": "ay",
     "payment": {
       "text": "Ödeme",
       "description": "Ödeme",
       "pay-with-crypto": "Kripto ile Öde",
       "pay-with-card": "Kart ile Öde",
-      "form": {
-        "card": "Kart",
-        "cvc": "CVC",
-        "expiry": "Son Kullanma Tarihi",
-        "name": "Ad",
-        "phone": "Telefon",
-        "address": "Adres",
-        "city": "İl",
-        "zip": "Posta Kodu",
-        "country": "Ülke"
-      }
+      "success": "Ödeme başarılı 🥳"
     },
     "features": {
       "basic-models": "Temel modeller",
@@ -160,7 +152,8 @@
       "image-file-upload": "Resim / Dosya yükleme",
       "image-generation": "Resim oluşturma",
       "search": "Arama özelliği",
-      "reasoning": "Akıl Yürütme"
+      "reasoning": "Akıl Yürütme",
+      "price": "Fiyat"
     }
   },
   "legal": {
