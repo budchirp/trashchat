@@ -61,6 +61,8 @@ export const POST = async (request: NextRequest) => {
             data: {
               isPlus: true,
 
+              paymentMethod: 'crypto',
+
               credits: CONSTANTS.USAGES.PLUS.CREDITS,
               premiumCredits: CONSTANTS.USAGES.PLUS.PREMIUM_CREDITS
             }

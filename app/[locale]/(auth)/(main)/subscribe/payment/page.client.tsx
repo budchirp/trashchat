@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Fetch } from '@/lib/fetch'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { Seperator } from '@/components/seperator'
-import { CardForm } from './card-form'
+import { CheckoutForm } from './checkout-form'
 import { toast } from '@/components/toast'
 
 import type { APIResponse } from '@/types/api'
@@ -53,8 +53,10 @@ export const PaymentPageClient: React.FC = (): React.ReactNode => {
 
       <Seperator text={t('common.or')} />
 
-      <div className='w-full flex items-center justify-center'>
-        <CardForm />
+      <div className='w-full flex flex-col gap-4 items-center justify-center'>
+        <h2 className='font-medium'>{t('subscribe.payment.pay-with-card')}</h2>
+
+        <CheckoutForm />
       </div>
     </div>
   )

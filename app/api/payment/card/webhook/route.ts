@@ -1,54 +1,36 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { Secrets } from '@/lib/secrets'
-import { createHmac } from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { CONSTANTS } from '@/lib/constants'
+import { getTranslations } from 'next-intl/server'
+import { paddle } from '@/lib/payments/paddle'
+import { EventName, type TransactionCompletedEvent } from '@paddle/paddle-node-sdk'
 
 export const POST = async (request: NextRequest) => {
   try {
     const rawBody = await request.text()
 
-    const signature = request.headers.get('X-IYZ-SIGNATURE-V3')
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
+    const signature = request.headers.get('paddle-signature')
     if (!signature) {
-      throw new Error('`X-IYZ-SIGNATURE-V3` header is required')
+      throw new Error(t('api.required-header', { header: 'paddle-signature' }))
     }
 
-    const iyzicoSecretKey = Secrets.iyzicoSecretKey
-    if (!iyzicoSecretKey) {
-      throw new Error('`IYZICO_SECRET_KEY` is not set')
+    const paddleWebhookSecret = Secrets.paddleWebhookSecret
+    if (!paddleWebhookSecret) {
+      throw new Error(t('api.env-error', { env: 'PADDLE_WEBHOOK_SECRET' }))
     }
 
-    const hmac = createHmac('sha256', iyzicoSecretKey)
-    hmac.update(rawBody)
-    const digest = hmac.digest('hex')
-
-    if (digest !== signature) {
-      throw new Error('Invalid signature')
+    const json = await paddle.webhooks.unmarshal(rawBody, paddleWebhookSecret, signature)
+    if (!json) {
+      throw new Error(t('api.invalid-signature'))
     }
 
-    const json = JSON.parse(rawBody)
-
-    const {
-      event: {
-        type,
-        data: {
-          metadata: { id }
-        }
-      }
-    } = json as {
-      event: {
-        type: 'charge:created' | 'charge:pending' | 'charge:confirmed' | 'charge:failed'
-        data: {
-          metadata: {
-            id: string
-          }
-        }
-      }
-    }
-
-    switch (type) {
-      case 'charge:confirmed': {
-        console.log('charge:confirmed', id)
+    switch (json.eventType) {
+      case EventName.TransactionCompleted: {
+        const id = (json as any)?.data?.customData?.user_id || null
         if (id) {
           await prisma.user.update({
             where: {
@@ -56,6 +38,8 @@ export const POST = async (request: NextRequest) => {
             },
             data: {
               isPlus: true,
+
+              paymentMethod: 'card',
 
               credits: CONSTANTS.USAGES.PLUS.CREDITS,
               premiumCredits: CONSTANTS.USAGES.PLUS.PREMIUM_CREDITS
@@ -67,11 +51,14 @@ export const POST = async (request: NextRequest) => {
       }
 
       default: {
-        console.log(type)
+        console.log(json.eventType)
       }
     }
 
-    return NextResponse.json({})
+    return NextResponse.json({
+      message: t('common.success'),
+      data: {}
+    })
   } catch (error) {
     return NextResponse.json(
       {

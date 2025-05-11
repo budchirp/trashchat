@@ -145,7 +145,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
         {messages.length < 1 && (
           <div className='h-[calc(100vh-4rem-4rem-4rem-1rem)] flex flex-col gap-4 items-center text-center justify-center'>
-            <h1 className='font-bold text-2xl opacity-90 tracking-wider'>{t('chat.start')}</h1>
+            <h1 className='font-bold text-2xl opacity-90 tracking-wide'>{t('chat.start')}</h1>
           </div>
         )}
       </Container>
