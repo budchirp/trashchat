@@ -1,17 +1,20 @@
 'use client'
 
 import type React from 'react'
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { use, useEffect, useRef, useState, type FormEvent } from 'react'
 
 import { MemoizedMarkdown } from '@/components/markdown/memoized'
+import { SidebarContext } from '@/providers/context/sidebar'
 import { MessageBox } from '@/components/chat/message-box'
 import { ChatForm } from '@/components/chat/chat-form'
 import { useLocale, useTranslations } from 'next-intl'
 import { useUpload } from '@/lib/helpers/use-upload'
 import { Container } from '@/components/container'
 import { generateId, type UIMessage } from 'ai'
+import { ChatAPIManager } from '@/lib/api/chat'
 import { CONSTANTS } from '@/lib/constants'
 import { useChat } from '@ai-sdk/react'
+import { Env } from '@/lib/env'
 
 import type { Chat } from '@/types/chat'
 import type { AIModelID, AIModelReasoningOption } from '@/lib/ai/models'
@@ -27,6 +30,11 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   chat
 }: ChatClientPageProps): React.ReactNode => {
   const t = useTranslations()
+
+  const [mounted, setMounted] = useState<boolean>(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const [model, setModel] = useState<AIModelID>(chat.model || CONSTANTS.AI.DEFAULT_MODEL)
   const [error, setError] = useState<string | null>(null)
@@ -47,12 +55,22 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
   const locale = useLocale()
 
+  const { refreshChats } = use(SidebarContext)
+
   const { messages, setMessages, input, status, stop, handleInputChange, handleSubmit } = useChat({
     api: `/api/chat/${chat.id}/message`,
     initialMessages: (chat.messages as any) || [],
     headers: {
-      authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'accept-language': locale || 'en'
+    },
+    onFinish: async () => {
+      if (messages.length < 2 && mounted) {
+        refreshChats()
+
+        const newChat = await ChatAPIManager.get({ token, locale }, chat.id)
+        document.title = `${newChat?.title || t('chat.new-chat')} - ${Env.appName}`
+      }
     },
     onError: async (error) => {
       let erorrMessage: string | null = null
@@ -94,6 +112,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
       })
     }
   }, [status])
+
   return (
     <div className='size-full mt-4'>
       <Container className='grid gap-2 mb-2'>

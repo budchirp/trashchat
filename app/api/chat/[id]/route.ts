@@ -136,16 +136,18 @@ export const GET = async (
         }
       })
 
+      const newChat = {
+        title: t('chat.new-chat'),
+
+        model: CONSTANTS.AI.DEFAULT_MODEL,
+
+        userId: user.id
+      }
+
       let chat: any
       if (chats.length < 1) {
         chat = await prisma.chat.create({
-          data: {
-            title: 'New chat',
-
-            model: CONSTANTS.AI.DEFAULT_MODEL,
-
-            userId: user.id
-          },
+          data: newChat,
           include: {
             messages: {
               include: {
@@ -156,6 +158,19 @@ export const GET = async (
         })
       } else {
         chat = chats[0]
+
+        if (chat.messages.length > 0) {
+          chat = await prisma.chat.create({
+            data: newChat,
+            include: {
+              messages: {
+                include: {
+                  files: true
+                }
+              }
+            }
+          })
+        }
       }
 
       return NextResponse.json({
