@@ -25,12 +25,13 @@
 - [x] Reasoning
 - [x] Save reasoning, sources and generated images
 - [x] Profile picture upload
-- [ ] Share feature
+- [x] Payments (broken for now)
+- [x] Appearance page
+- [x] Payment page
 - [x] Copy message feature
+- [x] Translate API routes
 - [ ] Landing page
 - [ ] Github OAuth maybe
 - [ ] Forgot password feature
-- [ ] Translate API routes
 - [ ] SEO
-- [ ] Payments
-- [x] Appearance page
+- [ ] Share feature

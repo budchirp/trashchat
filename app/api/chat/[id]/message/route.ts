@@ -95,6 +95,30 @@ export const POST = async (
       }
     }
 
+    const model = models[modelName]
+
+    if (
+      !user.isPlus &&
+      (model.premium ||
+        model.plus ||
+        model.imageGeneration ||
+        useReasoning ||
+        useSearch ||
+        files.length > 0)
+    ) {
+      throw new Error()
+    }
+
+    if (model.premium) {
+      if (user.premiumCredits < 1) {
+        throw new Error(t('chat.errors.credit-error'))
+      }
+    } else {
+      if (user.credits < 1) {
+        throw new Error(t('chat.errors.credit-error'))
+      }
+    }
+
     const { id } = await params
 
     const chat = await prisma.chat.findUnique({
@@ -110,25 +134,6 @@ export const POST = async (
 
     if (!chat) {
       throw new Error(t('chat.errors.not-found'))
-    }
-
-    const model = models[modelName]
-
-    if (
-      !user.isPlus &&
-      (model.premium || model.plus || model.imageGeneration || useReasoning || useSearch)
-    ) {
-      throw new Error()
-    }
-
-    if (model.premium) {
-      if (user.premiumCredits < 1) {
-        throw new Error(t('chat.errors.credit-error'))
-      }
-    } else {
-      if (user.credits < 1) {
-        throw new Error(t('chat.errors.credit-error'))
-      }
     }
 
     const message = messages[messages.length - 1]
@@ -172,6 +177,7 @@ export const POST = async (
       })
     )
 
+    let title = chat.title
     if (chat.messages.length < 2) {
       const { object } = await generateObject({
         model: models['gemini-2.0-flash'].provider(),
@@ -183,16 +189,7 @@ export const POST = async (
         prompt: message.content
       })
 
-      await prisma.chat.update({
-        where: {
-          id: chat.id,
-
-          userId: user.id
-        },
-        data: {
-          title: object.title
-        }
-      })
+      title = object.title
     }
 
     await prisma.chat.update({
@@ -202,26 +199,28 @@ export const POST = async (
         userId: user.id
       },
       data: {
-        model: model.id
+        model: model.id,
+        title
       }
     })
 
     const system = constructSystemPrompt(model, user)
+    const wrappedModel =
+      model.company === 'deepseek'
+        ? wrapLanguageModel({
+            model: model.provider(),
+            middleware: [extractReasoningMiddleware({ tagName: 'think' })]
+          })
+        : model.provider(
+            model.company === 'google' && model.search && useSearch
+              ? {
+                  useSearchGrounding: true
+                }
+              : undefined
+          )
 
     const result = streamText({
-      model:
-        model.company === 'deepseek'
-          ? wrapLanguageModel({
-              model: model.provider(),
-              middleware: [extractReasoningMiddleware({ tagName: 'think' })]
-            })
-          : model.provider(
-              model.company === 'google' && model.search && useSearch
-                ? {
-                    useSearchGrounding: true
-                  }
-                : undefined
-            ),
+      model: wrappedModel,
       providerOptions: {
         openai:
           model.reasoning && useReasoning
@@ -238,7 +237,9 @@ export const POST = async (
                     ? 1024
                     : reasoningEffort === 'medium'
                       ? 2048
-                      : 4096
+                      : reasoningEffort === 'high'
+                        ? 4096
+                        : 0
                   : 0
               }
             : {})
@@ -253,19 +254,21 @@ export const POST = async (
               type: 'text',
               text: message.content
             },
-            ...files.map((file) => {
-              if (file.contentType.startsWith('image/')) {
+            ...(model.fileUpload || model.imageUpload ? files : []).map((file) => {
+              if (model.imageUpload && file.contentType.startsWith('image/')) {
                 return {
                   type: 'image',
                   image: file.url
                 }
               }
 
-              return {
-                type: 'file',
-                mimeType: file.contentType,
-                data: file.url,
-                filename: file.name
+              if (model.fileUpload) {
+                return {
+                  type: 'file',
+                  mimeType: file.contentType,
+                  data: file.url,
+                  filename: file.name
+                }
               }
             })
           ]
@@ -277,7 +280,7 @@ export const POST = async (
         })
       ],
       system: model.id === 'gemini-2.0-flash-image-generation' ? undefined : system,
-      onFinish: async ({ text, reasoning, sources, files }) => {
+      onFinish: async ({ text, reasoning, sources = [], files = [] }) => {
         const message = await prisma.message.create({
           data: {
             role: 'assistant',
@@ -312,7 +315,7 @@ export const POST = async (
         }
 
         await Promise.all(
-          (sources || []).map(async (source) => {
+          sources.map(async (source) => {
             await prisma.messagePart.create({
               data: {
                 type: 'source',
@@ -326,7 +329,7 @@ export const POST = async (
         )
 
         await Promise.all(
-          (model.imageGeneration ? files || [] : []).map(async (file) => {
+          (model.imageGeneration ? files : []).map(async (file) => {
             await prisma.file.create({
               data: {
                 name: randomUUID(),

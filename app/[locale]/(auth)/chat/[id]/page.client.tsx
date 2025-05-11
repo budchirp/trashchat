@@ -102,6 +102,13 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
       ref.current.scrollIntoView({
         behavior: 'smooth'
       })
+
+      // wait for highlighter to load
+      setTimeout(() => {
+        ref.current?.scrollIntoView({
+          behavior: 'smooth'
+        })
+      }, 500)
     }
   }, [])
 
@@ -111,7 +118,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         behavior: 'smooth'
       })
     }
-  }, [status])
+  }, [messages])
 
   return (
     <div className='size-full mt-4'>

@@ -38,6 +38,7 @@ export const POST = async (request: NextRequest) => {
             },
             data: {
               isPlus: true,
+              plusExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
 
               paymentMethod: 'card',
 

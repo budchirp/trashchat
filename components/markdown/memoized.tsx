@@ -6,11 +6,6 @@ import { memo, useMemo } from 'react'
 import { Markdown, type MarkdownProps } from '@/components/markdown'
 import { marked } from 'marked'
 
-function parseMarkdownIntoBlocks(markdown: string): string[] {
-  const tokens = marked.lexer(markdown)
-  return tokens.map((token) => token.raw)
-}
-
 const MemoizedMarkdownBlock: React.MemoExoticComponent<(props: MarkdownProps) => React.ReactNode> =
   memo(
     ({ content }: MarkdownProps): React.ReactNode => {
@@ -22,11 +17,15 @@ const MemoizedMarkdownBlock: React.MemoExoticComponent<(props: MarkdownProps) =>
     }
   )
 
+const parseMarkdownIntoBlocks = (markdown: string): string[] => {
+  const tokens = marked.lexer(markdown)
+  return tokens.map((token) => token.raw)
+}
+
 export const MemoizedMarkdown: React.MemoExoticComponent<
   (props: MarkdownProps) => React.ReactNode
 > = memo(({ content }: MarkdownProps): React.ReactNode => {
   const blocks = useMemo(() => parseMarkdownIntoBlocks(content), [content])
-
   return blocks.map((block, index) => (
     <MemoizedMarkdownBlock content={block} key={`block_${index}`} />
   ))

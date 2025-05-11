@@ -1,10 +1,11 @@
 import type React from 'react'
+import type { ComponentProps } from 'react'
 
 import { CopyButton } from '@/components/markdown/code/copy-button'
+import { isInlineCode, useShikiHighlighter } from 'react-shiki'
 import { Box } from '@/components/box'
+import { cn } from '@/lib/cn'
 
-import { bundledLanguages, createHighlighter } from 'shiki/bundle/web'
-import { createJavaScriptRegexEngine } from 'shiki'
 import {
   transformerNotationDiff,
   transformerNotationErrorLevel,
@@ -12,43 +13,39 @@ import {
   transformerNotationHighlight
 } from '@shikijs/transformers'
 
-import githubDarkDefault from '@shikijs/themes/github-dark-default'
-import githubLightDefault from '@shikijs/themes/github-light-default'
-
-const engine = createJavaScriptRegexEngine()
-
-const shiki = await createHighlighter({
-  themes: [githubDarkDefault, githubLightDefault],
-  langs: Object.keys(bundledLanguages),
-  engine
-})
-
 type MarkdownCodeProps = {
-  children: React.ReactNode
-  className: string
-}
+  node: any
+} & ComponentProps<'code'>
 
 export const MarkdownCode: React.FC<MarkdownCodeProps> = ({
   children,
-  className
+  className,
+  node
 }: MarkdownCodeProps): React.ReactNode => {
-  const match = /language-(\w+)/.exec(className || '')
-  if (match) {
-    const lang = match[1]
-    const code = String(children).replace(/\n$/, '')
-    const html = shiki.codeToHtml(code, {
-      lang: !Object.keys(bundledLanguages).includes(lang) ? 'plaintext' : lang,
-      themes: {
+  const code = String(children).trim()
+
+  const match = className?.match(/language-(\w+)/)
+  const lang = match?.[1] || 'plaintext'
+
+  const isInline = node ? isInlineCode(node) : undefined
+  if (!isInline) {
+    const highlighted = useShikiHighlighter(
+      code,
+      lang,
+      {
         light: 'github-light-default',
         dark: 'github-dark-default'
       },
-      transformers: [
-        transformerNotationDiff(),
-        transformerNotationHighlight(),
-        transformerNotationFocus(),
-        transformerNotationErrorLevel()
-      ]
-    })
+      {
+        delay: 150,
+        transformers: [
+          transformerNotationDiff(),
+          transformerNotationErrorLevel(),
+          transformerNotationFocus(),
+          transformerNotationHighlight()
+        ]
+      }
+    )
 
     return (
       <Box padding='none' variant='primary'>
@@ -58,15 +55,14 @@ export const MarkdownCode: React.FC<MarkdownCodeProps> = ({
           <CopyButton content={code} />
         </div>
 
-        <div
-          className='select-text rounded-3xl'
-          dangerouslySetInnerHTML={{
-            __html: html
-          }}
-        />
+        <div className={cn('select-text rounded-3xl w-full min-w-0', !highlighted && 'px-4 py-2')}>
+          {highlighted ?? (
+            <div className='w-full h-2 bg-background-tertiary rounded-lg animate-pulse' />
+          )}
+        </div>
       </Box>
     )
   }
 
-  return <code>{children}</code>
+  return <code>{code}</code>
 }

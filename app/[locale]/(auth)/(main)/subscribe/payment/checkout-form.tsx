@@ -3,9 +3,9 @@
 import type React from 'react'
 import { use, useEffect, useState } from 'react'
 
-import { initializePaddle, type CheckoutEventsData, type Paddle } from '@paddle/paddle-js'
-import { useLocale, useTranslations } from 'next-intl'
+import { initializePaddle, type Paddle } from '@paddle/paddle-js'
 import { UserContext } from '@/providers/context/user'
+import { useLocale } from 'next-intl'
 import { useTheme } from 'next-themes'
 
 export const CheckoutForm: React.FC = (): React.ReactNode => {
