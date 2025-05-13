@@ -31,27 +31,20 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 }: ChatClientPageProps): React.ReactNode => {
   const t = useTranslations()
 
-  const [mounted, setMounted] = useState<boolean>(false)
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
   const [model, setModel] = useState<AIModelID>(chat.model || CONSTANTS.AI.DEFAULT_MODEL)
   const [error, setError] = useState<string | null>(null)
-
-  const [reasoningEffort, setReasoningEffort] = useState<AIModelReasoningOption | null>(null)
 
   const [useReasoning, setUseReasoning] = useState<boolean>(false)
   const [useSearch, setUseSearch] = useState<boolean>(false)
 
-  const [isUploading, setIsUploading] = useState<boolean>(false)
-  const [files, setFiles] = useState<File[]>([])
+  const [reasoningEffort, setReasoningEffort] = useState<AIModelReasoningOption | null>(null)
 
+  const [isUploading, setIsUploading] = useState<boolean>(false)
+
+  const [files, setFiles] = useState<File[]>([])
   const [messageFiles, setMessageFiles] = useState<{
     [index: number]: PrismaFile[]
   }>({})
-
-  const ref = useRef<HTMLDivElement | null>(null)
 
   const locale = useLocale()
 
@@ -65,7 +58,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
       'accept-language': locale || 'en'
     },
     onFinish: async () => {
-      if (messages.length < 2 && mounted) {
+      if (messages.length < 2 && typeof window !== 'undefined') {
         refreshChats()
 
         const newChat = await ChatAPIManager.get({ token, locale }, chat.id)
@@ -96,6 +89,8 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         }
       ])
   }, [error])
+
+  const ref = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (ref.current) {

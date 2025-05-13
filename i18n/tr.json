@@ -134,7 +134,8 @@
   "subscribe": {
     "text": "Abone Ol",
     "description": "Trash Chat'e Abone Ol",
-    "price": "Abone ol: ${price}",
+    "subscribe": "{price} karşılığında abone ol",
+    "price": "${price} + vergi / ay",
     "free": "Ücretsiz",
     "month": "ay",
     "payment": {
@@ -146,9 +147,9 @@
     },
     "features": {
       "basic-models": "Temel modeller",
-      "premium-models": "Plus ve premium modeller",
-      "normal-model-limit": "Normal model limiti",
-      "premium-model-limit": "Premium model limiti",
+      "premium-models": "Premium modeller",
+      "normal-model-limit": "Normal limit",
+      "premium-model-limit": "Premium limit",
       "image-file-upload": "Resim / Dosya yükleme",
       "image-generation": "Resim oluşturma",
       "search": "Arama özelliği",

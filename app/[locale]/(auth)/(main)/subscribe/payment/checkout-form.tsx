@@ -5,18 +5,26 @@ import { use, useEffect, useState } from 'react'
 
 import { initializePaddle, type Paddle } from '@paddle/paddle-js'
 import { UserContext } from '@/providers/context/user'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
+import { Box } from '@/components/box'
 
 export const CheckoutForm: React.FC = (): React.ReactNode => {
+  const t = useTranslations('common')
+
   const { user } = use(UserContext)
 
   const { theme } = useTheme()
   const locale = useLocale()
 
+  const [mounted, setMounted] = useState<boolean>(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const [paddle, setPaddle] = useState<Paddle | null>(null)
   useEffect(() => {
-    if (!paddle?.Initialized) {
+    if (mounted && !paddle?.Initialized) {
       initializePaddle({
         token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN || '',
         environment: 'sandbox',
@@ -24,7 +32,7 @@ export const CheckoutForm: React.FC = (): React.ReactNode => {
           settings: {
             variant: 'one-page',
             displayMode: 'inline',
-            theme: theme as any,
+            theme: theme === 'dark' ? 'dark' : theme === 'light' ? 'light' : 'dark',
             allowLogout: false,
             locale,
             frameTarget: 'paddle-checkout-frame',
@@ -54,11 +62,13 @@ export const CheckoutForm: React.FC = (): React.ReactNode => {
         }
       })
     }
-  }, [paddle?.Initialized])
+  }, [mounted, paddle?.Initialized])
 
   return (
-    <div className='w-full bg-background-primary rounded-2xl p-4'>
+    <Box variant='primary' padding='small'>
+      {(!paddle || !paddle?.Initialized) && <h2 className='font-medium'>{t('loading')}</h2>}
+
       <div className='paddle-checkout-frame' />
-    </div>
+    </Box>
   )
 }

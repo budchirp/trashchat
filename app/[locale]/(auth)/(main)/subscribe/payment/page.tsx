@@ -6,9 +6,8 @@ import { authenticatedRoute } from '@/lib/auth/client'
 import { PaymentPageClient } from './page.client'
 import { Heading } from '@/components/heading'
 import { routing } from '@/lib/i18n/routing'
-import { cookies } from 'next/headers'
-
 import { CONSTANTS } from '@/lib/constants'
+import { cookies } from 'next/headers'
 import { Env } from '@/lib/env'
 
 import type { Metadata } from 'next'
@@ -20,12 +19,17 @@ const PaymentPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
 
   authenticatedRoute(await cookies(), locale)
 
+  const t = await getTranslations({
+    namespace: 'subscribe',
+    locale
+  })
+
   return (
     <div className='flex size-full flex-col mt-4'>
       <Heading
         description={
           <h2 className='text-lg text-text-tertiary'>
-            $<span className='font-medium'>{CONSTANTS.PLUS_PRICE}</span>
+            {t('price', { price: CONSTANTS.PLUS_PRICE })}
           </h2>
         }
       >
@@ -46,6 +50,7 @@ export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Me
     namespace: 'subscribe.payment',
     locale
   })
+
   return MetadataManager.generate(t('text'), t('description'))
 }
 

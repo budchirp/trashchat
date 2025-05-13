@@ -14,7 +14,7 @@ import { cn } from '@/lib/cn'
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
 
-const tiers = ['Normal', 'Plus'] as const
+const tiers = ['Plus', 'Normal'] as const
 const features = [
   'basic-models',
   'premium-models',
@@ -23,12 +23,11 @@ const features = [
   'search',
   'reasoning',
   'normal-model-limit',
-  'premium-model-limit',
-  'price'
+  'premium-model-limit'
 ] as const
 
 const featureMap: Record<(typeof tiers)[number], (typeof features)[number][]> = {
-  Normal: ['basic-models', 'normal-model-limit', 'premium-model-limit', 'price'],
+  Normal: ['basic-models', 'normal-model-limit', 'premium-model-limit'],
   Plus: [
     'basic-models',
     'premium-models',
@@ -37,8 +36,7 @@ const featureMap: Record<(typeof tiers)[number], (typeof features)[number][]> = 
     'image-file-upload',
     'image-generation',
     'search',
-    'reasoning',
-    'price'
+    'reasoning'
   ]
 } as const
 
@@ -55,8 +53,7 @@ const titles = (
     'image-file-upload': t('features.image-file-upload'),
     'image-generation': t('features.image-generation'),
     search: t('features.search'),
-    reasoning: t('features.reasoning'),
-    price: t('features.price')
+    reasoning: t('features.reasoning')
   } as const
 }
 
@@ -73,69 +70,76 @@ const SubscribePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPage
 
   const translatedTitles = titles(t)
 
-  const thClass = 'px-4 py-2 text-left font-bold text-text-tertiary tracking-wider'
-  const tdClass = 'px-4 py-2 whitespace-nowrap font-medium text-gray-900 dark:text-white'
+  const thClass =
+    'px-4 md:px-8 first:px-4 py-2 text-left font-bold text-text-tertiary tracking-wider'
+  const tdClass =
+    'px-4 md:px-8 first:px-4 py-2 whitespace-nowrap font-medium text-gray-900 dark:text-white'
 
   return (
     <div className='flex size-full flex-col mt-4'>
       <Heading>{t('text')}</Heading>
 
       <div className='grid gap-4'>
-        <table className='min-w-full'>
-          <thead className='bg-background-primary'>
-            <tr>
-              <th scope='col' className={cn(thClass, 'w-full')} />
-
-              {tiers.map((tier) => (
-                <th key={tier} scope='col' className={cn(thClass, 'px-16')}>
-                  {tier}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {features.map((feature) => (
-              <tr className='bg-background-primary odd:bg-background-secondary' key={feature}>
-                <td className={cn(tdClass, 'w-full')}>{translatedTitles[feature]}</td>
+        <div className='w-full overflow-x-auto'>
+          <table className='table-auto overflow-scroll w-full'>
+            <thead className='bg-background-primary'>
+              <tr>
+                <th scope='col' className={cn(thClass, 'w-full border-r border-border max-w-32')} />
 
                 {tiers.map((tier) => (
-                  <td key={`${tier}-${feature}`} className={cn(tdClass, 'px-16')}>
-                    {feature === 'normal-model-limit' ? (
-                      tier === 'Normal' ? (
-                        CONSTANTS.USAGES.NORMAL.CREDITS
-                      ) : (
-                        CONSTANTS.USAGES.PLUS.CREDITS
-                      )
-                    ) : feature === 'premium-model-limit' ? (
-                      tier === 'Plus' ? (
-                        CONSTANTS.USAGES.PLUS.PREMIUM_CREDITS
-                      ) : (
-                        CONSTANTS.USAGES.NORMAL.PREMIUM_CREDITS
-                      )
-                    ) : feature === 'price' ? (
-                      tier === 'Normal' ? (
-                        t('free')
-                      ) : (
-                        `$${CONSTANTS.PLUS_PRICE} / ${t('month')}`
-                      )
-                    ) : featureMap[tier].includes(feature) ? (
-                      <Check className='text-green-500' size={16} />
-                    ) : (
-                      <X className='text-red-500' size={16} />
-                    )}
-                  </td>
+                  <th key={tier} scope='col' className={thClass}>
+                    {tier}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {features.map((feature) => (
+                <tr className='bg-background-primary odd:bg-background-secondary' key={feature}>
+                  <td
+                    className={cn(
+                      tdClass,
+                      'max-w-32 overflow-x-scroll inset-shadow-sm border-r border-border'
+                    )}
+                  >
+                    {translatedTitles[feature]}
+                  </td>
+
+                  {tiers.map((tier) => (
+                    <td key={`${tier}-${feature}`} className={cn(tdClass)}>
+                      {feature === 'normal-model-limit' ? (
+                        tier === 'Normal' ? (
+                          CONSTANTS.USAGES.NORMAL.CREDITS
+                        ) : (
+                          CONSTANTS.USAGES.PLUS.CREDITS
+                        )
+                      ) : feature === 'premium-model-limit' ? (
+                        tier === 'Plus' ? (
+                          CONSTANTS.USAGES.PLUS.PREMIUM_CREDITS
+                        ) : (
+                          CONSTANTS.USAGES.NORMAL.PREMIUM_CREDITS
+                        )
+                      ) : featureMap[tier].includes(feature) ? (
+                        <Check className='text-green-500' size={16} />
+                      ) : (
+                        <X className='text-red-500' size={16} />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         <div className='flex w-full items-center justify-center'>
           <Link href='/subscribe/payment'>
             <Button>
-              {t('price', {
-                price: CONSTANTS.PLUS_PRICE
+              {t('subscribe', {
+                price: t('price', {
+                  price: CONSTANTS.PLUS_PRICE
+                })
               })}
             </Button>
           </Link>

@@ -57,7 +57,6 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
             }
           } catch {
           } finally {
-            onClose()
             onDelete()
           }
         }

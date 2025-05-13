@@ -177,15 +177,15 @@ const SidebarHeader: React.FC = (): React.ReactNode => {
 type ChatChipProps = {
   selected?: boolean
   chat?: Chat
-  onDelete?: any
 }
 
 const ChatChip: React.FC<ChatChipProps> = ({
   selected = false,
-  chat,
-  onDelete = () => {}
+  chat
 }: ChatChipProps): React.ReactNode => {
   const [showDeleteChatDialog, setShowDeleteChatDialog] = useState<boolean>(false)
+
+  const { refreshChats } = use(SidebarContext)
 
   return (
     <>
@@ -193,7 +193,9 @@ const ChatChip: React.FC<ChatChipProps> = ({
         <DeleteChatDialog
           id={chat.id}
           redirect={selected}
-          onDelete={onDelete}
+          onDelete={() => {
+            refreshChats()
+          }}
           open={showDeleteChatDialog}
           onClose={() => setShowDeleteChatDialog(false)}
         />
@@ -261,7 +263,6 @@ const NewChatButton: React.FC = (): React.ReactNode => {
         refreshChats()
       } else {
         toast(t('errors.error'))
-        refreshChats()
       }
     }
   }
@@ -305,13 +306,6 @@ const SidebarContent: React.FC = (): React.ReactNode => {
           ? chats.map((chat, index) => {
               return (
                 <ChatChip
-                  onDelete={() => {
-                    setChats(chats.filter((_chat) => _chat.id !== chat.id))
-
-                    refreshChats()
-
-                    setShowSidebar(false)
-                  }}
                   selected={
                     index === chats.length - 1 && pathname.endsWith('chat')
                       ? true
