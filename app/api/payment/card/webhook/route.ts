@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { CONSTANTS } from '@/lib/constants'
 import { getTranslations } from 'next-intl/server'
 import { paddle } from '@/lib/payments/paddle'
-import { EventName, type TransactionCompletedEvent } from '@paddle/paddle-node-sdk'
+import { EventName } from '@paddle/paddle-node-sdk'
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -39,6 +39,8 @@ export const POST = async (request: NextRequest) => {
             data: {
               isPlus: true,
               plusExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+
+              firstUsageAt: new Date(Date.now()),
 
               paymentMethod: 'card',
 

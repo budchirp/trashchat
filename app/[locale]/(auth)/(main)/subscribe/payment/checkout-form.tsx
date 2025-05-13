@@ -8,6 +8,7 @@ import { UserContext } from '@/providers/context/user'
 import { useLocale, useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { Box } from '@/components/box'
+import { Env } from '@/lib/env'
 
 export const CheckoutForm: React.FC = (): React.ReactNode => {
   const t = useTranslations('common')
@@ -24,21 +25,22 @@ export const CheckoutForm: React.FC = (): React.ReactNode => {
 
   const [paddle, setPaddle] = useState<Paddle | null>(null)
   useEffect(() => {
-    if (mounted && !paddle?.Initialized) {
+    const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN
+    if (mounted && !paddle?.Initialized && token) {
       initializePaddle({
-        token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN || '',
+        token,
         environment: 'sandbox',
         checkout: {
           settings: {
             variant: 'one-page',
             displayMode: 'inline',
-            theme: theme === 'dark' ? 'dark' : theme === 'light' ? 'light' : 'dark',
+            theme: (theme as any) || 'dark',
             allowLogout: false,
             locale,
             frameTarget: 'paddle-checkout-frame',
             frameInitialHeight: 500,
             frameStyle: 'width: 100%; background-color: transparent; border: none',
-            successUrl: `${locale}/subscribe/payment/success`
+            successUrl: `${Env.appUrl}/${locale}/subscribe/payment/success`
           }
         }
       }).then((paddle) => {

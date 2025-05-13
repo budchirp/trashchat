@@ -36,7 +36,7 @@ export const POST = async (request: NextRequest) => {
       event: {
         type,
         data: {
-          metadata: { id }
+          metadata: { user_id: id }
         }
       }
     } = json as {
@@ -44,7 +44,7 @@ export const POST = async (request: NextRequest) => {
         type: 'charge:created' | 'charge:pending' | 'charge:confirmed' | 'charge:failed'
         data: {
           metadata: {
-            id: string
+            user_id: string
           }
         }
       }
@@ -52,7 +52,6 @@ export const POST = async (request: NextRequest) => {
 
     switch (type) {
       case 'charge:confirmed': {
-        console.log('charge:confirmed', id)
         if (id) {
           await prisma.user.update({
             where: {
@@ -61,6 +60,8 @@ export const POST = async (request: NextRequest) => {
             data: {
               isPlus: true,
               plusExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+
+              firstUsageAt: new Date(Date.now()),
 
               paymentMethod: 'crypto',
 
