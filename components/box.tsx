@@ -10,7 +10,8 @@ const boxVariants = cva(
     variants: {
       variant: {
         primary: 'bg-background-primary',
-        secondary: 'bg-background-secondary'
+        secondary: 'bg-background-secondary',
+        blurry: 'bg-background-primary/50 backdrop-blur-sm'
       },
       padding: {
         default: 'px-4 py-3',

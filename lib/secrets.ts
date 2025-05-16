@@ -21,5 +21,13 @@ export const Secrets = {
   resendApiKey: process.env.RESEND_TOKEN || null,
 
   captchaSiteKey: process.env.CAPTCHA_SITE_KEY || null,
-  captchaSecretKey: process.env.CAPTCHA_SECRET_KEY || null
+  captchaSecretKey: process.env.CAPTCHA_SECRET_KEY || null,
+
+  openaiApiKey: process.env.OPENAI_API_KEY || null,
+
+  googleVertexEmail: process.env.GOOGLE_VERTEX_EMAIL || null,
+  googleVertexKey: process.env.GOOGLE_VERTEX_KEY || null,
+
+  azureResourceName: process.env.AZURE_RESOURCE_NAME || null,
+  azureApiKey: process.env.AZURE_API_KEY || null
 }

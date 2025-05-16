@@ -2,7 +2,7 @@ import { Secrets } from '@/lib/secrets'
 import { Environment, LogLevel, Paddle, type PaddleOptions } from '@paddle/paddle-node-sdk'
 
 const options: PaddleOptions = {
-  environment: Environment.sandbox,
+  environment: process.env.NEXT_PUBLIC_PADDLE_ENV as any,
   logLevel: LogLevel.error
 }
 

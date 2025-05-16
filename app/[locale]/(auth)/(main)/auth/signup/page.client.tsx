@@ -5,15 +5,16 @@ import { useRef, useState } from 'react'
 
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { signUpValidator } from '@/lib/validators/signup'
+import { useLocale, useTranslations } from 'next-intl'
+import { useRouter, Link } from '@/lib/i18n/routing'
+import { Checkbox } from '@/components/checkbox'
 import { UserAPIManager } from '@/lib/api/user'
 import { Lock, Mail, User } from 'lucide-react'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { useRouter } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
-import { useLocale, useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
-import { Field } from '@headlessui/react'
+import { Field, Label } from '@headlessui/react'
 import { Box } from '@/components/box'
 import { Fetch } from '@/lib/fetch'
 import { useFormik } from 'formik'
@@ -39,7 +40,9 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
     initialValues: {
       name: '',
       email: '',
-      password: ''
+      password: '',
+      privacyPolicy: false,
+      termsOfService: false
     },
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
@@ -117,7 +120,6 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             <p className='text-red-500 ms-2'>{formik.errors.name}</p>
           )}
         </Field>
-
         <Field>
           <Input
             id='email'
@@ -135,7 +137,6 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             <p className='text-red-500 ms-2'>{formik.errors.email}</p>
           )}
         </Field>
-
         <Field>
           <Input
             id='password'
@@ -153,6 +154,44 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             <p className='text-red-500 ms-2'>{formik.errors.password}</p>
           )}
         </Field>
+
+        <div>
+          <Field className='flex items-center gap-2'>
+            <Checkbox
+              id='privacyPolicy'
+              name='privacyPolicy'
+              checked={formik.values.privacyPolicy}
+              onChange={(checked) => formik.setFieldValue('privacyPolicy', checked)}
+            />
+
+            <Label>
+              <Link href='/legal/privacy-policy'>{t('signup.privacy-policy')}</Link>
+            </Label>
+          </Field>
+
+          {formik.errors.privacyPolicy && formik.touched.privacyPolicy && (
+            <p className='text-red-500'>{formik.errors.privacyPolicy}</p>
+          )}
+        </div>
+
+        <div>
+          <Field className='flex items-center gap-2'>
+            <Checkbox
+              id='termsOfService'
+              name='termsOfService'
+              checked={formik.values.termsOfService}
+              onChange={(checked) => formik.setFieldValue('termsOfService', checked)}
+            />
+
+            <Label>
+              <Link href='/legal/terms-of-service'>{t('signup.tos')}</Link>
+            </Label>
+          </Field>
+
+          {formik.errors.termsOfService && formik.touched.termsOfService && (
+            <p className='text-red-500'>{formik.errors.termsOfService}</p>
+          )}
+        </div>
 
         <div>
           <ReCAPTCHA ref={captchaRef} sitekey={captchaSiteKey} />

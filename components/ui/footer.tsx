@@ -14,6 +14,10 @@ export const Footer: React.FC = async () => {
     {
       location: '/legal/privacy-policy',
       title: t('legal.privacy-policy.text')
+    },
+    {
+      location: '/legal/terms-of-service',
+      title: t('legal.terms-of-service.text')
     }
   ]
 
@@ -28,10 +32,10 @@ export const Footer: React.FC = async () => {
           </Link>
         </div>
 
-        <div className='items-center h-16 flex justify-between gap-2'>
+        <div className='items-center min-h-16 py-4 flex justify-between gap-1'>
           <div />
 
-          <div className='justify-end flex flex-col text-end'>
+          <div className='justify-end flex flex-col gap-2 text-end'>
             {routes.map((route) => {
               return (
                 <Link

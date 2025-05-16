@@ -301,7 +301,7 @@ const SidebarContent: React.FC = (): React.ReactNode => {
     <Container className='grid gap-2 h-full overflow-y-auto py-4'>
       <NewChatButton />
 
-      <div className='flex flex-col-reverse w-full gap-2'>
+      <div className='flex flex-col-reverse w-full gap-2 min-w-0'>
         {chats
           ? chats.map((chat, index) => {
               return (

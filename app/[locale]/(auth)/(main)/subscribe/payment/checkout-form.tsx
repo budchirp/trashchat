@@ -15,7 +15,7 @@ export const CheckoutForm: React.FC = (): React.ReactNode => {
 
   const { user } = use(UserContext)
 
-  const { theme } = useTheme()
+  const { resolvedTheme } = useTheme()
   const locale = useLocale()
 
   const [mounted, setMounted] = useState<boolean>(false)
@@ -29,12 +29,12 @@ export const CheckoutForm: React.FC = (): React.ReactNode => {
     if (mounted && !paddle?.Initialized && token) {
       initializePaddle({
         token,
-        environment: 'sandbox',
+        environment: process.env.NEXT_PUBLIC_PADDLE_ENV as any,
         checkout: {
           settings: {
             variant: 'one-page',
             displayMode: 'inline',
-            theme: (theme as any) || 'dark',
+            theme: (resolvedTheme as any) || 'dark',
             allowLogout: false,
             locale,
             frameTarget: 'paddle-checkout-frame',

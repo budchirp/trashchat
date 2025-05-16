@@ -8,8 +8,8 @@ import { Heading } from '@/components/heading'
 import { Button } from '@/components/button'
 import { CONSTANTS } from '@/lib/constants'
 import { Check, X } from 'lucide-react'
+import { Box } from '@/components/box'
 import { cookies } from 'next/headers'
-import { cn } from '@/lib/cn'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
@@ -70,49 +70,35 @@ const SubscribePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPage
 
   const translatedTitles = titles(t)
 
-  const thClass =
-    'px-4 md:px-8 first:px-4 py-2 text-left font-bold text-text-tertiary tracking-wider'
-  const tdClass =
-    'px-4 md:px-8 first:px-4 py-2 whitespace-nowrap font-medium text-gray-900 dark:text-white'
-
   return (
     <div className='flex size-full flex-col mt-4'>
       <Heading>{t('text')}</Heading>
 
       <div className='grid gap-4'>
-        <div className='w-full overflow-x-auto'>
-          <table className='table-auto overflow-scroll w-full'>
-            <thead className='bg-background-primary'>
-              <tr>
-                <th scope='col' className={cn(thClass, 'w-full border-r border-border max-w-32')} />
+        <div className='grid justify-items-center grid-cols-1 md:grid-cols-2 gap-4'>
+          {tiers.map((tier) => (
+            <Box variant='blurry' className='p-4 grid max-w-sm gap-4' key={tier}>
+              <div className='flex justify-center items-center flex-col gap-2'>
+                <h2 className='font-semibold text-text-tertiary'>{tier}</h2>
+                <h1 className='text-2xl font-bold text-text-accent-primary'>
+                  {tier === 'Plus'
+                    ? t('price', {
+                        price: CONSTANTS.PLUS_PRICE
+                      })
+                    : t('free')}
+                </h1>
+              </div>
 
-                {tiers.map((tier) => (
-                  <th key={tier} scope='col' className={thClass}>
-                    {tier}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {features.map((feature) => (
-                <tr className='bg-background-primary odd:bg-background-secondary' key={feature}>
-                  <td
-                    className={cn(
-                      tdClass,
-                      'max-w-32 overflow-x-scroll inset-shadow-sm border-r border-border'
-                    )}
-                  >
-                    {translatedTitles[feature]}
-                  </td>
-
-                  {tiers.map((tier) => (
-                    <td key={`${tier}-${feature}`} className={cn(tdClass)}>
+              <div className='grid gap-2'>
+                {features.map((feature) => (
+                  <div className='flex w-full items-center justify-between gap-2' key={feature}>
+                    <h3 className='font-medium text-text-secondary'>{translatedTitles[feature]}</h3>
+                    <div>
                       {feature === 'normal-model-limit' ? (
-                        tier === 'Normal' ? (
-                          CONSTANTS.USAGES.NORMAL.CREDITS
-                        ) : (
+                        tier === 'Plus' ? (
                           CONSTANTS.USAGES.PLUS.CREDITS
+                        ) : (
+                          CONSTANTS.USAGES.NORMAL.CREDITS
                         )
                       ) : feature === 'premium-model-limit' ? (
                         tier === 'Plus' ? (
@@ -125,12 +111,12 @@ const SubscribePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPage
                       ) : (
                         <X className='text-red-500' size={16} />
                       )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Box>
+          ))}
         </div>
 
         <div className='flex w-full items-center justify-center'>

@@ -7,10 +7,10 @@ import {
   wrapLanguageModel,
   type Message
 } from 'ai'
-import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
 import { constructSystemPrompt } from '@/lib/ai/prompt'
 import { getTranslations } from 'next-intl/server'
 import { authenticate } from '@/lib/auth/server'
+import { AIProviders } from '@/lib/ai/providers'
 import { CONSTANTS } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 import { randomUUID } from 'crypto'
@@ -19,11 +19,10 @@ import { z } from 'zod'
 import type { File } from '@prisma/client'
 import type { GoogleGenerativeAIProviderOptions } from '@ai-sdk/google'
 import type { OpenAIResponsesProviderOptions } from '@ai-sdk/openai/internal'
+import type { AIModelID, AIModelReasoningOption } from '@/lib/ai/models'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
-
-const models = AIModels.get()
 
 export const POST = async (
   request: NextRequest,
@@ -95,7 +94,7 @@ export const POST = async (
       }
     }
 
-    const model = models[modelName]
+    const model = AIProviders.get(modelName)
 
     if (
       !user.isPlus &&
@@ -180,7 +179,7 @@ export const POST = async (
     let title = chat.title
     if (chat.messages.length < 2) {
       const { object } = await generateObject({
-        model: models['gemini-2.0-flash'].provider(),
+        model: AIProviders.get('gemini-2.0-flash').provider(),
         schema: z.object({
           title: z.string().max(75)
         }),
@@ -204,6 +203,16 @@ export const POST = async (
       }
     })
 
+    await prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        credits: !model.premium ? user.credits - 1 : undefined,
+        premiumCredits: model.premium ? user.premiumCredits - 1 : undefined
+      }
+    })
+
     const system = constructSystemPrompt(model, user)
     const wrappedModel =
       model.company === 'deepseek'
@@ -219,9 +228,33 @@ export const POST = async (
               : undefined
           )
 
+    const thinkingTokens = useReasoning
+      ? reasoningEffort === 'low'
+        ? 1024
+        : reasoningEffort === 'medium'
+          ? 2048
+          : reasoningEffort === 'high'
+            ? 4096
+            : 0
+      : 0
+
     const result = streamText({
       model: wrappedModel,
+      system,
+      experimental_transform: [
+        smoothStream({
+          chunking: 'word'
+        })
+      ],
       providerOptions: {
+        anthtopic: model.reasoning
+          ? {
+              thinking: {
+                type: useReasoning ? 'enabled' : 'disabled',
+                budgetTokens: thinkingTokens
+              }
+            }
+          : {},
         openai:
           model.reasoning && useReasoning
             ? ({
@@ -232,15 +265,10 @@ export const POST = async (
           responseModalities: model.imageGeneration ? ['TEXT', 'IMAGE'] : ['TEXT'],
           ...(model.reasoning
             ? {
-                thinkingBudget: useReasoning
-                  ? reasoningEffort === 'low'
-                    ? 1024
-                    : reasoningEffort === 'medium'
-                      ? 2048
-                      : reasoningEffort === 'high'
-                        ? 4096
-                        : 0
-                  : 0
+                thinkingConfig: {
+                  includeThoughts: useReasoning,
+                  thinkingBudget: thinkingTokens
+                }
               }
             : {})
         } satisfies GoogleGenerativeAIProviderOptions
@@ -274,12 +302,6 @@ export const POST = async (
           ]
         }
       ],
-      experimental_transform: [
-        smoothStream({
-          chunking: 'word'
-        })
-      ],
-      system: model.id === 'gemini-2.0-flash-image-generation' ? undefined : system,
       onFinish: async ({ text, reasoning, sources = [], files = [] }) => {
         const message = await prisma.message.create({
           data: {
@@ -342,16 +364,6 @@ export const POST = async (
             })
           })
         )
-
-        await prisma.user.update({
-          where: {
-            id: user.id
-          },
-          data: {
-            credits: !model.premium ? user.credits - 1 : undefined,
-            premiumCredits: model.premium ? user.premiumCredits - 1 : undefined
-          }
-        })
       }
     })
 

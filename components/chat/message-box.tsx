@@ -11,7 +11,7 @@ import Image from 'next/image'
 import type { UIMessage } from 'ai'
 import type { File, Message } from '@prisma/client'
 
-const models = AIModels.get(false)
+const models = AIModels.get()
 
 type FileItemProps = {
   file: File
@@ -133,7 +133,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                   return (
                     <article
                       key={index}
-                      className='prose dark:prose-dark w-full !max-w-none text-text-primary select-text'
+                      className='prose dark:prose-dark w-full min-w-0 break-words !max-w-none text-text-primary select-text'
                     >
                       {part.text}
                     </article>

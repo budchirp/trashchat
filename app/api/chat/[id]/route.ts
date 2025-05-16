@@ -159,7 +159,7 @@ export const GET = async (
       } else {
         chat = chats[0]
 
-        if (chat.messages.length > 0) {
+        if (chat.messages.length > 1) {
           chat = await prisma.chat.create({
             data: newChat,
             include: {

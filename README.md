@@ -25,11 +25,12 @@
 - [x] Reasoning
 - [x] Save reasoning, sources and generated images
 - [x] Profile picture upload
-- [x] Payments (broken for now)
+- [x] Payments
 - [x] Appearance page
 - [x] Payment page
 - [x] Copy message feature
 - [x] Translate API routes
+- [ ] Add an option to select a model for new chats
 - [ ] Landing page
 - [ ] Github OAuth maybe
 - [ ] Forgot password feature
