@@ -370,14 +370,13 @@ export class AIModels {
 
   public static get = (): AIModelMap => {
     let models: Partial<AIModelMap> = {}
-    ;(Env.enabledProviders as AIProvider[]).map(async (provider: AIProvider) => {
+    ;(Env.enabledProviders as AIProvider[]).map((provider: AIProvider) => {
       const providerGetter = this.providerToGetterMap[provider]
       if (!providerGetter) {
         return
       }
 
-      const providerModels = providerGetter()
-      models = { ...models, ...providerModels }
+      models = { ...models, ...providerGetter() }
     })
 
     return models as AIModelMap

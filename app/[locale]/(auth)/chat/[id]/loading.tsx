@@ -5,7 +5,6 @@ import type React from 'react'
 import { MessageBox } from '@/components/chat/message-box'
 import { ChatForm } from '@/components/chat/chat-form'
 import { Container } from '@/components/container'
-import { cn } from '@/lib/cn'
 
 const Loading: React.FC = () => {
   return (
@@ -14,6 +13,7 @@ const Loading: React.FC = () => {
         {[...Array(4)].map((_, index) => (
           <MessageBox
             className={index % 2 === 0 ? 'w-2/4' : 'w-full'}
+            models={{} as any}
             key={index}
             message={
               {
@@ -44,7 +44,8 @@ const Loading: React.FC = () => {
         loading={true}
         isUploading={false}
         stop={() => {}}
-        modelId={'gemini-2.0-flash'}
+        modelId={'gemini-2.5-flash'}
+        models={{} as any}
         input={''}
         files={[]}
         reasoningEffort={null}

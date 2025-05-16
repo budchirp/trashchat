@@ -17,13 +17,15 @@ import { useChat } from '@ai-sdk/react'
 import { Env } from '@/lib/env'
 
 import type { Chat } from '@/types/chat'
-import type { AIModelID, AIModelReasoningOption } from '@/lib/ai/models'
+import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
 import type { File as PrismaFile } from '@prisma/client'
 
 type ChatClientPageProps = {
   token: string
   chat: Chat
 }
+
+const models = AIModels.get()
 
 export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   token,
@@ -127,6 +129,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
           return (
             <MessageBox
               key={index}
+              models={models}
               message={
                 {
                   ...message,
@@ -149,6 +152,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
         {messages.length > 0 && status === 'submitted' && (
           <MessageBox
+            models={models}
             message={
               {
                 role: 'assistant',
@@ -178,6 +182,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         isUploading={isUploading}
         stop={stop}
         modelId={model}
+        models={models}
         input={input}
         files={files}
         reasoningEffort={reasoningEffort}

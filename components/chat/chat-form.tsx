@@ -4,7 +4,12 @@ import type React from 'react'
 import { use, useEffect, useRef, useState, type ChangeEvent } from 'react'
 
 import { Brain, FileIcon, Loader2, Paperclip, Search, Send, Square, Trash } from 'lucide-react'
-import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
+import {
+  AIModels,
+  type AIModelID,
+  type AIModelMap,
+  type AIModelReasoningOption
+} from '@/lib/ai/models'
 import { ReasoningEffortSelector } from '@/components/chat/reasoning-effort-selector'
 import { ModelSelector } from '@/components/chat/model-selector'
 import { Button, buttonVariants } from '@/components/button'
@@ -31,6 +36,7 @@ export type ChatFormProps = {
   files: File[]
 
   modelId: AIModelID
+  models: AIModelMap
 
   reasoningEffort: AIModelReasoningOption | null
 
@@ -48,8 +54,6 @@ export type ChatFormProps = {
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-const models = AIModels.get(false)
-
 export const ChatForm: React.FC<ChatFormProps> = ({
   isSkeleton = false,
 
@@ -63,6 +67,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   files,
 
   modelId,
+  models,
 
   reasoningEffort,
 
@@ -99,7 +104,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   const isPlus = user?.isPlus
 
   const model = models[modelId]
-  const supportsAttachments = isPlus && (model.imageUpload || model.fileUpload)
+  const supportsAttachments = isPlus && (model?.imageUpload || model?.fileUpload)
 
   const t = useTranslations('chat')
 
@@ -225,12 +230,12 @@ export const ChatForm: React.FC<ChatFormProps> = ({
             </div>
 
             <div className='flex items-center gap-2'>
-              {model.reasoning && (
+              {model?.reasoning && (
                 <Button
                   disabled={!isPlus}
                   aria-label='Toggle reasoning'
                   variant='round'
-                  color={useReasoning || model.company === 'deepseek' ? 'primary' : 'secondary'}
+                  color={useReasoning || model?.company === 'deepseek' ? 'primary' : 'secondary'}
                   onClick={() => {
                     handleUseReasoningChange(!useReasoning)
 
@@ -247,7 +252,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                 </Button>
               )}
 
-              {model.reasoning && useReasoning && isPlus && (
+              {model?.reasoning && useReasoning && isPlus && (
                 <ReasoningEffortSelector
                   height={height}
                   reasoningEffort={reasoningEffort}
@@ -255,7 +260,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                 />
               )}
 
-              {model.search && (
+              {model?.search && (
                 <Button
                   disabled={!isPlus}
                   variant='round'

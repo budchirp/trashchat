@@ -68,7 +68,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
             className='px-4 h-10 transition-all duration-150 rounded-lg bg-transparent hover:bg-background-secondary flex items-center gap-1 cursor-pointer'
             aria-label='Open model selector menu'
           >
-            {models[model].name}
+            {models[model]?.name || model}
 
             <ChevronDown />
           </ListboxButton>
@@ -128,64 +128,64 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                       'transition text-center duration-300',
                                       selected
                                         ? 'text-text-accent-primary font-bold'
-                                        : model.recommended
+                                        : model?.recommended
                                           ? 'font-bold text-text-primary'
                                           : 'font-medium text-text-secondary'
                                     )}
                                   >
-                                    {model.name}
+                                    {model?.name || modelId}
                                   </p>
 
                                   <div className='flex items-center flex-wrap justify-center gap-2'>
-                                    {model.plus && (
+                                    {model?.plus && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Crown />
                                       </div>
                                     )}
 
-                                    {model.premium && (
+                                    {model?.premium && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <DollarSign />
                                       </div>
                                     )}
 
-                                    {model.recommended && (
+                                    {model?.recommended && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <ThumbsUp />
                                       </div>
                                     )}
 
-                                    {model.experimental && (
+                                    {model?.experimental && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <FlaskConical />
                                       </div>
                                     )}
 
-                                    {model.reasoning && (
+                                    {model?.reasoning && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Brain />
                                       </div>
                                     )}
 
-                                    {model.search && (
+                                    {model?.search && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Search />
                                       </div>
                                     )}
 
-                                    {model.imageUpload && (
+                                    {model?.imageUpload && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Camera />
                                       </div>
                                     )}
 
-                                    {model.fileUpload && (
+                                    {model?.fileUpload && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <File />
                                       </div>
                                     )}
 
-                                    {model.imageGeneration && (
+                                    {model?.imageGeneration && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <SprayCan />
                                       </div>
