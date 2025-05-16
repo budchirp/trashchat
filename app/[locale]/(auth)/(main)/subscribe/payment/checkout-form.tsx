@@ -56,7 +56,7 @@ export const CheckoutForm: React.FC = (): React.ReactNode => {
             },
             items: [
               {
-                priceId: 'pri_01jtzcsjyzz4cpsrn04e1apcg3',
+                priceId: process.env.NEXT_PUBLIC_PADDLE_PRICE_ID as string,
                 quantity: 1
               }
             ]
