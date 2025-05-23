@@ -3,26 +3,22 @@ import { Env } from '@/lib/env'
 
 import type { User } from '@/types/user'
 import type { APIResponse } from '@/types/api'
-
-export type Metadata = {
-  token: string
-  locale?: string
-}
+import type { APIHeaders } from '@/types/api-headers'
 
 export class UserAPIManager {
   public static verifyPassword = async (
-    metadata: Metadata,
+    headers: APIHeaders,
     password: string
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.post<APIResponse>(
-        `${Env.appUrl}/api/user/password/verify`,
+        `${Env.appUrl}/api/user/password`,
         {
           password
         },
         {
-          authorization: `Bearer ${metadata.token}`,
-          'accept-language': metadata.locale || 'en'
+          authorization: `Bearer ${headers.token}`,
+          'accept-language': headers.locale || 'en'
         }
       )
 
@@ -36,13 +32,13 @@ export class UserAPIManager {
   }
 
   public static update = async (
-    metadata: Metadata,
-    user: Partial<User>
+    headers: APIHeaders,
+    user: Partial<User> | any
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.patch<APIResponse>(`${Env.appUrl}/api/user`, user, {
-        authorization: `Bearer ${metadata.token}`,
-        'accept-language': metadata.locale || 'en'
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
       })
 
       if (response.ok) return [true, undefined]
@@ -54,11 +50,33 @@ export class UserAPIManager {
     }
   }
 
-  public static get = async (metadata: Metadata): Promise<User | null> => {
+  public static updatePassword = async (
+    headers: APIHeaders,
+    values: {
+      password: string
+      newPassword: string
+    }
+  ): Promise<[true, undefined] | [false, string | null]> => {
+    try {
+      const response = await Fetch.patch<APIResponse>(`${Env.appUrl}/api/user/password`, values, {
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
+      })
+
+      if (response.ok) return [true, undefined]
+
+      const json = await response.json()
+      return [false, json.message]
+    } catch {
+      return [false, null]
+    }
+  }
+
+  public static get = async (headers: APIHeaders): Promise<User | null> => {
     try {
       const response = await Fetch.get<APIResponse<User>>(`${Env.appUrl}/api/user`, {
-        authorization: `Bearer ${metadata.token}`,
-        'accept-language': metadata.locale || 'en'
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
       })
 
       if (response.ok) {
@@ -73,12 +91,12 @@ export class UserAPIManager {
   }
 
   public static delete = async (
-    metadata: Metadata
+    headers: APIHeaders
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.delete<APIResponse>(`${Env.appUrl}/api/user`, {
-        authorization: `Bearer ${metadata.token}`,
-        'accept-language': metadata.locale || 'en'
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
       })
 
       if (response.ok) return [true, undefined]
@@ -91,7 +109,7 @@ export class UserAPIManager {
   }
 
   public static new = async (
-    metadata: Partial<Metadata>,
+    headers: Partial<APIHeaders>,
     user: {
       name: string
       email: string
@@ -100,7 +118,7 @@ export class UserAPIManager {
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.post<APIResponse>(`${Env.appUrl}/api/user`, user, {
-        'accept-language': metadata.locale || 'en'
+        'accept-language': headers.locale || 'en'
       })
 
       if (response.ok) {
@@ -115,12 +133,12 @@ export class UserAPIManager {
   }
 
   public static sendEmail = async (
-    metadata: Metadata
+    headers: APIHeaders
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.get<APIResponse>(`${Env.appUrl}/api/user/verify/email`, {
-        authorization: `Bearer ${metadata.token}`,
-        'accept-language': metadata.locale || 'en'
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
       })
 
       if (response.ok) {
@@ -135,7 +153,7 @@ export class UserAPIManager {
   }
 
   public static verifyEmail = async (
-    metadata: Metadata,
+    headers: APIHeaders,
     verificationToken: string
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
@@ -145,8 +163,8 @@ export class UserAPIManager {
           token: verificationToken
         },
         {
-          authorization: `Bearer ${metadata.token}`,
-          'accept-language': metadata.locale || 'en'
+          authorization: `Bearer ${headers.token}`,
+          'accept-language': headers.locale || 'en'
         }
       )
 

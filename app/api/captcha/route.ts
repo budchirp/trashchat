@@ -27,6 +27,8 @@ export const POST = async (request: NextRequest) => {
       }
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,

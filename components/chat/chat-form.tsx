@@ -101,10 +101,10 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   const { user } = use(UserContext)
   const { showSidebar } = use(SidebarContext)
 
-  const isPlus = user?.isPlus
+  const subscribed = user?.subscription
 
   const model = models[modelId]
-  const supportsAttachments = isPlus && (model?.imageUpload || model?.fileUpload)
+  const supportsAttachments = subscribed && (model?.imageUpload || model?.fileUpload)
 
   const t = useTranslations('chat')
 
@@ -232,7 +232,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
             <div className='flex items-center gap-2'>
               {model?.reasoning && (
                 <Button
-                  disabled={!isPlus}
+                  disabled={!subscribed}
                   aria-label='Toggle reasoning'
                   variant='round'
                   color={useReasoning || model?.company === 'deepseek' ? 'primary' : 'secondary'}
@@ -252,7 +252,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                 </Button>
               )}
 
-              {model?.reasoning && useReasoning && isPlus && (
+              {model?.reasoning && useReasoning && subscribed && (
                 <ReasoningEffortSelector
                   height={height}
                   reasoningEffort={reasoningEffort}
@@ -262,7 +262,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
 
               {model?.search && (
                 <Button
-                  disabled={!isPlus}
+                  disabled={!subscribed}
                   variant='round'
                   color={useSearch ? 'primary' : 'secondary'}
                   onClick={() => handleUseSearchChange(!useSearch)}

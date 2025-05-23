@@ -53,7 +53,7 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
         if (verify_ok) {
           const [ok, message] = await UserAPIManager.delete({ token, locale })
           if (ok) {
-            await SessionAPIManager.delete({ locale })
+            await SessionAPIManager.delete({ locale, token }, {})
 
             toast(t('common.success'))
 

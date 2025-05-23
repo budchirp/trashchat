@@ -37,15 +37,22 @@ export const POST = async (request: NextRequest) => {
               id: Number(id)
             },
             data: {
-              isPlus: true,
-              plusExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-
               firstUsageAt: new Date(Date.now()),
 
-              paymentMethod: 'card',
+              subscription: {
+                create: {
+                  paymentMethod: 'card',
 
-              credits: CONSTANTS.USAGES.PLUS.CREDITS,
-              premiumCredits: CONSTANTS.USAGES.PLUS.PREMIUM_CREDITS
+                  expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                }
+              },
+
+              usages: {
+                update: {
+                  credits: CONSTANTS.USAGES.PLUS.CREDITS,
+                  premiumCredits: CONSTANTS.USAGES.PLUS.PREMIUM_CREDITS
+                }
+              }
             }
           })
         }
@@ -63,6 +70,8 @@ export const POST = async (request: NextRequest) => {
       data: {}
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,

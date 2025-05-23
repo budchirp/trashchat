@@ -20,7 +20,7 @@ export const POST = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -55,6 +55,7 @@ export const POST = async (request: NextRequest) => {
     })
   } catch (error) {
     console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,

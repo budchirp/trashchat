@@ -4,7 +4,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { UserContextProvider } from '@/providers/user'
 import { SessionAPIManager } from '@/lib/api/session'
 import { UserAPIManager } from '@/lib/api/user'
-import { redirect } from '@/lib/i18n/routing'
 import { getToken } from '@/lib/auth/client'
 import { cookies } from 'next/headers'
 
@@ -14,24 +13,20 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
   const { locale } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations({
-    locale
-  })
+  const t = await getTranslations({ locale })
 
   const token = getToken(await cookies())
   if (token) {
-    const user = await UserAPIManager.get({ token, locale })
-    if (!user) {
-      await SessionAPIManager.delete({
-        locale
-      })
+    const [ok, message] = await SessionAPIManager.verify({
+      locale,
+      token
+    })
 
-      return redirect({
-        locale,
-        href: `/?${Math.random()}`
-      })
+    if (!ok) {
+      throw new Error(message || t('errors.error'))
     }
 
+    const user = await UserAPIManager.get({ token, locale })
     return (
       <UserContextProvider token={token} initialUser={user}>
         {children}

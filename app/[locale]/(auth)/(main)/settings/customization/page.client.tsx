@@ -19,6 +19,11 @@ import { Input } from '@/components/input'
 import { Box } from '@/components/box'
 import { Brain } from 'lucide-react'
 import { useFormik } from 'formik'
+import { Dropdown } from '@/components/dropdown'
+import { AIModels, type AIModelID } from '@/lib/ai/models'
+import { Seperator } from '@/components/seperator'
+
+const models = AIModels.get()
 
 export const CustomizationClientPage: React.FC = (): React.ReactNode => {
   const router = useRouter()
@@ -34,8 +39,9 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
   const [error, setError] = useState<string | null>(null)
   const formik = useFormik({
     initialValues: {
-      systemPrompt: user.systemPrompt,
-      shareInfoWithAI: user.shareInfoWithAI
+      defaultModel: user?.customization?.defaultModel,
+      systemPrompt: user?.customization?.systemPrompt,
+      shareInfoWithAI: user?.customization?.shareInfoWithAI
     },
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
@@ -63,6 +69,22 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
           <p className='text-red-500'>{error}</p>
         </Box>
       )}
+
+      <div className='grid gap-2'>
+        <h2>{t('default-model')}</h2>
+
+        <Dropdown
+          button={<Button>{models[formik.values.defaultModel as AIModelID].name}</Button>}
+          options={(Object.keys(models) as AIModelID[]).map((model) => ({
+            value: model,
+            title: models[model].name
+          }))}
+          selected={formik.values.defaultModel}
+          onChange={(value) => formik.setFieldValue('defaultModel', value)}
+        />
+      </div>
+
+      <Seperator />
 
       <div className='grid gap-2 w-full'>
         <Field>

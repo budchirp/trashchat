@@ -18,8 +18,7 @@ import { Box } from '@/components/box'
 import { useFormik } from 'formik'
 
 export const SignInClientPage: React.FC = (): React.ReactNode => {
-  const t = useTranslations('auth')
-  const t_common = useTranslations('common')
+  const t = useTranslations()
 
   const locale = useLocale()
 
@@ -38,19 +37,19 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
       if (ok) {
         const user = await UserAPIManager.get({ token: token!, locale })
         if (!user) {
-          setError(t_common('error'))
+          setError(t('errors.error'))
           return
         }
 
         setUser(user)
 
-        toast(t_common('success'))
+        toast(t('common.success'))
 
         window?.location?.replace(new URL(`/${locale}/chat`, window.location.origin))
       } else {
         setUser(null)
 
-        setError(message || t_common('error'))
+        setError(message || t('errors.error'))
       }
 
       setSubmitting(false)
@@ -74,7 +73,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
             type='email'
             autoComplete='email'
             icon={<Mail size={16} />}
-            placeholder={t('email')}
+            placeholder={t('auth.email')}
             value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -92,7 +91,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
             type='password'
             autoComplete='current-password'
             icon={<Lock size={16} />}
-            placeholder={t('password')}
+            placeholder={t('auth.password')}
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -106,7 +105,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
 
       <div>
         <Button loading={formik.isSubmitting} type='submit'>
-          {t_common('submit')}
+          {t('common.submit')}
         </Button>
       </div>
     </form>

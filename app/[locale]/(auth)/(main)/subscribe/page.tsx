@@ -2,8 +2,8 @@ import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { MetadataManager } from '@/lib/metadata-manager'
-import { authenticatedRoute } from '@/lib/auth/client'
-import { Link, routing } from '@/lib/i18n/routing'
+import { authenticatedRoute, getToken } from '@/lib/auth/client'
+import { Link, redirect, routing } from '@/lib/i18n/routing'
 import { Heading } from '@/components/heading'
 import { Button } from '@/components/button'
 import { CONSTANTS } from '@/lib/constants'
@@ -13,13 +13,13 @@ import { cookies } from 'next/headers'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
+import { UserAPIManager } from '@/lib/api/user'
 
 const tiers = ['Plus', 'Normal'] as const
 const features = [
   'basic-models',
   'premium-models',
   'image-file-upload',
-  'image-generation',
   'search',
   'reasoning',
   'normal-model-limit',
@@ -34,7 +34,6 @@ const featureMap: Record<(typeof tiers)[number], (typeof features)[number][]> = 
     'normal-model-limit',
     'premium-model-limit',
     'image-file-upload',
-    'image-generation',
     'search',
     'reasoning'
   ]
@@ -51,7 +50,6 @@ const titles = (
     'normal-model-limit': t('features.normal-model-limit'),
     'premium-model-limit': t('features.premium-model-limit'),
     'image-file-upload': t('features.image-file-upload'),
-    'image-generation': t('features.image-generation'),
     search: t('features.search'),
     reasoning: t('features.reasoning')
   } as const
@@ -61,7 +59,16 @@ const SubscribePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPage
   const { locale } = await params
   setRequestLocale(locale)
 
-  authenticatedRoute(await cookies(), locale)
+  const token = getToken(await cookies())
+  if (token) {
+    const user = await UserAPIManager.get({ token, locale })
+    if (user?.subscription) {
+      redirect({
+        href: '/',
+        locale
+      })
+    }
+  }
 
   const t = await getTranslations({
     namespace: 'subscribe',

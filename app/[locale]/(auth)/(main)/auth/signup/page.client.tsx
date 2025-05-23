@@ -30,8 +30,8 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
   const router = useRouter()
 
   const locale = useLocale()
-  const t = useTranslations('auth')
-  const t_common = useTranslations('common')
+
+  const t = useTranslations()
 
   const captchaRef = useRef(null)
 
@@ -50,7 +50,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
       if (captchaRef.current) {
         const captcha = (captchaRef.current as any).getValue()
         if (!captcha) {
-          setError(t('captcha-error'))
+          setError(t('errors.captcha-error'))
           return
         }
 
@@ -71,22 +71,22 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
         if (response.ok) {
           const json = await response.json()
           if (!json.data.success) {
-            setError(t('captcha-error'))
+            setError(t('errors.captcha-error'))
             return
           }
         } else {
-          setError(t('captcha-error'))
+          setError(t('errors.captcha-error'))
           return
         }
       }
 
       const [ok, message] = await UserAPIManager.new({ locale }, values)
       if (ok) {
-        toast(t_common('success'))
+        toast(t('common.success'))
 
         router.push('/auth/signin')
       } else {
-        setError(message || t_common('error'))
+        setError(message || t('errors.error'))
       }
 
       setSubmitting(false)
@@ -110,7 +110,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             type='text'
             autoComplete='name'
             icon={<User size={16} />}
-            placeholder={t('name')}
+            placeholder={t('auth.name')}
             value={formik.values.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -127,7 +127,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             type='email'
             autoComplete='email'
             icon={<Mail size={16} />}
-            placeholder={t('email')}
+            placeholder={t('auth.email')}
             value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -144,7 +144,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             type='password'
             autoComplete='current-password'
             icon={<Lock size={16} />}
-            placeholder={t('password')}
+            placeholder={t('auth.password')}
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -200,7 +200,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
 
       <div>
         <Button loading={formik.isSubmitting} type='submit'>
-          {t_common('submit')}
+          {t('common.submit')}
         </Button>
       </div>
     </form>

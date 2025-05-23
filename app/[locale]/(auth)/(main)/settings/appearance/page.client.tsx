@@ -3,10 +3,10 @@
 import type React from 'react'
 import { useEffect, useState } from 'react'
 
-import { Laptop, Moon, Sun, type LucideIcon } from 'lucide-react'
+import { ChevronDown, Laptop, Moon, Sun, type LucideIcon } from 'lucide-react'
+import { Dropdown } from '@/components/dropdown'
 import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
-import { Box } from '@/components/box'
 import { useTheme } from 'next-themes'
 
 import type { Theme } from '@/types/theme'
@@ -31,24 +31,26 @@ export const AppearanceClientPage: React.FC = (): React.ReactNode => {
 
   return (
     mounted && (
-      <Box padding='small' className='flex gap-2 w-fit'>
-        {(Object.keys(themes) as Theme[]).map((_theme) => {
-          const [label, Icon] = themes[_theme]
+      <div className='grid gap-2'>
+        <h2>{t('theme')}</h2>
 
-          return (
-            <Button
-              className='flex gap-2'
-              key={_theme}
-              color={_theme === theme ? 'primary' : 'secondary'}
-              onClick={() => setTheme(_theme)}
-            >
-              <Icon />
+        <Dropdown
+          button={
+            <Button color='secondary' className='flex gap-2'>
+              <span>{t(theme || 'system')}</span>
 
-              {label(t)}
+              <ChevronDown />
             </Button>
-          )
-        })}
-      </Box>
+          }
+          options={Object.keys(themes).map((_theme) => ({
+            value: _theme,
+            title: t(_theme),
+            icon: themes[_theme as keyof typeof themes][1]
+          }))}
+          selected={theme}
+          onChange={(option) => setTheme(option as Theme)}
+        />
+      </div>
     )
   )
 }

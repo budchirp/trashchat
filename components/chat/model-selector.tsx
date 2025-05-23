@@ -26,8 +26,7 @@ import {
   Camera,
   File,
   Brain,
-  Search,
-  SprayCan
+  Search
 } from 'lucide-react'
 
 import type { AIModelID, AIModelMap } from '@/lib/ai/models'
@@ -106,7 +105,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
                         return (
                           <ListboxOption
-                            disabled={model.plus && !user?.isPlus}
+                            disabled={model.plus && !user?.subscription}
                             key={modelId}
                             value={modelId}
                             className={({ selected }) =>
@@ -182,12 +181,6 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                     {model?.fileUpload && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <File />
-                                      </div>
-                                    )}
-
-                                    {model?.imageGeneration && (
-                                      <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
-                                        <SprayCan />
                                       </div>
                                     )}
                                   </div>

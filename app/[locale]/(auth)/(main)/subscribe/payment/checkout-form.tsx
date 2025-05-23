@@ -49,10 +49,10 @@ export const CheckoutForm: React.FC = (): React.ReactNode => {
 
           paddle.Checkout.open({
             customer: {
-              email: user.email
+              email: user?.email || ''
             },
             customData: {
-              user_id: user.id
+              user_id: user?.id
             },
             items: [
               {

@@ -16,7 +16,7 @@ import { prisma } from '@/lib/prisma'
 import { randomUUID } from 'crypto'
 import { z } from 'zod'
 
-import type { File } from '@prisma/client'
+import type { File, Usages } from '@prisma/client'
 import type { GoogleGenerativeAIProviderOptions } from '@ai-sdk/google'
 import type { OpenAIResponsesProviderOptions } from '@ai-sdk/openai/internal'
 import type { AIModelID, AIModelReasoningOption } from '@/lib/ai/models'
@@ -38,7 +38,7 @@ export const POST = async (
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -53,7 +53,8 @@ export const POST = async (
 
     const {
       messages,
-      model: modelName = CONSTANTS.AI.DEFAULT_MODEL,
+      model: modelName = (user.customization?.defaultModel as AIModelID) ||
+        CONSTANTS.AI.DEFAULT_MODEL,
       files = [],
       reasoningEffort = 'low',
       useReasoning = false,
@@ -78,17 +79,24 @@ export const POST = async (
       })
     } else {
       if (new Date(user.firstUsageAt).getTime() < new Date(Date.now()).getTime()) {
+        await prisma.usages.update({
+          where: {
+            userId: user.id
+          },
+          data: {
+            credits: user.isEmailVerified
+              ? CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].CREDITS
+              : 10,
+            premiumCredits: CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+          }
+        })
+
         await prisma.user.update({
           where: {
             id: user.id
           },
           data: {
-            firstUsageAt: new Date(Date.now()),
-
-            credits: user.isEmailVerified
-              ? CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].CREDITS
-              : 10,
-            premiumCredits: CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+            firstUsageAt: new Date(Date.now())
           }
         })
       }
@@ -97,23 +105,24 @@ export const POST = async (
     const model = AIProviders.get(modelName)
 
     if (
-      !user.isPlus &&
-      (model.premium ||
-        model.plus ||
-        model.imageGeneration ||
-        useReasoning ||
-        useSearch ||
-        files.length > 0)
+      !user.subscription &&
+      (model.premium || model.plus || useReasoning || useSearch || files.length > 0)
     ) {
       throw new Error()
     }
 
+    const usages = (await prisma.usages.findUnique({
+      where: {
+        userId: user.id
+      }
+    })) as Usages
+
     if (model.premium) {
-      if (user.premiumCredits < 1) {
+      if (usages.premiumCredits < 1) {
         throw new Error(t('chat.errors.credit-error'))
       }
     } else {
-      if (user.credits < 1) {
+      if (usages.credits < 1) {
         throw new Error(t('chat.errors.credit-error'))
       }
     }
@@ -178,17 +187,19 @@ export const POST = async (
 
     let title = chat.title
     if (chat.messages.length < 2) {
-      const { object } = await generateObject({
-        model: AIProviders.get('gemini-2.0-flash').provider(),
-        schema: z.object({
-          title: z.string().max(75)
-        }),
-        system:
-          "Generate a concise and relevant title (max 75 characters) based on the user's query or conversation",
-        prompt: message.content
-      })
+      try {
+        const { object } = await generateObject({
+          model: AIProviders.get('gemini-2.0-flash').provider(),
+          schema: z.object({
+            title: z.string().max(75)
+          }),
+          system:
+            "Generate a concise and relevant title (max 75 characters) based on the user's query or conversation",
+          prompt: message.content
+        })
 
-      title = object.title
+        title = object.title
+      } catch {}
     }
 
     await prisma.chat.update({
@@ -203,13 +214,13 @@ export const POST = async (
       }
     })
 
-    await prisma.user.update({
+    await prisma.usages.update({
       where: {
-        id: user.id
+        userId: user.id
       },
       data: {
-        credits: !model.premium ? user.credits - 1 : undefined,
-        premiumCredits: model.premium ? user.premiumCredits - 1 : undefined
+        credits: !model.premium ? usages.credits - 1 : undefined,
+        premiumCredits: model.premium ? usages.premiumCredits - 1 : undefined
       }
     })
 
@@ -262,7 +273,6 @@ export const POST = async (
               } satisfies OpenAIResponsesProviderOptions)
             : {},
         google: {
-          responseModalities: model.imageGeneration ? ['TEXT', 'IMAGE'] : ['TEXT'],
           ...(model.reasoning
             ? {
                 thinkingConfig: {
@@ -351,7 +361,7 @@ export const POST = async (
         )
 
         await Promise.all(
-          (model.imageGeneration ? files : []).map(async (file) => {
+          files.map(async (file) => {
             await prisma.file.create({
               data: {
                 name: randomUUID(),
@@ -377,6 +387,8 @@ export const POST = async (
       }
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as any).message || 'Error while generating content. Please try again',

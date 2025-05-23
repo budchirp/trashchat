@@ -10,20 +10,18 @@ type Cookie = {
 }
 
 export class CookieMonster {
-  private isServer = typeof window === 'undefined'
-
   private cookieStore: ReadonlyRequestCookies | null = null
 
   constructor(cookieStore: ReadonlyRequestCookies | null = null) {
     this.cookieStore = cookieStore
   }
 
-  private stringfy = (value: unknown): string => {
+  private stringify = (value: unknown): string => {
     return typeof value === 'string' ? value : JSON.stringify(value)
   }
 
   public get = (key: string): CookieValue => {
-    if (this.isServer && this.cookieStore) {
+    if (this.cookieStore) {
       return this.cookieStore.get(key)?.value
     }
 
@@ -32,7 +30,7 @@ export class CookieMonster {
   }
 
   public getAll = (): Cookie[] => {
-    if (this.isServer && this.cookieStore) {
+    if (this.cookieStore) {
       return this.cookieStore.getAll() as Cookie[]
     }
 
@@ -44,12 +42,12 @@ export class CookieMonster {
   }
 
   public set = (key: string, value: unknown, options?: cookie.SerializeOptions): void => {
-    if (this.isServer && this.cookieStore) {
+    if (this.cookieStore) {
       this.cookieStore.set(key, value as any, options as any)
       return
     }
 
-    document.cookie = cookie.serialize(key, this.stringfy(value), options)
+    document.cookie = cookie.serialize(key, this.stringify(value), options)
   }
 
   public delete = (key: string): void => {
@@ -59,7 +57,7 @@ export class CookieMonster {
   }
 
   public has = (key: string): boolean => {
-    if (this.isServer && this.cookieStore) {
+    if (this.cookieStore) {
       return this.cookieStore.has(key)
     }
 

@@ -9,46 +9,116 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum PaymentMethod {
-  card
-  crypto
-}
-
 model User {
   id Int @id @unique @default(autoincrement())
 
-  name     String
   email    String  @unique
-  
-  isEmailVerified Boolean @default(false)
+    
+  isEmailVerified Boolean @default(false) @map("is_email_verified")
 
-  emailVerificationToken String @default(uuid())
-  lastEmailSentAt        DateTime?
+  emailVerificationToken String @default(uuid()) @map("email_verification_token")
+  lastEmailSentAt        DateTime? @map("last_email_sent_at")
 
   password String
 
-  profilePicture String?
+  firstUsageAt DateTime? @map("first_usage_at")
 
-  paymentMethod PaymentMethod?
+  profile Profile?
+  customization AICustomization?
 
-  isPlus           Boolean @default(false)
-  plusExpiresAt    DateTime?
+  usages Usages?
 
-  credits        Int     @default(10)
-  premiumCredits Int     @default(0)
+  subscription Subscription?
 
-  systemPrompt    String  @default("")
-  shareInfoWithAI Boolean @default(true)
-
-  firstUsageAt DateTime?
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  sessions Session[]
 
   chats Chat[]
   messages Message[]
 
   @@map("users")
+}
+
+model Usages {
+  id Int @id @unique @default(autoincrement())
+
+  credits        Int     @default(10) @map("credits")
+  premiumCredits Int     @default(0) @map("premium_credits")
+
+  userId Int @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("usages")
+}
+
+model AICustomization {
+  id Int @id @unique @default(autoincrement())
+
+  defaultModel String @map("default_model")
+
+  systemPrompt    String  @default("") @map("system_prompt")
+  shareInfoWithAI Boolean @default(true) @map("share_info_with_ai")
+
+  userId Int @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("ai_customizations")
+}
+
+model Profile {
+  id Int @id @unique @default(autoincrement())
+
+  name     String
+
+  profilePicture String? @map("profile_picture")
+
+  userId Int @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+enum SessionPlatform {
+  mobile
+  desktop
+  tablet
+}
+
+model Session {
+  id String @id @unique @default(uuid())
+
+  ip String
+
+  platform SessionPlatform
+
+  os String
+  browser String
+
+  expiresAt DateTime @map("expires_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+enum PaymentMethod {
+  card
+  crypto
+}
+
+model Subscription {
+  id Int @id @unique @default(autoincrement())
+
+  paymentMethod PaymentMethod @map("payment_method")
+
+  expiresAt DateTime @map("expires_at")
+
+  userId Int @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
 }
 
 model Chat {
@@ -124,7 +194,7 @@ model File {
   name String
   url  String
 
-  contentType String
+  contentType String @map("content_type")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

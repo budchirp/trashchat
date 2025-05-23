@@ -4,6 +4,7 @@
     "required-header": "`{header}` header is required",
     "env-error": "`{env}` environment variable is not set",
     "invalid-signature": "Invalid signature",
+    "session-expired": "Session expired",
     "user": {
       "already-exists": "User with these stuff already exists!",
       "not-found": "User not found",
@@ -71,13 +72,13 @@
     "or": "or"
   },
   "auth": {
-    "danger-zone": "Danger zone",
     "captcha-error": "Failed to resolve captcha",
     "not-found": "User not found",
     "name": "Name",
     "username": "Username",
     "email": "E-Mail",
     "password": "Password",
+    "new-password": "New password",
     "logout": "Log out",
     "signin": {
       "text": "Sign in",
@@ -103,6 +104,7 @@
     "account": {
       "text": "Account",
       "description": "Account",
+      "danger-zone": "Danger zone",
       "delete": "Delete account",
       "profile-picture": "Profile Picture",
       "verify-warning": "Your e-mail is not verified. Please verify it",
@@ -112,8 +114,15 @@
     "customization": {
       "text": "Customization",
       "description": "Customization",
+      "default-model": "Default model",
       "prompt": "System prompt",
       "share-info": "Share info with ai"
+    },
+    "security": {
+      "text": "Security",
+      "description": "Security",
+      "sessions": "Sessions",
+      "delete-session": "Delete session"
     },
     "usages": {
       "text": "Usages",
@@ -127,6 +136,7 @@
       "text": "Appearance",
       "description": "Appearance",
       "themes": {
+        "theme": "Theme",
         "dark": "Dark",
         "light": "Light",
         "system": "System"
@@ -155,7 +165,6 @@
       "normal-model-limit": "Normal limit",
       "premium-model-limit": "Premium limit",
       "image-file-upload": "Image / File upload",
-      "image-generation": "Image generation",
       "search": "Search",
       "reasoning": "Reasoning"
     }

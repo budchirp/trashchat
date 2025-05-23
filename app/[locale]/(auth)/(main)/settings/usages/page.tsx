@@ -22,9 +22,9 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
   const user = (await UserAPIManager.get({ token, locale })) as User
 
   const credits = user.isEmailVerified
-    ? CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].CREDITS
+    ? CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].CREDITS
     : 10
-  const premium_credits = CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+  const premium_credits = CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
 
   const t = await getTranslations({
     namespace: 'settings.usages',
@@ -56,7 +56,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
             <h1 className='font-bold text-md'>{t('credits')}</h1>
 
             <span>
-              {user.credits} / {credits}
+              {user.usages.credits} / {credits}
             </span>
           </div>
 
@@ -64,7 +64,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
             <div
               className='bg-background-accent-primary h-full rounded-full'
               style={{
-                width: `${(user.credits / credits) * 100}%`
+                width: `${(user.usages.credits / credits) * 100}%`
               }}
             />
           </div>
@@ -75,7 +75,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
             <h1 className='font-bold text-md'>{t('premium-credits')}</h1>
 
             <span>
-              {user.premiumCredits} / {premium_credits}
+              {user.usages.premiumCredits} / {premium_credits}
             </span>
           </div>
 
@@ -83,7 +83,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
             <div
               className='bg-accent-700 h-full rounded-full'
               style={{
-                width: `${premium_credits === 0 ? 0 : (user.premiumCredits / premium_credits) * 100}%`
+                width: `${premium_credits === 0 ? 0 : (user.usages.premiumCredits / premium_credits) * 100}%`
               }}
             />
           </div>

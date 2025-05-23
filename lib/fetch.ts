@@ -1,8 +1,10 @@
+type Headers = Record<string, string | undefined | null>
+
 export class Fetch {
   private static fetch = <T>(
     url: string,
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
-    headers?: Record<string, string>,
+    headers?: Headers,
     body?: Record<string, unknown> | FormData
   ) => {
     return fetch(url, {
@@ -19,27 +21,27 @@ export class Fetch {
     >
   }
 
-  public static get = async <T>(url: string, headers?: Record<string, string>) =>
+  public static get = async <T>(url: string, headers?: Headers) =>
     await Fetch.fetch<T>(url, 'GET', headers, undefined)
 
   public static post = async <T>(
     url: string,
     body?: Record<string, unknown> | FormData,
-    headers?: Record<string, string>
+    headers?: Headers
   ) => await Fetch.fetch<T>(url, 'POST', headers, body)
 
   public static put = async <T>(
     url: string,
     body?: Record<string, unknown> | FormData,
-    headers?: Record<string, string>
+    headers?: Headers
   ) => await Fetch.fetch<T>(url, 'PUT', headers, body)
 
-  public static delete = async <T>(url: string, headers?: Record<string, string>) =>
+  public static delete = async <T>(url: string, headers?: Headers) =>
     await Fetch.fetch<T>(url, 'DELETE', headers, undefined)
 
   public static patch = async <T>(
     url: string,
     body?: Record<string, unknown> | FormData,
-    headers?: Record<string, string>
+    headers?: Headers
   ) => await Fetch.fetch<T>(url, 'PATCH', headers, body)
 }

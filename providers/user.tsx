@@ -11,7 +11,7 @@ import type { User } from '@/types/user'
 
 type UserContextProviderProps = {
   children: React.ReactNode
-  initialUser: User
+  initialUser: User | null
   token: string
 }
 
@@ -20,7 +20,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   initialUser,
   token
 }: UserContextProviderProps): React.ReactNode => {
-  const [user, setUser] = useState<User>(initialUser)
+  const [user, setUser] = useState<User | null>(initialUser)
 
   const locale = useLocale()
 

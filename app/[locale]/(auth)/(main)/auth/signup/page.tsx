@@ -23,7 +23,7 @@ const SignUpPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
   })
 
   return (
-    <div className='w-full page-h-screen mt-4 flex-col gap-8 flex items-center justify-center'>
+    <div className='w-full page-min-h-screen mt-4 flex-col gap-8 flex items-center justify-center'>
       <div className='flex flex-col gap-1 text-center items-center'>
         <h1 className='font-bold text-2xl'>{t('text')}</h1>
 

@@ -3,18 +3,14 @@ import { Env } from '@/lib/env'
 
 import type { Chat } from '@/types/chat'
 import type { APIResponse } from '@/types/api'
-
-type Metadata = {
-  token: string
-  locale?: string
-}
+import type { APIHeaders } from '@/types/api-headers'
 
 export class ChatAPIManager {
-  public static get = async (metadata: Metadata, id: string): Promise<Chat | null> => {
+  public static get = async (headers: APIHeaders, id: string): Promise<Chat | null> => {
     try {
       const response = await Fetch.get<APIResponse<Chat>>(`${Env.appUrl}/api/chat/${id}`, {
-        authorization: `Bearer ${metadata.token}`,
-        'accept-language': metadata.locale || 'en'
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
       })
 
       const json = await response.json()
@@ -28,11 +24,11 @@ export class ChatAPIManager {
     }
   }
 
-  public static getAll = async (metadata: Metadata): Promise<Chat[] | null> => {
+  public static getAll = async (headers: APIHeaders): Promise<Chat[] | null> => {
     try {
       const response = await Fetch.get<APIResponse<Chat[]>>(`${Env.appUrl}/api/chat`, {
-        authorization: `Bearer ${metadata.token}`,
-        'accept-language': metadata.locale || 'en'
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
       })
 
       const json = await response.json()
@@ -46,11 +42,11 @@ export class ChatAPIManager {
     }
   }
 
-  public static delete = async (metadata: Metadata, id: string): Promise<boolean> => {
+  public static delete = async (headers: APIHeaders, id: string): Promise<boolean> => {
     try {
       const response = await Fetch.delete(`${Env.appUrl}/api/chat/${id}`, {
-        authorization: `Bearer ${metadata.token}`,
-        'accept-language': metadata.locale || 'en'
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
       })
 
       if (response.ok) return true
@@ -61,14 +57,14 @@ export class ChatAPIManager {
     }
   }
 
-  public static new = async (metadata: Metadata): Promise<Chat | null> => {
+  public static new = async (headers: APIHeaders): Promise<Chat | null> => {
     try {
       const response = await Fetch.post<APIResponse<Chat>>(
         `${Env.appUrl}/api/chat`,
         {},
         {
-          authorization: `Bearer ${metadata.token}`,
-          'accept-language': metadata.locale || 'en'
+          authorization: `Bearer ${headers.token}`,
+          'accept-language': headers.locale || 'en'
         }
       )
 

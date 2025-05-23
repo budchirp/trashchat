@@ -3,6 +3,7 @@
 import type React from 'react'
 import { use, useEffect, useRef, useState, type FormEvent } from 'react'
 
+import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
 import { MemoizedMarkdown } from '@/components/markdown/memoized'
 import { SidebarContext } from '@/providers/context/sidebar'
 import { MessageBox } from '@/components/chat/message-box'
@@ -17,8 +18,8 @@ import { useChat } from '@ai-sdk/react'
 import { Env } from '@/lib/env'
 
 import type { Chat } from '@/types/chat'
-import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
 import type { File as PrismaFile } from '@prisma/client'
+import { UserContext } from '@/providers/context/user'
 
 type ChatClientPageProps = {
   token: string
@@ -33,7 +34,11 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 }: ChatClientPageProps): React.ReactNode => {
   const t = useTranslations()
 
-  const [model, setModel] = useState<AIModelID>(chat.model || CONSTANTS.AI.DEFAULT_MODEL)
+  const { user } = use(UserContext)
+
+  const [model, setModel] = useState<AIModelID>(
+    chat.model || (user?.customization?.defaultModel as AIModelID) || CONSTANTS.AI.DEFAULT_MODEL
+  )
   const [error, setError] = useState<string | null>(null)
 
   const [useReasoning, setUseReasoning] = useState<boolean>(false)

@@ -18,6 +18,10 @@ export const SettingsLinksSection: React.FC = (): React.ReactNode => {
       title: t('account.text')
     },
     {
+      location: '/security',
+      title: t('security.text')
+    },
+    {
       location: '/usages',
       title: t('usages.text')
     },

@@ -33,12 +33,12 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
           <SettingsProfilePicture user={user} />
 
           <h1 className='font-bold text-xl flex gap-2 items-center'>
-            {user?.isPlus && <Crown size={16} className='text-text-accent-primary' />}
+            {user?.subscription && <Crown size={16} className='text-text-accent-primary' />}
 
-            <span>{user?.name}</span>
+            <span>{user?.profile?.name}</span>
           </h1>
 
-          {!user.isPlus && (
+          {!user.subscription && (
             <Link href='/subscribe'>
               <Button className='flex gap-2 items-center'>
                 <CreditCard size={16} />

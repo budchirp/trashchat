@@ -1,3 +1,5 @@
+'use client'
+
 import { use } from 'react'
 
 import { UserContext } from '@/providers/context/user'
@@ -5,15 +7,19 @@ import { SessionAPIManager } from '@/lib/api/session'
 import { useLocale, useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 
-export const useLogout = (): (() => Promise<void>) => {
+export const useLogout = (): ((token: string) => Promise<void>) => {
   const locale = useLocale()
   const t = useTranslations('common')
 
   const { setUser } = use(UserContext)
-  return async () => {
-    await SessionAPIManager.delete({
-      locale
-    })
+  return async (token) => {
+    await SessionAPIManager.delete(
+      {
+        locale,
+        token
+      },
+      {}
+    )
 
     setUser(null)
 

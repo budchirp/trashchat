@@ -8,14 +8,15 @@ import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/routing'
 
 import type { ErrorProps } from '@/types/error'
+import { CookieMonster } from '@/lib/cookie-monster'
+import { CONSTANTS } from '@/lib/constants'
 
 const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => {
   const t = useTranslations()
 
+  const cookieMonster = new CookieMonster()
+
   const logout = useLogout()
-  if (error.message === 'token') {
-    logout()
-  }
 
   return (
     <div className='w-full min-h-screen flex items-center py-4 justify-center'>
@@ -36,9 +37,19 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
             {t('common.refresh')}
           </Button>
 
-          <Button color='secondary' onClick={logout}>
-            {t('auth.logout')}
-          </Button>
+          {logout && (
+            <Button
+              color='secondary'
+              onClick={() => {
+                const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+                if (token) {
+                  logout(token)
+                }
+              }}
+            >
+              {t('auth.logout')}
+            </Button>
+          )}
         </div>
       </div>
     </div>

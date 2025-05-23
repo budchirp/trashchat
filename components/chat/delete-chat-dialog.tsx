@@ -26,8 +26,7 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
   onDelete
 }: DeleteChatDialogProps): React.ReactNode => {
   const locale = useLocale()
-  const t = useTranslations('chat')
-  const t_common = useTranslations('common')
+  const t = useTranslations()
 
   const cookieMonster = new CookieMonster()
 
@@ -42,7 +41,7 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
           try {
             const ok = await ChatAPIManager.delete({ token, locale }, id)
             if (!ok) {
-              toast(t_common('error'))
+              toast(t('errors.error'))
               return
             }
 
@@ -61,9 +60,9 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
           }
         }
       }}
-      title={t('delete')}
+      title={t('chat.delete')}
     >
-      <p>{t('are-you-sure')}</p>
+      <p>{t('chat.are-you-sure')}</p>
     </AreYouSureDialog>
   )
 }

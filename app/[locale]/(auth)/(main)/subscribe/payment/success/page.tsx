@@ -20,7 +20,7 @@ const PaymentSuccessfullPage: React.FC<DynamicPageProps> = async ({ params }: Dy
   })
 
   const user = await UserAPIManager.get({ token, locale })
-  if (!user?.isPlus)
+  if (!user?.subscription)
     redirect({
       href: '/',
       locale

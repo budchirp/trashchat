@@ -1,14 +1,14 @@
 import 'server-only'
 
-import { AIModels, type AIModel, type AIModelID, type AIProvider, type AIModelMap } from './models'
-import { Secrets } from '../secrets'
+import { AIModels, type AIModel, type AIModelID, type AIProvider } from '@/lib/ai/models'
+import { createVertexAnthropic } from '@ai-sdk/google-vertex/anthropic'
 import { createOpenAI } from '@ai-sdk/openai'
 import { createVertex } from '@ai-sdk/google-vertex'
 import { createAzure } from '@ai-sdk/azure'
-import { Env } from '../env'
+import { Secrets } from '@/lib/secrets'
+import { Env } from '@/lib/env'
 
 import type { LanguageModelV1 } from 'ai'
-import { createVertexAnthropic } from '@ai-sdk/google-vertex/anthropic'
 
 type AIModelWithProvider = {
   provider: (options?: any) => LanguageModelV1

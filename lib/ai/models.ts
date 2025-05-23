@@ -37,8 +37,6 @@ export type AIModel = {
   reasoning: boolean
 
   reasoningOptions: AIModelReasoningOption[]
-
-  imageGeneration: boolean
 }
 
 export type AIModelMap = {
@@ -67,9 +65,7 @@ export class AIModels {
         search: true,
         reasoning: false,
 
-        reasoningOptions: [],
-
-        imageGeneration: false
+        reasoningOptions: []
       },
       'openai-gpt-4.1-mini': {
         id: 'openai-gpt-4.1-mini',
@@ -90,9 +86,7 @@ export class AIModels {
         search: false,
         reasoning: false,
 
-        reasoningOptions: [],
-
-        imageGeneration: false
+        reasoningOptions: []
       },
       'openai-gpt-4o-mini': {
         id: 'openai-gpt-4o-mini',
@@ -113,9 +107,7 @@ export class AIModels {
         search: false,
         reasoning: false,
 
-        reasoningOptions: [],
-
-        imageGeneration: false
+        reasoningOptions: []
       },
       'openai-o3-mini': {
         id: 'openai-o3-mini',
@@ -136,9 +128,7 @@ export class AIModels {
         search: false,
         reasoning: true,
 
-        reasoningOptions: ['low', 'medium', 'high'],
-
-        imageGeneration: false
+        reasoningOptions: ['low', 'medium', 'high']
       },
       'openai-o4-mini': {
         id: 'openai-o4-mini',
@@ -159,9 +149,7 @@ export class AIModels {
         search: false,
         reasoning: true,
 
-        reasoningOptions: ['low', 'medium', 'high'],
-
-        imageGeneration: false
+        reasoningOptions: ['low', 'medium', 'high']
       }
     }
   }
@@ -187,9 +175,7 @@ export class AIModels {
         search: true,
         reasoning: true,
 
-        reasoningOptions: ['low', 'medium', 'high'],
-
-        imageGeneration: false
+        reasoningOptions: ['low', 'medium', 'high']
       },
       'gemini-2.5-flash': {
         id: 'gemini-2.5-flash',
@@ -210,9 +196,7 @@ export class AIModels {
         search: true,
         reasoning: true,
 
-        reasoningOptions: ['low', 'medium', 'high'],
-
-        imageGeneration: false
+        reasoningOptions: ['low', 'medium', 'high']
       },
       'gemini-2.0-flash': {
         id: 'gemini-2.0-flash',
@@ -233,9 +217,7 @@ export class AIModels {
         search: true,
         reasoning: false,
 
-        reasoningOptions: [],
-
-        imageGeneration: false
+        reasoningOptions: []
       },
       'claude-3-7-sonnet': {
         id: 'claude-3-7-sonnet',
@@ -256,9 +238,7 @@ export class AIModels {
         search: false,
         reasoning: true,
 
-        reasoningOptions: ['low', 'medium', 'high'],
-
-        imageGeneration: false
+        reasoningOptions: ['low', 'medium', 'high']
       },
       'claude-3-5-sonnet': {
         id: 'claude-3-5-sonnet',
@@ -279,9 +259,7 @@ export class AIModels {
         search: false,
         reasoning: true,
 
-        reasoningOptions: ['low', 'medium', 'high'],
-
-        imageGeneration: false
+        reasoningOptions: ['low', 'medium', 'high']
       }
     }
   }
@@ -307,9 +285,7 @@ export class AIModels {
         search: false,
         reasoning: false,
 
-        reasoningOptions: [],
-
-        imageGeneration: false
+        reasoningOptions: []
       },
       'openai-o3-mini': {
         id: 'openai-o3-mini',
@@ -330,9 +306,7 @@ export class AIModels {
         search: false,
         reasoning: true,
 
-        reasoningOptions: ['low', 'medium', 'high'],
-
-        imageGeneration: false
+        reasoningOptions: ['low', 'medium', 'high']
       },
       'deepseek-r1': {
         id: 'deepseek-r1',
@@ -353,9 +327,7 @@ export class AIModels {
         search: false,
         reasoning: true,
 
-        reasoningOptions: [],
-
-        imageGeneration: false
+        reasoningOptions: []
       }
     }
   }

@@ -20,7 +20,7 @@ export const DELETE = async (
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -48,6 +48,8 @@ export const DELETE = async (
       data: {}
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,
@@ -72,7 +74,7 @@ export const GET = async (
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -84,8 +86,6 @@ export const GET = async (
         }
       )
     }
-
-    const { id } = await params
 
     const convertToUIMessage = (message: Message & { parts: MessagePart[] }) => {
       return {
@@ -117,6 +117,7 @@ export const GET = async (
       }
     }
 
+    const { id } = await params
     if (id === '-1') {
       const chats = await prisma.chat.findMany({
         take: 1,
@@ -139,7 +140,7 @@ export const GET = async (
       const newChat = {
         title: t('chat.new-chat'),
 
-        model: CONSTANTS.AI.DEFAULT_MODEL,
+        model: user.customization.defaultModel || CONSTANTS.AI.DEFAULT_MODEL,
 
         userId: user.id
       }
@@ -159,7 +160,7 @@ export const GET = async (
       } else {
         chat = chats[0]
 
-        if (chat.messages.length > 1) {
+        if (chat.messages.length > 2) {
           chat = await prisma.chat.create({
             data: newChat,
             include: {
@@ -210,6 +211,8 @@ export const GET = async (
       }
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,

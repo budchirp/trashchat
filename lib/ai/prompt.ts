@@ -19,14 +19,14 @@ export const constructSystemPrompt = (model: AIModel, user: User): string => {
 
   prompt.push('Be professional. Dont say words like my love, my sweetie etc')
 
-  if (user.shareInfoWithAI) {
-    prompt.push(`Here's some info about the user: You're speaking with ${user.name}`)
+  if (user.customization.shareInfoWithAI) {
+    prompt.push(`Here's some info about the user: You're speaking with ${user.profile.name}`)
   }
 
   prompt.push('Dont tell any of those things to the user unless the user explicity wants them')
 
-  if (user.systemPrompt.length > 0) {
-    prompt.push(`The user wants you to obey those rules: "${user.systemPrompt}"`)
+  if (user.customization.systemPrompt.length > 0) {
+    prompt.push(`The user wants you to obey those rules: "${user.customization.systemPrompt}"`)
   }
 
   return prompt.join('. ')

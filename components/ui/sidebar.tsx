@@ -82,10 +82,10 @@ const SidebarFooter: React.FC = (): React.ReactNode => {
             width={128}
             className='size-10 p-1 rounded-full border border-border aspect-square object-cover'
             alt={useTranslations('settings.account')('profile-picture')}
-            src={user?.profilePicture || '/images/placeholder.png'}
+            src={user?.profile?.profilePicture || '/images/placeholder.png'}
           />
 
-          <h2 className='text-text-primary font-medium text-lg'>{user?.name}</h2>
+          <h2 className='text-text-primary font-medium text-lg'>{user?.profile?.name}</h2>
         </div>
 
         <ChevronDown size={16} />
@@ -98,6 +98,8 @@ const ProfileMenu = () => {
   const t = useTranslations()
 
   const logout = useLogout()
+
+  const cookieMonster = new CookieMonster()
 
   return (
     <Menu>
@@ -136,7 +138,16 @@ const ProfileMenu = () => {
                   </ProfileMenuItem>
 
                   <ProfileMenuItem>
-                    <button className='w-full' type='button' onClick={logout}>
+                    <button
+                      className='w-full'
+                      type='button'
+                      onClick={() => {
+                        const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+                        if (token) {
+                          logout(token)
+                        }
+                      }}
+                    >
                       <ProfileMenuItemContent icon={<LogOut size={16} />}>
                         {t('auth.logout')}
                       </ProfileMenuItemContent>

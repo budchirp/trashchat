@@ -14,7 +14,7 @@ export const POST = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -41,18 +41,26 @@ export const POST = async (request: NextRequest) => {
         id: user.id
       },
       data: {
-        isEmailVerified: true,
-
-        credits: CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].CREDITS,
-        premiumCredits: CONSTANTS.USAGES[user.isPlus ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+        isEmailVerified: true
       }
     })
 
+    await prisma.usages.update({
+      where: {
+        userId: user.id
+      },
+      data: {
+        credits: CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].CREDITS,
+        premiumCredits: CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+      }
+    })
     return NextResponse.json({
       message: t('common.success'),
       data: {}
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,
@@ -68,7 +76,7 @@ export const GET = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -123,6 +131,8 @@ export const GET = async (request: NextRequest) => {
       data: {}
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,

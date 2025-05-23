@@ -29,17 +29,15 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
   const { user } = use(UserContext)
 
   const locale = useLocale()
-  const t = useTranslations('auth')
-  const t_account = useTranslations('settings.account')
-  const t_common = useTranslations('common')
+  const t = useTranslations()
 
   const cookieMonster = new CookieMonster()
 
   const [error, setError] = useState<string | null>(null)
   const formik = useFormik({
     initialValues: {
-      name: user.name,
-      email: user.email
+      name: user?.profile?.name,
+      email: user?.email
     },
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
@@ -48,11 +46,11 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
       if (token) {
         const [ok, message] = await UserAPIManager.update({ token, locale }, values)
         if (ok) {
-          toast(t_common('success'))
+          toast(t('common.success'))
 
           router.refresh()
         } else {
-          setError(message || t_common('error'))
+          setError(message || t('errors.error'))
         }
       }
 
@@ -82,7 +80,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
               type='text'
               autoComplete='name'
               icon={<UserIcon size={16} />}
-              placeholder={t('name')}
+              placeholder={t('auth.name')}
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -101,7 +99,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
               type='email'
               autoComplete='email'
               icon={<Mail size={16} />}
-              placeholder={t('email')}
+              placeholder={t('auth.email')}
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -111,9 +109,9 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
               <p className='text-red-500 ms-2'>{formik.errors.email}</p>
             )}
 
-            {!user.isEmailVerified && (
+            {!user?.isEmailVerified && (
               <div className='border-b-4 border-border-hover mb-2 pb-4 grid gap-2'>
-                <p>{t_account('verify-warning')}</p>
+                <p>{t('settings.account.verify-warning')}</p>
 
                 <div>
                   <ResendVerificationEmailButton />
@@ -125,7 +123,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
         <div>
           <Button loading={formik.isSubmitting} type='submit'>
-            {t_common('update')}
+            {t('common.update')}
           </Button>
         </div>
       </form>
@@ -133,15 +131,23 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
       <DeleteAccountDialog open={showDeleteDialog} onClose={() => setShowDeleteDialog(false)} />
 
       <div>
-        <Heading>{t('danger-zone')}</Heading>
+        <Heading>{t('settings.account.danger-zone')}</Heading>
 
         <div className='flex gap-2'>
           <Button color='danger' onClick={() => setShowDeleteDialog(true)}>
-            {t_account('delete')}
+            {t('settings.account.delete')}
           </Button>
 
-          <Button color='secondary' onClick={logout}>
-            {t('logout')}
+          <Button
+            color='secondary'
+            onClick={() => {
+              const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+              if (token) {
+                logout(token)
+              }
+            }}
+          >
+            {t('auth.logout')}
           </Button>
         </div>
       </div>

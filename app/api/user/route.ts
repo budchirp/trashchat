@@ -1,17 +1,18 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 import { authenticate } from '@/lib/auth/server'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
 
 import type { User } from '@/types/user'
-import { getTranslations } from 'next-intl/server'
+import { CONSTANTS } from '@/lib/constants'
 
 export const GET = async (request: NextRequest) => {
   try {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -38,6 +39,8 @@ export const GET = async (request: NextRequest) => {
       }
     )
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,
@@ -53,7 +56,7 @@ export const DELETE = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -66,13 +69,19 @@ export const DELETE = async (request: NextRequest) => {
       )
     }
 
-    await prisma.user.delete({ where: user })
+    await prisma.user.delete({
+      where: {
+        id: user.id
+      }
+    })
 
     return NextResponse.json({
       message: t('common.success'),
       data: {}
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,
@@ -105,9 +114,24 @@ export const POST = async (request: NextRequest) => {
 
     await prisma.user.create({
       data: {
-        name,
         email,
-        password: await Encrypt.encrypt(password)
+        password: await Encrypt.encrypt(password),
+
+        profile: {
+          create: {
+            name
+          }
+        },
+
+        customization: {
+          create: {
+            defaultModel: CONSTANTS.AI.DEFAULT_MODEL
+          }
+        },
+
+        usages: {
+          create: {}
+        }
       }
     })
 
@@ -121,6 +145,8 @@ export const POST = async (request: NextRequest) => {
       }
     )
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,
@@ -136,7 +162,7 @@ export const PATCH = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers)
+    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
     if (!isTokenValid || !payload) {
       return NextResponse.json(
         {
@@ -149,8 +175,8 @@ export const PATCH = async (request: NextRequest) => {
       )
     }
 
-    const { name, email, profilePicture, systemPrompt, shareInfoWithAI } =
-      (await request.json()) as User
+    const { name, email, profilePicture, defaultModel, systemPrompt, shareInfoWithAI } =
+      await request.json()
 
     await prisma.user.update({
       where: {
@@ -158,11 +184,19 @@ export const PATCH = async (request: NextRequest) => {
         id: user.id
       },
       data: {
-        name,
-        email,
-        profilePicture,
-        systemPrompt,
-        shareInfoWithAI
+        profile: {
+          update: {
+            name,
+            profilePicture
+          }
+        },
+        customization: {
+          update: {
+            defaultModel,
+            systemPrompt,
+            shareInfoWithAI
+          }
+        }
       }
     })
 
@@ -171,6 +205,8 @@ export const PATCH = async (request: NextRequest) => {
       data: {}
     })
   } catch (error) {
+    console.log(error)
+
     return NextResponse.json(
       {
         message: (error as Error).message,

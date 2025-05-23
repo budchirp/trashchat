@@ -13,6 +13,7 @@ import { cn } from '@/lib/cn'
 export type DialogProps = {
   title: React.ReactNode
   content: React.ReactNode
+
   open: boolean
   onClose: () => void
 }

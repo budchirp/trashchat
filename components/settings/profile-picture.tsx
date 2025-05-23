@@ -79,7 +79,7 @@ export const SettingsProfilePicture: React.FC<SettingsProfilePictureProps> = ({
         width={128}
         className='size-full object-cover p-1 border border-border rounded-full'
         alt={t('settings.account.profile-picture')}
-        src={user?.profilePicture || '/images/placeholder.png'}
+        src={user?.profile?.profilePicture || '/images/placeholder.png'}
       />
 
       <label
