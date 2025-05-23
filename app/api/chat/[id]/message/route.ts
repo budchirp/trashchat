@@ -104,11 +104,8 @@ export const POST = async (
 
     const model = AIProviders.get(modelName)
 
-    if (
-      !user.subscription &&
-      (model.premium || model.plus || useReasoning || useSearch || files.length > 0)
-    ) {
-      throw new Error()
+    if (!user.subscription && (model.plus || useReasoning || useSearch || files.length > 0)) {
+      throw new Error(t('chat.errors.plan-error'))
     }
 
     const usages = (await prisma.usages.findUnique({

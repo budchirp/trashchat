@@ -75,10 +75,22 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
 
         <Dropdown
           button={<Button>{models[formik.values.defaultModel as AIModelID].name}</Button>}
-          options={(Object.keys(models) as AIModelID[]).map((model) => ({
-            value: model,
-            title: models[model].name
-          }))}
+          options={
+            (Object.keys(models) as AIModelID[])
+              .map((modelName) => {
+                const model = models[modelName]
+
+                if (!user?.subscription && model.plus) {
+                  return
+                }
+
+                return {
+                  value: modelName,
+                  title: model.name
+                }
+              })
+              .filter(Boolean) as { value: string; title: string }[]
+          }
           selected={formik.values.defaultModel}
           onChange={(value) => formik.setFieldValue('defaultModel', value)}
         />

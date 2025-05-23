@@ -33,7 +33,8 @@
       "file-too-big": "Bu dosya çok büyük",
       "only-image": "Bu model sadece görsel kabul etmektedir",
       "credit-error": "Yetersiz kredi!",
-      "api-error": "İçerik oluşturulurken hata oluştu. Lütfen tekrar deneyin."
+      "api-error": "İçerik oluşturulurken hata oluştu. Lütfen tekrar deneyin.",
+      "plan-error": "Bu modeli kullanmak için abone olmanız gerekiyor"
     },
     "reasoning-effort": {
       "low": "Düşük",
