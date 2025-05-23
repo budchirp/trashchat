@@ -165,7 +165,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             />
 
             <Label>
-              <Link href='/legal/privacy-policy'>{t('signup.privacy-policy')}</Link>
+              <Link href='/legal/privacy-policy'>{t('auth.signup.privacy-policy')}</Link>
             </Label>
           </Field>
 
@@ -184,7 +184,7 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             />
 
             <Label>
-              <Link href='/legal/terms-of-service'>{t('signup.tos')}</Link>
+              <Link href='/legal/terms-of-service'>{t('auth.signup.tos')}</Link>
             </Label>
           </Field>
 
