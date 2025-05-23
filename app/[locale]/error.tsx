@@ -1,20 +1,29 @@
 'use client'
 
 import type React from 'react'
+import { useEffect, useState } from 'react'
 
 import { useLogout } from '@/lib/helpers/use-logout'
+import { CookieMonster } from '@/lib/cookie-monster'
+import { CONSTANTS } from '@/lib/constants'
 import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/lib/i18n/routing'
 
 import type { ErrorProps } from '@/types/error'
-import { CookieMonster } from '@/lib/cookie-monster'
-import { CONSTANTS } from '@/lib/constants'
 
 const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => {
   const t = useTranslations()
 
   const cookieMonster = new CookieMonster()
+
+  const [token, setToken] = useState<string | null>(null)
+  useEffect(() => {
+    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+    if (token) {
+      setToken(token)
+    }
+  }, [])
 
   const logout = useLogout()
 
@@ -41,7 +50,6 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
             <Button
               color='secondary'
               onClick={() => {
-                const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
                 if (token) {
                   logout(token)
                 }

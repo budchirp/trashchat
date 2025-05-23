@@ -25,6 +25,6 @@ export const useLogout = (): ((token: string) => Promise<void>) => {
 
     toast(t('success'))
 
-    window?.location?.replace(new URL('/', window.location.origin))
+    window?.location?.replace(`/${locale}`)
   }
 }

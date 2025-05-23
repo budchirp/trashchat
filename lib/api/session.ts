@@ -9,7 +9,7 @@ import type { APIResponse } from '@/types/api'
 
 export class SessionAPIManager {
   public static delete = async (
-    headers: Omit<APIHeaders, 'token'> & { token?: string },
+    headers: UnprotectedAPIHeaders & { token?: string },
     options: {
       token_id?: string
       cookieStore?: ReadonlyRequestCookies

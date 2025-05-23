@@ -171,7 +171,7 @@ export const DELETE = async (request: NextRequest) => {
       )
     }
 
-    const token = await request.nextUrl.searchParams.get('token_id')
+    const token = request.nextUrl.searchParams.get('token_id')
     if (token) {
       await prisma.session.delete({
         where: {

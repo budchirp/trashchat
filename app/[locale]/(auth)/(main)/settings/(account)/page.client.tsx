@@ -1,7 +1,7 @@
 'use client'
 
 import type React from 'react'
-import { use, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 
 import { ResendVerificationEmailButton } from '../../auth/verify/email/[token]/resend-button'
 import { DeleteAccountDialog } from '@/components/settings/delete-account-dialog'
@@ -33,6 +33,14 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
   const cookieMonster = new CookieMonster()
 
+  const [token, setToken] = useState<string | null>(null)
+  useEffect(() => {
+    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+    if (token) {
+      setToken(token)
+    }
+  }, [])
+
   const [error, setError] = useState<string | null>(null)
   const formik = useFormik({
     initialValues: {
@@ -42,7 +50,6 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
         const [ok, message] = await UserAPIManager.update({ token, locale }, values)
         if (ok) {
@@ -141,7 +148,6 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
           <Button
             color='secondary'
             onClick={() => {
-              const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
               if (token) {
                 logout(token)
               }

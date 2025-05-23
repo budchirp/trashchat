@@ -97,9 +97,17 @@ const SidebarFooter: React.FC = (): React.ReactNode => {
 const ProfileMenu = () => {
   const t = useTranslations()
 
-  const logout = useLogout()
-
   const cookieMonster = new CookieMonster()
+
+  const [token, setToken] = useState<string | null>(null)
+  useEffect(() => {
+    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+    if (token) {
+      setToken(token)
+    }
+  }, [])
+
+  const logout = useLogout()
 
   return (
     <Menu>
@@ -142,7 +150,6 @@ const ProfileMenu = () => {
                       className='w-full'
                       type='button'
                       onClick={() => {
-                        const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
                         if (token) {
                           logout(token)
                         }

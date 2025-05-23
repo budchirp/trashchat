@@ -45,7 +45,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
 
         toast(t('common.success'))
 
-        window?.location?.replace(new URL(`/${locale}/chat`, window.location.origin))
+        window?.location?.replace(`/${locale}/chat`)
       } else {
         setUser(null)
 
