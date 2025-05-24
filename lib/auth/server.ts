@@ -70,7 +70,7 @@ export const verifyToken = async (
     if (!session) {
       await SessionAPIManager.delete({ locale }, { cookieStore: cookies as ReadonlyRequestCookies })
 
-      return [false, undefined, undefined, AuthErrorMessages.TOKEN_NOT_FOUND]
+      return [false, undefined, undefined, AuthErrorMessages.EXPIRED]
     }
 
     if (checkExpirationDate && session.expiresAt < new Date()) {
