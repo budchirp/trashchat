@@ -18,10 +18,13 @@ export class SessionAPIManager {
     const cookieMonster = new CookieMonster(options.cookieStore)
 
     if (headers.token) {
-      await Fetch.delete(`${Env.appUrl}/api/session?token_id=${options.token_id}`, {
-        'accept-language': headers.locale || 'en',
-        authorization: `Bearer ${headers.token}`
-      })
+      await Fetch.delete(
+        `${Env.appUrl}/api/session${options.token_id ? `?token_id=${options.token_id}` : ''}`,
+        {
+          'accept-language': headers.locale || 'en',
+          authorization: `Bearer ${headers.token}`
+        }
+      )
     }
 
     cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
@@ -31,14 +34,10 @@ export class SessionAPIManager {
     headers: APIHeaders
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.post<APIResponse>(
-        `${Env.appUrl}/api/session/verify`,
-        {},
-        {
-          authorization: `Bearer ${headers.token}`,
-          'accept-language': headers.locale || 'en'
-        }
-      )
+      const response = await Fetch.get<APIResponse>(`${Env.appUrl}/api/session/verify`, {
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
+      })
 
       if (response.ok) {
         return [true, undefined]
