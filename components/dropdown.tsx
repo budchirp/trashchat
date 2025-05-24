@@ -31,7 +31,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <MenuItems
         as={Box}
         transition
-        className='absolute left-0 max-h-64 overflow-y-auto top-10 z-10 w-fit origin-top transition-all duration-300 ease-out data-closed:ease-in data-closed:scale-95 data-closed:opacity-0'
+        className='absolute left-0 max-h-64 overflow-y-auto top-10 z-10 w-fit origin-top transition-all duration-150 ease-out data-closed:ease-in data-closed:scale-95 data-closed:opacity-0'
         padding='none'
       >
         {options.map((option) => {
@@ -42,7 +42,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
               as='div'
               className={cn(
                 'border-b border-border last:border-none bg-background-primary px-4 py-2 items-center flex gap-2 transition-all duration-300 hover:bg-background-secondary',
-                option.value === selected && 'bg-background-secondary'
+                option.value === selected
+                  ? 'bg-background-secondary text-text-accent-primary font-medium'
+                  : 'text-text-tertiary hover:text-text-primary hover:font-medium'
               )}
               key={option.value}
               onClick={() => onChange(option.value)}
