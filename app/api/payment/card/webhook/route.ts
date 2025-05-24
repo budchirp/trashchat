@@ -1,10 +1,25 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { LogLevel, Paddle } from '@paddle/paddle-node-sdk'
+import { EventName } from '@paddle/paddle-node-sdk'
+import { getTranslations } from 'next-intl/server'
+import { CONSTANTS } from '@/lib/constants'
 import { Secrets } from '@/lib/secrets'
 import { prisma } from '@/lib/prisma'
-import { CONSTANTS } from '@/lib/constants'
-import { getTranslations } from 'next-intl/server'
-import { paddle } from '@/lib/payments/paddle'
-import { EventName } from '@paddle/paddle-node-sdk'
+
+const paddleApiKey = Secrets.paddleApiKey
+if (!paddleApiKey) {
+  throw new Error('Paddle API key is not set')
+}
+
+const paddleWebhookSecret = Secrets.paddleWebhookSecret
+if (!paddleWebhookSecret) {
+  throw new Error('Paddle webhook secret is not set')
+}
+
+const paddle = new Paddle(paddleApiKey, {
+  environment: process.env.NEXT_PUBLIC_PADDLE_ENV as any,
+  logLevel: LogLevel.error
+})
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -16,11 +31,6 @@ export const POST = async (request: NextRequest) => {
     const signature = request.headers.get('paddle-signature')
     if (!signature) {
       throw new Error(t('api.required-header', { header: 'paddle-signature' }))
-    }
-
-    const paddleWebhookSecret = Secrets.paddleWebhookSecret
-    if (!paddleWebhookSecret) {
-      throw new Error(t('api.env-error', { env: 'PADDLE_WEBHOOK_SECRET' }))
     }
 
     const json = await paddle.webhooks.unmarshal(rawBody, paddleWebhookSecret, signature)

@@ -5,7 +5,7 @@ import { use, useEffect, useState } from 'react'
 
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { X, Plus, Trash, ChevronDown, User, LogOut } from 'lucide-react'
-import { DeleteChatDialog } from '@/components/chat/delete-chat-dialog'
+import { DeleteChatDialog } from '@/components/ui/sidebar/delete-chat-dialog'
 import { SidebarContext } from '@/providers/context/sidebar'
 import { UserContext } from '@/providers/context/user'
 import { useLogout } from '@/lib/helpers/use-logout'
@@ -149,9 +149,9 @@ const ProfileMenu = () => {
                     <button
                       className='w-full'
                       type='button'
-                      onClick={() => {
+                      onClick={async () => {
                         if (token) {
-                          logout(token)
+                          await logout(token)
                         }
                       }}
                     >

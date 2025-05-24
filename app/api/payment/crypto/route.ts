@@ -10,25 +10,15 @@ export const POST = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     const coinbaseApiKey = Secrets.coinbaseApiKey
     if (!coinbaseApiKey) {
       throw new Error(t('api.env-error', { env: 'COINBASE_API_KEY' }))
     }
 
-    const response = await Fetch.post<any>(
+    const coinbase_response = await Fetch.post<any>(
       'https://api.commerce.coinbase.com/charges/',
       {
         name: 'Trash Chat Subscription',
@@ -48,7 +38,7 @@ export const POST = async (request: NextRequest) => {
       }
     )
 
-    const json = await response.json()
+    const json = await coinbase_response.json()
     return NextResponse.json({
       message: t('common.success'),
       data: json.data

@@ -13,11 +13,11 @@ const PaymentSuccessfullPage: React.FC<DynamicPageProps> = async ({ params }: Dy
   const { locale } = await params
   setRequestLocale(locale)
 
-  const token = authenticatedRoute(await cookies(), locale)!
-
   const t = await getTranslations({
     locale
   })
+
+  const token = authenticatedRoute(await cookies())!
 
   const user = await UserAPIManager.get({ token, locale })
   if (!user?.subscription)

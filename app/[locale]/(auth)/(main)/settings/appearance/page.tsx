@@ -15,7 +15,7 @@ const AppearancePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPag
   const { locale } = await params
   setRequestLocale(locale)
 
-  authenticatedRoute(await cookies(), locale)
+  authenticatedRoute(await cookies())
 
   const t = await getTranslations({
     namespace: 'settings.appearance',

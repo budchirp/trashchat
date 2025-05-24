@@ -7,12 +7,12 @@ import { Heading } from '@/components/heading'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/cn'
 
-import type { RouteMap } from '@/types/route-map'
+import type { Routes } from '@/types/routes'
 
 export const SettingsLinksSection: React.FC = (): React.ReactNode => {
   const t = useTranslations('settings')
 
-  const routes: RouteMap = [
+  const routes: Routes = [
     {
       location: '',
       title: t('account.text')

@@ -20,18 +20,8 @@ export const POST = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     const {
       file: { name, contentType }

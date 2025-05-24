@@ -1,3 +1,4 @@
+import { SessionAPIManager } from '@/lib/api/session'
 import { Fetch } from '@/lib/fetch'
 import { Env } from '@/lib/env'
 
@@ -9,10 +10,14 @@ export class UserAPIManager {
   public static verifyPassword = async (
     headers: APIHeaders,
     password: string
-  ): Promise<[true, undefined] | [false, string | null]> => {
+  ): Promise<[true, undefined, string] | [false, string | null, undefined]> => {
     try {
-      const response = await Fetch.post<APIResponse>(
-        `${Env.appUrl}/api/user/password`,
+      const response = await Fetch.post<
+        APIResponse<{
+          verificationToken: string
+        }>
+      >(
+        `${Env.appUrl}/api/user/verify`,
         {
           password
         },
@@ -22,12 +27,12 @@ export class UserAPIManager {
         }
       )
 
-      if (response.ok) return [true, undefined]
-
       const json = await response.json()
-      return [false, json.message]
+      if (response.ok) return [true, undefined, json.data.verificationToken]
+
+      return [false, json.message, undefined]
     } catch {
-      return [false, null]
+      return [false, null, undefined]
     }
   }
 
@@ -91,15 +96,23 @@ export class UserAPIManager {
   }
 
   public static delete = async (
-    headers: APIHeaders
+    headers: APIHeaders,
+    verificationToken: string
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.delete<APIResponse>(`${Env.appUrl}/api/user`, {
-        authorization: `Bearer ${headers.token}`,
-        'accept-language': headers.locale || 'en'
-      })
+      const response = await Fetch.delete<APIResponse>(
+        `${Env.appUrl}/api/user?verificationToken=${verificationToken}`,
+        {
+          authorization: `Bearer ${headers.token}`,
+          'accept-language': headers.locale || 'en'
+        }
+      )
 
-      if (response.ok) return [true, undefined]
+      if (response.ok) {
+        await SessionAPIManager.delete({ locale: headers.locale }, {})
+
+        return [true, undefined]
+      }
 
       const json = await response.json()
       return [false, json.message]

@@ -23,7 +23,7 @@ import { Dropdown } from '@/components/dropdown'
 import { AIModels, type AIModelID } from '@/lib/ai/models'
 import { Seperator } from '@/components/seperator'
 
-const models = AIModels.get()
+const models = AIModels.getAll()
 
 export const CustomizationClientPage: React.FC = (): React.ReactNode => {
   const router = useRouter()

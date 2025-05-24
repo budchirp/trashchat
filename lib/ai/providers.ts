@@ -18,7 +18,7 @@ type AIModelMapWithProvider = {
   [key in AIModelID]: AIModelWithProvider
 }
 
-const models = AIModels.get()
+const models = AIModels.getAll()
 
 export class AIProviders {
   static getOpenAI = (): Partial<AIModelMapWithProvider> => {

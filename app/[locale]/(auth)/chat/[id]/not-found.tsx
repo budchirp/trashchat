@@ -6,13 +6,11 @@ import { MetadataManager } from '@/lib/metadata-manager'
 import { Container } from '@/components/container'
 import { routing } from '@/lib/i18n/routing'
 
-import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
+import type { Metadata } from 'next'
 
 const NotFound: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
-  const { locale } = (await params) || {
-    locale: 'en'
-  }
+  const { locale } = (await params) || { locale: 'en' }
   setRequestLocale(locale)
 
   const t = await getTranslations({
@@ -28,7 +26,7 @@ const NotFound: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps
 }
 
 export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Metadata> => {
-  const { locale, id } = await params
+  const { locale } = await params
 
   const t = await getTranslations({
     namespace: 'chat',

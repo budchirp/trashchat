@@ -64,6 +64,8 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
         if (ok) {
           toast(t('common.success'))
 
+          formik.resetForm()
+
           router.refresh()
         } else {
           setError(message || t('errors.error'))
@@ -166,7 +168,7 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
                 onClick={async () => {
                   if (token) {
                     if (payload?.token === session.id) {
-                      logout(token)
+                      await logout(token)
                     } else {
                       await SessionAPIManager.delete(
                         { token, locale },
@@ -175,7 +177,8 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
                         }
                       )
 
-                      toast('success')
+                      toast(t('common.success'))
+
                       router.refresh()
                     }
                   }

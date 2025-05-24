@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { authenticate } from '@/lib/auth/server'
+import { authenticate, verifyToken } from '@/lib/auth/server'
+import { getTranslations } from 'next-intl/server'
 import { CONSTANTS } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 
 import type { Message, MessagePart } from '@prisma/client'
-import { getTranslations } from 'next-intl/server'
+import { convertMessageToUIMessage } from '@/lib/ai/db-helper'
 
 export const DELETE = async (
   request: NextRequest,
@@ -20,18 +21,8 @@ export const DELETE = async (
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     const { id } = await params
 
@@ -74,48 +65,8 @@ export const GET = async (
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
-
-    const convertToUIMessage = (message: Message & { parts: MessagePart[] }) => {
-      return {
-        ...message,
-        parts: message.parts.map((part) => {
-          if (part.type === 'text') {
-            return {
-              ...part,
-              text: part.text
-            }
-          }
-
-          if (part.type === 'reasoning') {
-            return {
-              ...part,
-              reasoning: part.text
-            }
-          }
-
-          if (part.type === 'source') {
-            const [url, title] = part.text.split(';') || [part.text, null]
-
-            return {
-              ...part,
-              source: { url, title }
-            }
-          }
-        })
-      }
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     const { id } = await params
     if (id === '-1') {
@@ -178,7 +129,7 @@ export const GET = async (
         message: t('common.success'),
         data: {
           ...chat,
-          messages: chat.messages.map(convertToUIMessage)
+          messages: chat.messages.map(convertMessageToUIMessage)
         }
       })
     }
@@ -207,7 +158,7 @@ export const GET = async (
       message: t('common.success'),
       data: {
         ...chat,
-        messages: chat.messages.map(convertToUIMessage)
+        messages: chat.messages.map(convertMessageToUIMessage)
       }
     })
   } catch (error) {

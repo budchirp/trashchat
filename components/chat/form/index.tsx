@@ -10,8 +10,8 @@ import {
   type AIModelMap,
   type AIModelReasoningOption
 } from '@/lib/ai/models'
-import { ReasoningEffortSelector } from '@/components/chat/reasoning-effort-selector'
-import { ModelSelector } from '@/components/chat/model-selector'
+import { ReasoningEffortSelector } from '@/components/chat/form/reasoning-effort-selector'
+import { ModelSelector } from '@/components/chat/form/model-selector'
 import { Button, buttonVariants } from '@/components/button'
 import { SidebarContext } from '@/providers/context/sidebar'
 import { UserContext } from '@/providers/context/user'
@@ -35,8 +35,7 @@ export type ChatFormProps = {
 
   files: File[]
 
-  modelId: AIModelID
-  models: AIModelMap
+  selectedModel: AIModelID
 
   reasoningEffort: AIModelReasoningOption | null
 
@@ -50,7 +49,7 @@ export type ChatFormProps = {
 
   handleFilesChange: (files: File[]) => void
 
-  handleModelIdChange: (modelId: AIModelID) => void
+  handleModelChange: (modelId: AIModelID) => void
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -66,8 +65,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   input,
   files,
 
-  modelId,
-  models,
+  selectedModel,
 
   reasoningEffort,
 
@@ -78,7 +76,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
   handleUseReasoningChange,
   handleUseSearchChange,
   handleFilesChange,
-  handleModelIdChange,
+  handleModelChange,
   handleInputChange
 }: ChatFormProps): React.ReactNode => {
   const ref = useRef<HTMLDivElement>(null)
@@ -103,7 +101,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
 
   const subscribed = user?.subscription
 
-  const model = models[modelId]
+  const model = AIModels.get(selectedModel)
   const supportsAttachments = subscribed && (model?.imageUpload || model?.fileUpload)
 
   const t = useTranslations('chat')
@@ -273,9 +271,8 @@ export const ChatForm: React.FC<ChatFormProps> = ({
 
               <ModelSelector
                 height={height}
-                models={models}
-                model={modelId}
-                onModelChange={handleModelIdChange}
+                model={selectedModel}
+                onModelChange={handleModelChange}
               />
             </div>
           </Container>

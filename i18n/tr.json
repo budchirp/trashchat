@@ -3,13 +3,13 @@
     "required-fields": "`{fields}` alanları zorunludur",
     "required-header": "`{header}` başlığı zorunludur",
     "env-error": "`{env}` ortam değişkeni ayarlanmamış",
+    "invalid-verification-token": "Geçersiz doğrulama anahtarı",
     "invalid-signature": "Geçersiz imza",
     "session-expired": "Oturum süresi doldu",
     "user": {
       "already-exists": "Bu bilgilere sahip kullanıcı zaten mevcut!",
       "not-found": "Kullanıcı bulunamadı",
       "invalid-password": "Geçersiz şifre",
-      "invalid-verification-token": "Geçersiz doğrulama anahtarı",
       "email-already-sent": "E-posta zaten gönderildi. Lütfen yenisini talep etmeden önce 1 saat bekleyin."
     }
   },

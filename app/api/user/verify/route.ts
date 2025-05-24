@@ -2,19 +2,20 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { authenticate } from '@/lib/auth/server'
 import { Encrypt } from '@/lib/encrypt'
 import { getTranslations } from 'next-intl/server'
-import { prisma } from '@/lib/prisma'
+import { Secrets } from '@/lib/secrets'
+import jwt from 'jsonwebtoken'
 
-export const PATCH = async (request: NextRequest) => {
+export const POST = async (request: NextRequest) => {
   try {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [response, user, payload] = await authenticate(request, locale)
+    const [response, user] = await authenticate(request, locale)
     if (response) return response
 
-    const { password, newPassword } = await request.json()
-    if (!password || !newPassword) {
-      throw new Error(t('api.required-fields', { fields: 'password, newPassword' }))
+    const { password } = await request.json()
+    if (!password) {
+      throw new Error(t('api.required-fields', { fields: 'password' }))
     }
 
     const passwordMatch = await Encrypt.compare(password, user.password)
@@ -22,28 +23,13 @@ export const PATCH = async (request: NextRequest) => {
       throw new Error(t('api.user.invalid-password'))
     }
 
-    await prisma.user.update({
-      where: {
-        id: user.id
-      },
-      data: {
-        password: await Encrypt.encrypt(newPassword)
-      }
-    })
-
-    await prisma.session.deleteMany({
-      where: {
-        userId: user.id,
-
-        NOT: {
-          id: payload.token
-        }
-      }
-    })
-
     return NextResponse.json({
       message: t('common.success'),
-      data: {}
+      data: {
+        verificationToken: jwt.sign({}, Secrets.appSecret, {
+          expiresIn: '1h'
+        })
+      }
     })
   } catch (error) {
     console.log(error)

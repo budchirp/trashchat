@@ -6,12 +6,10 @@ import { useState } from 'react'
 import { deleteAccountValidator } from '@/lib/validators/delete-account'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { AreYouSureDialog } from '@/components/r-u-sure'
-import { SessionAPIManager } from '@/lib/api/session'
+import { useLocale, useTranslations } from 'next-intl'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { UserAPIManager } from '@/lib/api/user'
-import { useRouter } from '@/lib/i18n/routing'
 import { CONSTANTS } from '@/lib/constants'
-import { useLocale, useTranslations } from 'next-intl'
 import { Input } from '@/components/input'
 import { toast } from '@/components/toast'
 import { Box } from '@/components/box'
@@ -34,8 +32,6 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
 
   const cookieMonster = new CookieMonster()
 
-  const router = useRouter()
-
   const formik = useFormik({
     initialValues: {
       password: ''
@@ -45,26 +41,24 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        const [verify_ok, verify_message] = await UserAPIManager.verifyPassword(
+        const [verifyOk, verifyMessage, verificationToken] = await UserAPIManager.verifyPassword(
           { token, locale },
           values.password
         )
 
-        if (verify_ok) {
-          const [ok, message] = await UserAPIManager.delete({ token, locale })
+        if (verifyOk) {
+          const [ok, message] = await UserAPIManager.delete({ token, locale }, verificationToken)
           if (ok) {
-            await SessionAPIManager.delete({ locale, token }, {})
-
             toast(t('common.success'))
 
             onClose()
 
-            router.push('/')
+            window?.location?.replace(`/${locale}`)
           } else {
             setError(message || t('errors.error'))
           }
         } else {
-          setError(verify_message || t('errors.error'))
+          setError(verifyMessage || t('errors.error'))
         }
 
         setSubmitting(false)

@@ -3,30 +3,28 @@
 import type React from 'react'
 import { use, useEffect, useRef, useState, type FormEvent } from 'react'
 
-import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
 import { MemoizedMarkdown } from '@/components/markdown/memoized'
 import { SidebarContext } from '@/providers/context/sidebar'
 import { MessageBox } from '@/components/chat/message-box'
-import { ChatForm } from '@/components/chat/chat-form'
 import { useLocale, useTranslations } from 'next-intl'
+import { UserContext } from '@/providers/context/user'
 import { useUpload } from '@/lib/helpers/use-upload'
 import { Container } from '@/components/container'
+import { ChatForm } from '@/components/chat/form'
 import { generateId, type UIMessage } from 'ai'
 import { ChatAPIManager } from '@/lib/api/chat'
 import { CONSTANTS } from '@/lib/constants'
 import { useChat } from '@ai-sdk/react'
 import { Env } from '@/lib/env'
 
-import type { Chat } from '@/types/chat'
+import type { AIModelID, AIModelReasoningOption } from '@/lib/ai/models'
 import type { File as PrismaFile } from '@prisma/client'
-import { UserContext } from '@/providers/context/user'
+import type { Chat } from '@/types/chat'
 
 type ChatClientPageProps = {
   token: string
   chat: Chat
 }
-
-const models = AIModels.get()
 
 export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   token,
@@ -39,6 +37,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   const [model, setModel] = useState<AIModelID>(
     chat.model || (user?.customization?.defaultModel as AIModelID) || CONSTANTS.AI.DEFAULT_MODEL
   )
+
   const [error, setError] = useState<string | null>(null)
 
   const [useReasoning, setUseReasoning] = useState<boolean>(false)
@@ -134,7 +133,6 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
           return (
             <MessageBox
               key={index}
-              models={models}
               message={
                 {
                   ...message,
@@ -157,7 +155,6 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
         {messages.length > 0 && status === 'submitted' && (
           <MessageBox
-            models={models}
             message={
               {
                 role: 'assistant',
@@ -186,8 +183,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         loading={status === 'streaming' || status === 'submitted' || isUploading}
         isUploading={isUploading}
         stop={stop}
-        modelId={model}
-        models={models}
+        selectedModel={model}
         input={input}
         files={files}
         reasoningEffort={reasoningEffort}
@@ -197,7 +193,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         handleUseReasoningChange={setUseReasoning}
         handleUseSearchChange={setUseSearch}
         handleFilesChange={setFiles}
-        handleModelIdChange={setModel}
+        handleModelChange={setModel}
         handleInputChange={handleInputChange}
         handleSubmit={async (event?: FormEvent) => {
           setError(null)

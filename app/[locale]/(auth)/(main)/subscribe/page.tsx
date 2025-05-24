@@ -62,12 +62,11 @@ const SubscribePage: React.FC<DynamicPageProps> = async ({ params }: DynamicPage
   const token = getToken(await cookies())
   if (token) {
     const user = await UserAPIManager.get({ token, locale })
-    if (user?.subscription) {
+    if (user?.subscription)
       redirect({
         href: '/',
         locale
       })
-    }
   }
 
   const t = await getTranslations({

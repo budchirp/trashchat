@@ -1,29 +1,22 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { getTranslations } from 'next-intl/server'
-import { authenticate } from '@/lib/auth/server'
+import { authenticate, verifyToken } from '@/lib/auth/server'
+import { CONSTANTS } from '@/lib/constants'
+import { Secrets } from '@/lib/secrets'
 import { Encrypt } from '@/lib/encrypt'
 import { prisma } from '@/lib/prisma'
+import jwt from 'jsonwebtoken'
 
+import type { JWTPayloadWithVerificationToken } from '@/types/jwt'
 import type { User } from '@/types/user'
-import { CONSTANTS } from '@/lib/constants'
 
 export const GET = async (request: NextRequest) => {
   try {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     return NextResponse.json(
       {
@@ -56,17 +49,18 @@ export const DELETE = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
+
+    const verificationToken = request.nextUrl.searchParams.get('verificationToken')
+    if (!verificationToken) {
+      throw new Error(t('api.required-fields', { fields: 'verificationToken' }))
+    }
+
+    try {
+      jwt.verify(verificationToken, Secrets.appSecret) as JWTPayloadWithVerificationToken
+    } catch (error) {
+      throw new Error(t('api.invalid-verification-token'))
     }
 
     await prisma.user.delete({
@@ -162,18 +156,8 @@ export const PATCH = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     const { name, email, profilePicture, defaultModel, systemPrompt, shareInfoWithAI } =
       await request.json()

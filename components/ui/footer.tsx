@@ -5,12 +5,12 @@ import { Container } from '@/components/container'
 import { Link } from '@/lib/i18n/routing'
 import { Logo } from '@/components/logo'
 
-import type { RouteMap } from '@/types/route-map'
+import type { Routes } from '@/types/routes'
 
 export const Footer: React.FC = async () => {
   const t = await getTranslations()
 
-  const routes: RouteMap = [
+  const routes: Routes = [
     {
       location: '/legal/privacy-policy',
       title: t('legal.privacy-policy.text')

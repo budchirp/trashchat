@@ -6,8 +6,8 @@ import { authenticatedRoute } from '@/lib/auth/client'
 import { UserAPIManager } from '@/lib/api/user'
 import { Heading } from '@/components/heading'
 import { routing } from '@/lib/i18n/routing'
-import { cookies } from 'next/headers'
 import { CONSTANTS } from '@/lib/constants'
+import { cookies } from 'next/headers'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
@@ -17,7 +17,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
   const { locale } = await params
   setRequestLocale(locale)
 
-  const token = authenticatedRoute(await cookies(), locale)
+  const token = authenticatedRoute(await cookies())
 
   const user = (await UserAPIManager.get({ token, locale })) as User
 

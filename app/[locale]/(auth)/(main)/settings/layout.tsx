@@ -19,7 +19,7 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
   const { locale } = await params
   setRequestLocale(locale)
 
-  const token = authenticatedRoute(await cookies(), locale)
+  const token = authenticatedRoute(await cookies())
   const user = (await UserAPIManager.get({ token, locale })) as User
 
   const t = await getTranslations({

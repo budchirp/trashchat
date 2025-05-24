@@ -340,7 +340,7 @@ export class AIModels {
     azure: this.getAzure
   }
 
-  public static get = (): AIModelMap => {
+  public static getAll = (): AIModelMap => {
     let models: Partial<AIModelMap> = {}
     ;(Env.enabledProviders as AIProvider[]).map((provider: AIProvider) => {
       const providerGetter = this.providerToGetterMap[provider]
@@ -352,5 +352,20 @@ export class AIModels {
     })
 
     return models as AIModelMap
+  }
+
+  public static allModels = AIModels.getAll()
+
+  public static get = (modelId: AIModelID): AIModel => {
+    const model = this.allModels[modelId]
+    if (!model) {
+      throw new Error(`Model "${modelId}" not found!`)
+    }
+
+    return model
+  }
+
+  public static getSafe = (modelId: AIModelID): AIModel | undefined => {
+    return this.allModels[modelId]
   }
 }

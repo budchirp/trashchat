@@ -6,9 +6,14 @@ export const routes = [
   '/chat',
   '/auth/signin',
   '/auth/signup',
+  '/legal/privacy-policy',
+  '/legal/terms-of-service',
+  '/subscribe',
   '/settings',
+  '/settings/security',
   '/settings/usages',
-  '/settings/customization'
+  '/settings/customization',
+  '/settings/appearance'
 ]
 
 export const routing = defineRouting({

@@ -17,7 +17,7 @@ const PaymentPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
   const { locale } = await params
   setRequestLocale(locale)
 
-  authenticatedRoute(await cookies(), locale)
+  authenticatedRoute(await cookies())
 
   const t = await getTranslations({
     namespace: 'subscribe',

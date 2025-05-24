@@ -16,7 +16,7 @@ const ChatLayout: React.FC<DynamicLayoutProps> = async ({
   const { locale } = await params
   setRequestLocale(locale)
 
-  const token = authenticatedRoute(await cookies(), locale)
+  const token = authenticatedRoute(await cookies())
   const chats = await ChatAPIManager.getAll({ token, locale })
 
   return (

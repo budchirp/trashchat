@@ -18,8 +18,8 @@ export const POST = async (request: NextRequest) => {
     }>(
       `https://www.google.com/recaptcha/api/siteverify?secret=${Secrets.captchaSecretKey}&response=${captcha}`
     )
-    const json = await response.json()
 
+    const json = await response.json()
     return NextResponse.json({
       message: t('common.success'),
       data: {

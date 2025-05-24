@@ -1,4 +1,5 @@
 import * as cookie from 'cookie'
+import type { RequestCookies } from 'next/dist/compiled/@edge-runtime/cookies'
 
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
 
@@ -12,8 +13,8 @@ type Cookie = {
 export class CookieMonster {
   private cookieStore: ReadonlyRequestCookies | null = null
 
-  constructor(cookieStore: ReadonlyRequestCookies | null = null) {
-    this.cookieStore = cookieStore
+  constructor(cookieStore: ReadonlyRequestCookies | RequestCookies | null = null) {
+    this.cookieStore = cookieStore as any
   }
 
   private stringify = (value: unknown): string => {

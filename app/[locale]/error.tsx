@@ -12,7 +12,7 @@ import { Link } from '@/lib/i18n/routing'
 
 import type { ErrorProps } from '@/types/error'
 
-const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => {
+const ErrorPage: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => {
   const t = useTranslations()
 
   const cookieMonster = new CookieMonster()
@@ -32,21 +32,27 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
       <div className='text-center flex flex-col gap-4 items-center justify-center'>
         <h1 className='text-lg font-medium'>{error.message}</h1>
 
-        <div className='grid gap-2'>
-          <Link href='/'>
-            <Button>{t('common.go-to-home')}</Button>
-          </Link>
+        {process.env.NODE_ENV === 'development' && <p>{error instanceof Error && error.stack}</p>}
 
-          <Button
-            color='secondary'
-            onClick={() => {
-              window?.location?.reload()
-            }}
-          >
-            {t('common.refresh')}
-          </Button>
+        <div className='flex flex-col items-center gap-2'>
+          <div>
+            <Link href='/'>
+              <Button>{t('common.go-to-home')}</Button>
+            </Link>
+          </div>
 
-          {logout && (
+          <div>
+            <Button
+              color='secondary'
+              onClick={() => {
+                window?.location?.reload()
+              }}
+            >
+              {t('common.refresh')}
+            </Button>
+          </div>
+
+          <div>
             <Button
               color='secondary'
               onClick={() => {
@@ -57,11 +63,11 @@ const Error: React.FC<ErrorProps> = ({ error }: ErrorProps): React.ReactNode => 
             >
               {t('auth.logout')}
             </Button>
-          )}
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default Error
+export default ErrorPage

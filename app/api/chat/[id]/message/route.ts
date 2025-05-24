@@ -38,27 +38,16 @@ export const POST = async (
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     const {
       messages,
-      model: modelName = (user.customization?.defaultModel as AIModelID) ||
-        CONSTANTS.AI.DEFAULT_MODEL,
+      model: modelName,
       files = [],
-      reasoningEffort = 'low',
-      useReasoning = false,
-      useSearch = false
+      reasoningEffort,
+      useReasoning,
+      useSearch
     }: {
       messages: Message[]
       model: AIModelID
@@ -78,6 +67,7 @@ export const POST = async (
         }
       })
     } else {
+      // TODO: Remove this and make it a cron job
       if (new Date(user.firstUsageAt).getTime() < new Date(Date.now()).getTime()) {
         await prisma.usages.update({
           where: {

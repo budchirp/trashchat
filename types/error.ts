@@ -1,4 +1,7 @@
 export type ErrorProps = {
-  error: Error
-  reset: () => void
+  error:
+    | Error
+    | {
+        message: string
+      }
 }

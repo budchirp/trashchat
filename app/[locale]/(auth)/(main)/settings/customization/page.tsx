@@ -15,7 +15,7 @@ const CustomizationPage: React.FC<DynamicPageProps> = async ({ params }: Dynamic
   const { locale } = await params
   setRequestLocale(locale)
 
-  authenticatedRoute(await cookies(), locale)
+  authenticatedRoute(await cookies())
 
   const t = await getTranslations({
     namespace: 'settings.customization',

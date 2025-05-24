@@ -4,7 +4,7 @@ import type React from 'react'
 import { use, useEffect, useState } from 'react'
 
 import { ResendVerificationEmailButton } from '../../auth/verify/email/[token]/resend-button'
-import { DeleteAccountDialog } from '@/components/settings/delete-account-dialog'
+import { DeleteAccountDialog } from '@/components/settings/account/delete-account-dialog'
 import { updateAccountValidator } from '@/lib/validators/update-account'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { UserContext } from '@/providers/context/user'
@@ -147,9 +147,9 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
           <Button
             color='secondary'
-            onClick={() => {
+            onClick={async () => {
               if (token) {
-                logout(token)
+                await logout(token)
               }
             }}
           >

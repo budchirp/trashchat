@@ -7,6 +7,8 @@ import { UserAPIManager } from '@/lib/api/user'
 import { getToken } from '@/lib/auth/client'
 import { cookies } from 'next/headers'
 
+import ErrorPage from '@/app/[locale]/error'
+
 import type { DynamicLayoutProps } from '@/types/layout'
 
 const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: DynamicLayoutProps) => {
@@ -23,7 +25,7 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
     })
 
     if (!ok) {
-      throw new Error(message || t('errors.error'))
+      return <ErrorPage error={{ message: message || t('errors.error') }} />
     }
 
     const user = await UserAPIManager.get({ token, locale })

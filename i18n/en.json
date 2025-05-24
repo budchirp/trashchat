@@ -5,11 +5,11 @@
     "env-error": "`{env}` environment variable is not set",
     "invalid-signature": "Invalid signature",
     "session-expired": "Session expired",
+    "invalid-verification-token": "Invalid verification token",
     "user": {
       "already-exists": "User with these stuff already exists!",
       "not-found": "User not found",
       "invalid-password": "Invalid password",
-      "invalid-verification-token": "Invalid verification token",
       "email-already-sent": "E-Mail is already sent. Please wait 1 hour before requesting another."
     }
   },

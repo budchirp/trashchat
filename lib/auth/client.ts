@@ -9,7 +9,7 @@ export const getToken = (cookieStore: ReadonlyRequestCookies): string | undefine
   return new CookieMonster(cookieStore).get(CONSTANTS.COOKIES.TOKEN_NAME)
 }
 
-export const authenticatedRoute = (cookieStore: ReadonlyRequestCookies, locale: string): string => {
+export const authenticatedRoute = (cookieStore: ReadonlyRequestCookies): string => {
   const token = getToken(cookieStore)
   if (!token) {
     return unauthorized()

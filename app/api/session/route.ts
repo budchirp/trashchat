@@ -158,36 +158,27 @@ export const DELETE = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [_, user, payload] = await authenticate(request, locale)
 
     const token = request.nextUrl.searchParams.get('token_id')
-    if (token) {
-      await prisma.session.delete({
-        where: {
-          id: token,
+    if (user && payload) {
+      if (token) {
+        await prisma.session.delete({
+          where: {
+            id: token,
 
-          userId: user.id
-        }
-      })
-    } else {
-      await prisma.session.delete({
-        where: {
-          id: payload.token,
+            userId: user.id
+          }
+        })
+      } else {
+        await prisma.session.delete({
+          where: {
+            id: payload.token,
 
-          userId: user.id
-        }
-      })
+            userId: user.id
+          }
+        })
+      }
     }
 
     const response = NextResponse.json({
@@ -196,7 +187,7 @@ export const DELETE = async (request: NextRequest) => {
     })
 
     if (!token) {
-      const cookieMonster = new CookieMonster(await cookies())
+      const cookieMonster = new CookieMonster(request.cookies)
       cookieMonster.delete(CONSTANTS.COOKIES.TOKEN_NAME)
 
       response.cookies.delete(CONSTANTS.COOKIES.TOKEN_NAME)

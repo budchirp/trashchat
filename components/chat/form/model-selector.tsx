@@ -5,6 +5,7 @@ import { useEffect, useState, use } from 'react'
 import { createPortal } from 'react-dom'
 
 import { SidebarContext } from '@/providers/context/sidebar'
+import { AIModels, type AIModelID } from '@/lib/ai/models'
 import { UserContext } from '@/providers/context/user'
 import { Container } from '@/components/container'
 import { Backdrop } from '@/components/backdrop'
@@ -29,21 +30,17 @@ import {
   Search
 } from 'lucide-react'
 
-import type { AIModelID, AIModelMap } from '@/lib/ai/models'
-
 export type ModelSelectorProps = {
   height: number
-
-  models: AIModelMap
 
   model: AIModelID
   onModelChange: (model: AIModelID) => void
 }
 
+const models = AIModels.getAll()
+
 export const ModelSelector: React.FC<ModelSelectorProps> = ({
   height,
-
-  models,
 
   model,
   onModelChange
@@ -56,6 +53,8 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   const { user } = use(UserContext)
   const { showSidebar } = use(SidebarContext)
 
+  const selectedModel = AIModels.get(model)
+
   return (
     <Listbox value={model} onChange={onModelChange}>
       {({ open }) => (
@@ -67,7 +66,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
             className='px-4 h-10 transition-all duration-150 rounded-lg bg-transparent hover:bg-background-secondary flex items-center gap-1 cursor-pointer'
             aria-label='Open model selector menu'
           >
-            {models[model]?.name || model}
+            {selectedModel.name}
 
             <ChevronDown />
           </ListboxButton>
@@ -101,7 +100,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                   >
                     <div className='grid grid-cols-2 md:grid-cols-3 gap-4 p-4'>
                       {(Object.keys(models) as AIModelID[]).map((modelId: AIModelID) => {
-                        const model = models[modelId]
+                        const model = AIModels.get(modelId)
 
                         return (
                           <ListboxOption
@@ -127,58 +126,58 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                       'transition text-center duration-300',
                                       selected
                                         ? 'text-text-accent-primary font-bold'
-                                        : model?.recommended
+                                        : model.recommended
                                           ? 'font-bold text-text-primary'
                                           : 'font-medium text-text-secondary'
                                     )}
                                   >
-                                    {model?.name || modelId}
+                                    {model.name}
                                   </p>
 
                                   <div className='flex items-center flex-wrap justify-center gap-2'>
-                                    {model?.plus && (
+                                    {model.plus && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Crown />
                                       </div>
                                     )}
 
-                                    {model?.premium && (
+                                    {model.premium && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <DollarSign />
                                       </div>
                                     )}
 
-                                    {model?.recommended && (
+                                    {model.recommended && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <ThumbsUp />
                                       </div>
                                     )}
 
-                                    {model?.experimental && (
+                                    {model.experimental && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <FlaskConical />
                                       </div>
                                     )}
 
-                                    {model?.reasoning && (
+                                    {model.reasoning && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Brain />
                                       </div>
                                     )}
 
-                                    {model?.search && (
+                                    {model.search && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Search />
                                       </div>
                                     )}
 
-                                    {model?.imageUpload && (
+                                    {model.imageUpload && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <Camera />
                                       </div>
                                     )}
 
-                                    {model?.fileUpload && (
+                                    {model.fileUpload && (
                                       <div className='size-8 border border-border p-2 flex items-center justify-center rounded-lg'>
                                         <File />
                                       </div>

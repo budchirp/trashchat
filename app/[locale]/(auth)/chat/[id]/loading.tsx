@@ -3,8 +3,9 @@
 import type React from 'react'
 
 import { MessageBox } from '@/components/chat/message-box'
-import { ChatForm } from '@/components/chat/chat-form'
+import { ChatForm } from '@/components/chat/form'
 import { Container } from '@/components/container'
+import { CONSTANTS } from '@/lib/constants'
 
 const Loading: React.FC = () => {
   return (
@@ -13,7 +14,6 @@ const Loading: React.FC = () => {
         {[...Array(4)].map((_, index) => (
           <MessageBox
             className={index % 2 === 0 ? 'w-2/4' : 'w-full'}
-            models={{} as any}
             key={index}
             message={
               {
@@ -44,8 +44,7 @@ const Loading: React.FC = () => {
         loading={true}
         isUploading={false}
         stop={() => {}}
-        modelId={'gemini-2.5-flash'}
-        models={{} as any}
+        selectedModel={CONSTANTS.AI.DEFAULT_MODEL}
         input={''}
         files={[]}
         reasoningEffort={null}
@@ -55,7 +54,7 @@ const Loading: React.FC = () => {
         handleUseReasoningChange={() => {}}
         handleUseSearchChange={() => {}}
         handleFilesChange={() => {}}
-        handleModelIdChange={() => {}}
+        handleModelChange={() => {}}
         handleInputChange={() => {}}
         handleSubmit={() => {}}
       />

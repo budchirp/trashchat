@@ -1,31 +1,26 @@
 import { VerifyEmailTemplate } from '@/components/email/verify'
 import { NextResponse, type NextRequest } from 'next/server'
-import { authenticate } from '@/lib/auth/server'
+import { authenticate, verifyToken } from '@/lib/auth/server'
 import { CONSTANTS } from '@/lib/constants'
 import { Secrets } from '@/lib/secrets'
 import { prisma } from '@/lib/prisma'
 import { Resend } from 'resend'
 import { getTranslations } from 'next-intl/server'
 
-const resend = new Resend(Secrets.resendApiKey!)
+const resendApiKey = Secrets.resendApiKey
+if (!resendApiKey) {
+  throw new Error('Resend API key is not set')
+}
+
+const resend = new Resend(resendApiKey)
 
 export const POST = async (request: NextRequest) => {
   try {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     const { token } = await request.json()
     if (!token) {
@@ -33,7 +28,7 @@ export const POST = async (request: NextRequest) => {
     }
 
     if (user.emailVerificationToken !== token) {
-      throw new Error(t('api.user.invalid-verification-token'))
+      throw new Error(t('api.invalid-verification-token'))
     }
 
     await prisma.user.update({
@@ -76,18 +71,8 @@ export const GET = async (request: NextRequest) => {
     const locale = request.headers.get('accept-language') || 'en'
     const t = await getTranslations({ locale })
 
-    const [isTokenValid, payload, user] = await authenticate(request.headers, request.cookies)
-    if (!isTokenValid || !payload) {
-      return NextResponse.json(
-        {
-          message: t('errors.unauthorized'),
-          data: {}
-        },
-        {
-          status: 403
-        }
-      )
-    }
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
 
     if (user.isEmailVerified) {
       return NextResponse.json({
