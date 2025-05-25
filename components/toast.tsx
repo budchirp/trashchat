@@ -7,7 +7,7 @@ import { Box } from '@/components/box'
 
 export const toast = (title: string) => {
   return sonnerToast.custom(() => (
-    <Box variant='primary' className='w-48 md:w-96 shadow-2xl'>
+    <Box variant='blurry' className='w-48 shadow-2xl md:w-96'>
       {title}
     </Box>
   ))

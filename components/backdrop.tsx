@@ -23,7 +23,7 @@ export const Backdrop: React.FC<BackdropProps> = ({
     as='div'
     onClick={onClose}
     className={cn(
-      'transition-all bg-black opacity-50 overflow-hidden .backdrop-blur-sm',
+      'transition-all bg-black opacity-25 dark:opacity-50 overflow-hidden .backdrop-blur-sm',
       'data-closed:opacity-0 data-closed:.backdrop-blur-none',
       'data-enter:ease-out data-enter:duration-400',
       'data-leave:ease-in data-leave:duration-200',
