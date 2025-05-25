@@ -11,12 +11,11 @@ import { constructSystemPrompt } from '@/lib/ai/prompt'
 import { getTranslations } from 'next-intl/server'
 import { authenticate } from '@/lib/auth/server'
 import { AIProviders } from '@/lib/ai/providers'
-import { CONSTANTS } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
 import { randomUUID } from 'crypto'
 import { z } from 'zod'
 
-import type { File, Usages } from '@prisma/client'
+import type { File } from '@prisma/client'
 import type { GoogleGenerativeAIProviderOptions } from '@ai-sdk/google'
 import type { OpenAIResponsesProviderOptions } from '@ai-sdk/openai/internal'
 import type { AIModelID, AIModelReasoningOption } from '@/lib/ai/models'
@@ -57,59 +56,18 @@ export const POST = async (
       useSearch: boolean
     } = await request.json()
 
-    if (!user.firstUsageAt) {
-      await prisma.user.update({
-        where: {
-          id: user.id
-        },
-        data: {
-          firstUsageAt: new Date(Date.now())
-        }
-      })
-    } else {
-      // TODO: Remove this and make it a cron job
-      if (new Date(user.firstUsageAt).getTime() < new Date(Date.now()).getTime()) {
-        await prisma.usages.update({
-          where: {
-            userId: user.id
-          },
-          data: {
-            credits: user.isEmailVerified
-              ? CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].CREDITS
-              : 10,
-            premiumCredits: CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
-          }
-        })
-
-        await prisma.user.update({
-          where: {
-            id: user.id
-          },
-          data: {
-            firstUsageAt: new Date(Date.now())
-          }
-        })
-      }
-    }
-
     const model = AIProviders.get(modelName)
 
     if (!user.subscription && (model.plus || useReasoning || useSearch || files.length > 0)) {
       throw new Error(t('chat.errors.plan-error'))
     }
 
-    const usages = (await prisma.usages.findUnique({
-      where: {
-        userId: user.id
-      }
-    })) as Usages
-
     if (model.premium) {
-      if (usages.premiumCredits < 1) {
+      if (user.usages.premiumCredits < 1) {
         throw new Error(t('chat.errors.credit-error'))
       }
     } else {
-      if (usages.credits < 1) {
+      if (user.usages.credits < 1) {
         throw new Error(t('chat.errors.credit-error'))
       }
     }
@@ -143,17 +101,17 @@ export const POST = async (
         content: message.content,
 
         userId: user.id,
-        chatId: chat.id
-      }
-    })
+        chatId: chat.id,
 
-    await prisma.messagePart.create({
-      data: {
-        type: 'text',
+        parts: {
+          create: [
+            {
+              type: 'text',
 
-        text: message.content,
-
-        messageId
+              text: message.content
+            }
+          ]
+        }
       }
     })
 
@@ -206,8 +164,12 @@ export const POST = async (
         userId: user.id
       },
       data: {
-        credits: !model.premium ? usages.credits - 1 : undefined,
-        premiumCredits: model.premium ? usages.premiumCredits - 1 : undefined
+        credits: {
+          decrement: 1
+        },
+        premiumCredits: {
+          decrement: model.premium ? 1 : 0
+        }
       }
     })
 
@@ -300,7 +262,7 @@ export const POST = async (
         }
       ],
       onFinish: async ({ text, reasoning, sources = [], files = [] }) => {
-        const message = await prisma.message.create({
+        await prisma.message.create({
           data: {
             role: 'assistant',
 
@@ -309,58 +271,49 @@ export const POST = async (
             content: text,
 
             userId: user.id,
-            chatId: chat.id
-          }
-        })
+            chatId: chat.id,
 
-        await prisma.messagePart.create({
-          data: {
-            type: 'text',
-            text: text,
-            messageId: message.id
-          }
-        })
+            files: {
+              create: await Promise.all(
+                files.map(async (file) => {
+                  return {
+                    name: randomUUID(),
+                    url: `data:${file.mimeType};base64,${file.base64}`,
 
-        if (reasoning) {
-          await prisma.messagePart.create({
-            data: {
-              type: 'reasoning',
+                    contentType: file.mimeType
+                  } as const
+                })
+              )
+            },
 
-              text: reasoning,
+            parts: {
+              create: [
+                {
+                  type: 'text',
+                  text: text
+                },
+                ...(reasoning
+                  ? ([
+                      {
+                        type: 'reasoning',
 
-              messageId: message.id
+                        text: reasoning
+                      }
+                    ] as const)
+                  : []),
+                ...(await Promise.all(
+                  sources.map(async (source) => {
+                    return {
+                      type: 'source',
+
+                      text: `${source.url};${source.title}`
+                    } as const
+                  })
+                ))
+              ]
             }
-          })
-        }
-
-        await Promise.all(
-          sources.map(async (source) => {
-            await prisma.messagePart.create({
-              data: {
-                type: 'source',
-
-                text: `${source.url};${source.title}`,
-
-                messageId: message.id
-              }
-            })
-          })
-        )
-
-        await Promise.all(
-          files.map(async (file) => {
-            await prisma.file.create({
-              data: {
-                name: randomUUID(),
-                url: `data:${file.mimeType};base64,${file.base64}`,
-
-                contentType: file.mimeType,
-
-                messageId: message.id
-              }
-            })
-          })
-        )
+          }
+        })
       }
     })
 
