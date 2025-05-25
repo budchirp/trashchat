@@ -31,8 +31,8 @@ export const AppearanceClientPage: React.FC = (): React.ReactNode => {
 
   return (
     mounted && (
-      <div className='grid gap-2'>
-        <h2>{t('theme')}</h2>
+      <div className='grid gap-1'>
+        <h2 className='font-medium text-text-tertiary'>{t('theme')}</h2>
 
         <Dropdown
           button={

@@ -103,7 +103,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
         </Field>
       </div>
 
-      <div>
+      <div className='flex justify-end'>
         <Button loading={formik.isSubmitting} type='submit'>
           {t('common.submit')}
         </Button>

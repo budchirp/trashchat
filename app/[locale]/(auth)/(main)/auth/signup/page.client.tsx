@@ -102,6 +102,10 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
         </Box>
       )}
 
+      <div className='flex justify-center mb-2'>
+        <ReCAPTCHA theme='dark' ref={captchaRef} sitekey={captchaSiteKey} />
+      </div>
+
       <div className='grid gap-2 w-full'>
         <Field>
           <Input
@@ -192,13 +196,9 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             <p className='text-red-500'>{formik.errors.termsOfService}</p>
           )}
         </div>
-
-        <div>
-          <ReCAPTCHA ref={captchaRef} sitekey={captchaSiteKey} />
-        </div>
       </div>
 
-      <div>
+      <div className='flex justify-end'>
         <Button loading={formik.isSubmitting} type='submit'>
           {t('common.submit')}
         </Button>

@@ -70,11 +70,15 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
         </Box>
       )}
 
-      <div className='grid gap-2'>
-        <h2>{t('default-model')}</h2>
+      <div className='grid gap-1'>
+        <h2 className='font-medium text-text-tertiary'>{t('default-model')}</h2>
 
         <Dropdown
-          button={<Button>{models[formik.values.defaultModel as AIModelID].name}</Button>}
+          button={
+            <Button color='secondary'>
+              {models[formik.values.defaultModel as AIModelID].name}
+            </Button>
+          }
           options={
             (Object.keys(models) as AIModelID[])
               .map((modelName) => {
