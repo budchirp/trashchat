@@ -31,7 +31,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
     locale
   })
 
-  const resetDate = new Date(user.firstUsageAt || Date.now())
+  const resetDate = new Date(user.usages.updatedAt || Date.now())
   resetDate.setDate(resetDate.getDate() + 10)
 
   return (
@@ -40,9 +40,7 @@ const UsagesPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePro
         description={
           <div>
             {!user.isEmailVerified && <p>{t('verify-warning')}</p>}
-            {user.firstUsageAt && user.isEmailVerified && (
-              <p>{t('reset', { date: resetDate.toLocaleDateString() })}</p>
-            )}
+            {user.isEmailVerified && <p>{t('reset', { date: resetDate.toLocaleDateString() })}</p>}
           </div>
         }
         className='max-md:mt-0'

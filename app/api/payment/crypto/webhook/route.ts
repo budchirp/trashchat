@@ -58,8 +58,6 @@ export const POST = async (request: NextRequest) => {
               id: Number(id)
             },
             data: {
-              firstUsageAt: new Date(Date.now()),
-
               subscription: {
                 create: {
                   paymentMethod: 'card',

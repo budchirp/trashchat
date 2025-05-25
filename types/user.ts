@@ -12,8 +12,6 @@ export type User = {
 
   password: string
 
-  firstUsageAt: Date | null
-
   profile: Profile
   customization: AICustomization
   usages: Usages
