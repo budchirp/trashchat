@@ -32,9 +32,6 @@
 - [x] Translate API routes
 - [x] Add an option to select a model for new chats
 - [ ] Landing page
-- [ ] Github OAuth maybe
 - [ ] Forgot password feature
 - [ ] SEO
 - [ ] Share feature
-
-- [ ] Fix logout
