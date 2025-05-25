@@ -29,8 +29,8 @@ export const POST = async (request: NextRequest) => {
       }
     })
 
-    let chat: any = chats.length > 0 ? chats[0] : null
-    if (!chat || (chat && chat.messages.length > 1)) {
+    let chat: any = chats[0]
+    if (!chat || (chat && chat.messages.length > 0)) {
       chat = await prisma.chat.create({
         data: {
           title: t('chat.new-chat'),
