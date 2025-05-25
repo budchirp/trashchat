@@ -8,29 +8,12 @@ import { UserContext } from '@/providers/context/user'
 import { Container } from '@/components/container'
 import { Button } from '@/components/button'
 import { useTranslations } from 'next-intl'
-import { Link } from '@/lib/i18n/routing'
+import { Link, usePathname } from '@/lib/i18n/routing'
 import { Logo } from '@/components/logo'
 import { MenuIcon } from 'lucide-react'
 import { cn } from '@/lib/cn'
-
-type HeaderLinkProps = {
-  href: string
-  children: React.ReactNode
-}
-
-const HeaderLink: React.FC<HeaderLinkProps> = ({
-  href,
-  children
-}: HeaderLinkProps): React.ReactNode => {
-  return (
-    <Link
-      className='text-lg text-text-tertiary font-medium hover:font-bold transition-all duration-300 hover:text-text-primary '
-      href={href}
-    >
-      {children}
-    </Link>
-  )
-}
+import { HeaderLink } from '../header-link'
+import type { Routes } from '@/types/routes'
 
 type HeaderProps = {
   isSidebarLayout?: boolean
@@ -39,10 +22,34 @@ type HeaderProps = {
 export const Header: React.FC<HeaderProps> = ({
   isSidebarLayout = false
 }: HeaderProps): React.ReactNode => {
-  const t = useTranslations()
-
   const { user } = use(UserContext)
   const { showSidebar, setShowSidebar } = use(SidebarContext)
+
+  const t = useTranslations()
+
+  const routes: Routes = [
+    ...(user
+      ? !isSidebarLayout
+        ? [
+            {
+              location: '/chat',
+              title: t('common.go-to-chat')
+            }
+          ]
+        : []
+      : [
+          {
+            location: '/auth/signin',
+            title: t('auth.signin.text')
+          },
+          {
+            location: '/auth/signup',
+            title: t('auth.signup.text')
+          }
+        ])
+  ]
+
+  const pathname = usePathname()
 
   return (
     <>
@@ -56,17 +63,17 @@ export const Header: React.FC<HeaderProps> = ({
           <Logo />
 
           <div className='flex h-full items-center gap-2'>
-            {!user && (
-              <>
-                <HeaderLink href='/auth/signin'>{t('auth.signin.text')}</HeaderLink>
-
-                <HeaderLink href='/auth/signup'>{t('auth.signup.text')}</HeaderLink>
-              </>
-            )}
-
-            {user && !isSidebarLayout && (
-              <HeaderLink href='/chat'>{t('common.go-to-chat')}</HeaderLink>
-            )}
+            {routes.map((route) => {
+              return (
+                <HeaderLink
+                  href={route.location}
+                  selected={pathname === route.location}
+                  key={route.location}
+                >
+                  {route.title}
+                </HeaderLink>
+              )
+            })}
 
             {isSidebarLayout && (
               <Button

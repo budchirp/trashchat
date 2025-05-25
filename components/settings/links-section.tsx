@@ -2,10 +2,10 @@
 
 import type React from 'react'
 
-import { Link, usePathname } from '@/lib/i18n/routing'
+import { HeaderLink } from '@/components/header-link'
+import { usePathname } from '@/lib/i18n/routing'
 import { Heading } from '@/components/heading'
 import { useTranslations } from 'next-intl'
-import { cn } from '@/lib/cn'
 
 import type { Routes } from '@/types/routes'
 
@@ -45,18 +45,9 @@ export const SettingsLinksSection: React.FC = (): React.ReactNode => {
         const location = `/settings${route.location}`
 
         return (
-          <Link
-            href={location}
-            className={cn(
-              'hover:text-text-primary transition-all duration-300 hover:font-bold',
-              pathname === location
-                ? 'text-text-primary font-bold'
-                : 'text-text-tertiary font-medium'
-            )}
-            key={route.location}
-          >
+          <HeaderLink href={location} selected={pathname === location} key={location}>
             {route.title}
-          </Link>
+          </HeaderLink>
         )
       })}
     </div>
