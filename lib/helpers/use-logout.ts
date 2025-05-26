@@ -13,6 +13,8 @@ export const useLogout = (): ((token: string) => Promise<void>) => {
 
   const { setUser } = use(UserContext)
   return async (token) => {
+    toast(t('loading'))
+
     await SessionAPIManager.delete(
       {
         locale,
