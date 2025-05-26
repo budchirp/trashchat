@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/cn'
 
 const boxVariants = cva(
-  ['w-full rounded-3xl border border-border transition-all duration-300 overflow-hidden'],
+  ['w-full rounded-3xl min-w-0 break-words border border-border transition-all duration-300'],
   {
     variants: {
       variant: {

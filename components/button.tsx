@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn'
 
 export const buttonVariants = cva(
   [
-    'flex ease-out disabled:opacity-50 border active:scale-95 cursor-pointer items-center justify-center font-medium transition duration-300'
+    'flex ease-out disabled:opacity-50 disabled:pointer-events-none border active:scale-95 cursor-pointer items-center justify-center font-medium transition duration-300'
   ],
   {
     variants: {
@@ -41,18 +41,21 @@ export type ButtonProps = {
 export const Button: React.FC<ButtonProps> = ({
   children,
   loading,
+  disabled,
   className,
   variant,
   color,
-  type,
+  type = 'button',
   ...props
 }: ButtonProps): React.ReactNode => {
   if (!children) loading = true
+  if (loading) disabled = true
 
   return (
     <HeadlessButton
       {...props}
-      type={type || 'button'}
+      type={type}
+      disabled={disabled}
       className={cn(buttonVariants({ className, variant, color }))}
     >
       {loading && <Loader2 className={cn('animate-spin text-xs', children ? 'mr-2' : '')} />}

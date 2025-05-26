@@ -7,6 +7,7 @@ import { Container } from '@/components/container'
 import { Backdrop } from '@/components/backdrop'
 import { Button } from '@/components/button'
 import { Box } from '@/components/box'
+import { Nav } from '@/components/nav'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/cn'
 
@@ -38,27 +39,28 @@ export const Dialog: React.FC<DialogProps> = ({
         )}
 
       <div className='w-screen h-screen_ flex justify-center items-center z-50 mx-auto inset-0 fixed'>
-        <Container className='fixed top-20 flex h-min items-center justify-center'>
+        <Container className='fixed top-20 flex h-full items-center justify-center'>
           <DialogPanel
             as={Box}
             transition
             variant='primary'
+            padding='none'
             className={cn(
-              'top-0 grid w-full gap-2 md:max-w-96 overflow-hidden sm:max-w-(--breakpoint-xs)',
+              'top-0 w-full max-h-3/4 absolute md:max-w-96 sm:max-w-(--breakpoint-xs)',
               'transition-all scale-100 opacity-100',
               'data-closed:scale-90 data-closed:opacity-0',
               'data-enter:ease-out data-enter:duration-400',
               'data-leave:ease-in data-leave:duration-200'
             )}
           >
-            <div className='flex items-center justify-between'>
+            <Nav rounded container={false}>
               <DialogTitle className='text-2xl font-bold'>{title}</DialogTitle>
               <Button onClick={onClose} variant='round' color='secondary'>
                 <X />
               </Button>
-            </div>
+            </Nav>
 
-            {content}
+            <div className='h-full p-4'>{content}</div>
           </DialogPanel>
         </Container>
       </div>

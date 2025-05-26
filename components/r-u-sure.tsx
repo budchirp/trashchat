@@ -7,16 +7,24 @@ import { useTranslations } from 'next-intl'
 type AreYouSureDialogProps = {
   title: React.ReactNode
   children: React.ReactNode
+
+  style?: 'default' | 'danger'
+
   open: boolean
   onClose: () => void
+
   onSubmit: () => void
 }
 
 export const AreYouSureDialog: React.FC<AreYouSureDialogProps> = ({
   title,
   children,
+
+  style = 'danger',
+
   open,
   onClose,
+
   onSubmit
 }: AreYouSureDialogProps): React.ReactNode => {
   const t = useTranslations('common')
@@ -27,15 +35,21 @@ export const AreYouSureDialog: React.FC<AreYouSureDialogProps> = ({
       onClose={onClose}
       title={title}
       content={
-        <div className='grid gap-4'>
+        <div className='grid gap-2'>
           <div>{children}</div>
 
-          <div className='flex gap-2'>
-            <Button color='danger' onClick={onSubmit} type='submit'>
-              {t('submit')}
+          <div className='flex justify-end gap-2'>
+            <Button color='secondary' onClick={onClose}>
+              {t('cancel')}
             </Button>
 
-            <Button onClick={onClose}>{t('cancel')}</Button>
+            <Button
+              color={style === 'danger' ? 'danger' : 'primary'}
+              onClick={onSubmit}
+              type='submit'
+            >
+              {t('submit')}
+            </Button>
           </div>
         </div>
       }
