@@ -28,7 +28,7 @@ import type { JWTPayload } from '@/types/jwt'
 export const CustomizationClientPage: React.FC = (): React.ReactNode => {
   const router = useRouter()
 
-  const { user } = use(UserContext)
+  const { user, refreshUser } = use(UserContext)
 
   const locale = useLocale()
   const t = useTranslations()
@@ -166,6 +166,8 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
                     if (payload?.token === session.id) {
                       await logout(token)
                     } else {
+                      toast(t('common.loading'))
+
                       await SessionAPIManager.delete(
                         { token, locale },
                         {
@@ -175,7 +177,7 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
 
                       toast(t('common.success'))
 
-                      router.refresh()
+                      refreshUser()
                     }
                   }
                 }}
