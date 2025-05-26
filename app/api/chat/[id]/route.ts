@@ -1,11 +1,9 @@
+import { convertMessageToUIMessage } from '@/lib/ai/db-helper'
 import { NextResponse, type NextRequest } from 'next/server'
-import { authenticate, verifyToken } from '@/lib/auth/server'
 import { getTranslations } from 'next-intl/server'
+import { authenticate } from '@/lib/auth/server'
 import { CONSTANTS } from '@/lib/constants'
 import { prisma } from '@/lib/prisma'
-
-import type { Message, MessagePart } from '@prisma/client'
-import { convertMessageToUIMessage } from '@/lib/ai/db-helper'
 
 export const DELETE = async (
   request: NextRequest,
@@ -160,6 +158,55 @@ export const GET = async (
         ...chat,
         messages: chat.messages.map(convertMessageToUIMessage)
       }
+    })
+  } catch (error) {
+    console.log(error)
+
+    return NextResponse.json(
+      {
+        message: (error as Error).message,
+        data: {}
+      },
+      { status: 500 }
+    )
+  }
+}
+
+export const PATCH = async (
+  request: NextRequest,
+  {
+    params
+  }: {
+    params: Promise<{
+      id: string
+    }>
+  }
+) => {
+  try {
+    const locale = request.headers.get('accept-language') || 'en'
+    const t = await getTranslations({ locale })
+
+    const [response, user] = await authenticate(request, locale)
+    if (response) return response
+
+    const { id } = await params
+
+    const { title, shared } = await request.json()
+
+    await prisma.chat.update({
+      where: {
+        id,
+        userId: user.id
+      },
+      data: {
+        title,
+        shared
+      }
+    })
+
+    return NextResponse.json({
+      message: t('common.success'),
+      data: {}
     })
   } catch (error) {
     console.log(error)

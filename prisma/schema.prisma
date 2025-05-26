@@ -21,6 +21,10 @@ model User {
 
   password String
 
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
+
   profile Profile?
   customization AICustomization?
 
@@ -32,9 +36,6 @@ model User {
 
   chats Chat[]
   messages Message[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
 
   @@map("users")
 }
@@ -97,7 +98,6 @@ model Session {
   browser String
 
   expiresAt DateTime @map("expires_at")
-
   createdAt DateTime @default(now()) @map("created_at")
 
   userId Int
@@ -130,6 +130,8 @@ model Chat {
   title String
 
   model String
+
+  shared Boolean @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

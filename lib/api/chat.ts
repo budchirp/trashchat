@@ -78,4 +78,24 @@ export class ChatAPIManager {
       return null
     }
   }
+
+  public static update = async (
+    headers: APIHeaders,
+    id: string,
+    data: Partial<Chat>
+  ): Promise<[true, undefined] | [false, string | null]> => {
+    try {
+      const response = await Fetch.patch<APIResponse<Chat>>(`${Env.appUrl}/api/chat/${id}`, data, {
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
+      })
+
+      if (response.ok) return [true, undefined]
+
+      const json = await response.json()
+      return [false, json.message]
+    } catch {
+      return [false, null]
+    }
+  }
 }
