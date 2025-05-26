@@ -3,23 +3,25 @@
 import type React from 'react'
 import { use, useEffect, useState } from 'react'
 
+import { X, Plus, Trash, ChevronDown, User, LogOut, MoreVertical, Cog } from 'lucide-react'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
-import { X, Plus, Trash, ChevronDown, User, LogOut } from 'lucide-react'
+import { ChatOptionsDialog } from '@/components/ui/sidebar/chat-options-dialog'
 import { DeleteChatDialog } from '@/components/ui/sidebar/delete-chat-dialog'
 import { SidebarContext } from '@/providers/context/sidebar'
 import { UserContext } from '@/providers/context/user'
+import { useLocale, useTranslations } from 'next-intl'
 import { useLogout } from '@/lib/helpers/use-logout'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { Link, useRouter } from '@/lib/i18n/routing'
-import { Container } from '@/components/container'
+import { Dropdown } from '@/components/dropdown'
 import { Backdrop } from '@/components/backdrop'
 import { ChatAPIManager } from '@/lib/api/chat'
 import { usePathname } from 'next/navigation'
-import { useLocale, useTranslations } from 'next-intl'
 import { Button } from '@/components/button'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/components/toast'
 import { Box } from '@/components/box'
+import { Nav } from '@/components/nav'
 import Image from 'next/image'
 import { cn } from '@/lib/cn'
 
@@ -74,23 +76,26 @@ const SidebarFooter: React.FC = (): React.ReactNode => {
   const { user } = use(UserContext)
 
   return (
-    <div className='w-full h-16 cursor-pointer hover:bg-background-secondary bg-background-primary transition-all duration-300 sticky bottom-0 flex items-center justify-center border-t border-border'>
-      <Container className='h-16 flex items-center justify-between'>
-        <div className='flex items-center gap-3'>
-          <Image
-            height={128}
-            width={128}
-            className='size-10 p-1 rounded-full border border-border aspect-square object-cover'
-            alt={useTranslations('settings.account')('profile-picture')}
-            src={user?.profile?.profilePicture || '/images/placeholder.png'}
-          />
+    <Nav
+      position='bottom'
+      variant='default'
+      container={false}
+      className='transition-all duration-300 hover:bg-background-secondary cursor-pointer'
+    >
+      <div className='flex items-center gap-3'>
+        <Image
+          height={128}
+          width={128}
+          className='size-10 p-1 rounded-full border border-border aspect-square object-cover'
+          alt={useTranslations('settings.account')('profile-picture')}
+          src={user?.profile?.profilePicture || '/images/placeholder.png'}
+        />
 
-          <h2 className='text-text-primary font-medium text-lg'>{user?.profile?.name}</h2>
-        </div>
+        <h2 className='text-text-primary font-medium text-lg'>{user?.profile?.name}</h2>
+      </div>
 
-        <ChevronDown size={16} />
-      </Container>
-    </div>
+      <ChevronDown size={16} />
+    </Nav>
   )
 }
 
@@ -110,33 +115,39 @@ const ProfileMenu = () => {
   const logout = useLogout()
 
   return (
-    <Menu>
-      {({ open }) => {
-        return (
-          <div>
-            <Backdrop
-              fullscreen={false}
-              open={open}
-              className='backdrop-h-screen absolute top-0 z-10 w-full'
-            />
+    <>
+      <Menu>
+        {({ open }) => {
+          return (
+            <div>
+              <Backdrop
+                fullscreen={false}
+                open={open}
+                className='backdrop-h-screen absolute top-0 z-10 w-full'
+              />
 
-            <MenuButton className='w-full'>
-              <SidebarFooter />
-            </MenuButton>
+              <MenuButton className='w-full'>
+                <SidebarFooter />
+              </MenuButton>
 
-            <Transition
-              show={open}
-              as='div'
-              className={cn(
-                'flex justify-center items-center origin-[50%_100%] left-0 bottom-20 z-20 mx-auto w-full absolute',
-                'transition-all scale-100 opacity-100',
-                'data-closed:scale-90 data-closed:opacity-0',
-                'data-enter:ease-out data-enter:duration-400',
-                'data-leave:ease-in data-leave:duration-200'
-              )}
-            >
-              <Container>
-                <MenuItems static as={Box} variant='primary' padding='none' className='w-full'>
+              <Transition
+                show={open}
+                as='div'
+                className={cn(
+                  'flex justify-center items-center origin-[50%_100%] left-0 bottom-20 z-20 mx-auto w-full absolute',
+                  'transition-all scale-100 opacity-100',
+                  'data-closed:scale-90 data-closed:opacity-0',
+                  'data-enter:ease-out data-enter:duration-400',
+                  'data-leave:ease-in data-leave:duration-200'
+                )}
+              >
+                <MenuItems
+                  static
+                  as={Box}
+                  variant='primary'
+                  padding='none'
+                  className='w-full overflow-hidden mx-4'
+                >
                   <ProfileMenuItem>
                     <Link href='/settings'>
                       <ProfileMenuItemContent icon={<User size={16} />}>
@@ -161,12 +172,12 @@ const ProfileMenu = () => {
                     </button>
                   </ProfileMenuItem>
                 </MenuItems>
-              </Container>
-            </Transition>
-          </div>
-        )
-      }}
-    </Menu>
+              </Transition>
+            </div>
+          )
+        }}
+      </Menu>
+    </>
   )
 }
 
@@ -174,21 +185,108 @@ const SidebarHeader: React.FC = (): React.ReactNode => {
   const { setShowSidebar } = use(SidebarContext)
 
   return (
-    <div className='w-full h-16 sticky top-0 bg-background-primary flex items-center justify-center border-b border-border'>
-      <Container className='h-16 flex items-center justify-between'>
-        <h1 className='font-bold text-2xl'>Chats</h1>
+    <Nav variant='default' container={false}>
+      <h1 className='font-bold text-2xl'>Chats</h1>
 
-        <Button
-          className='md:hidden'
-          aria-label='Open menu'
-          variant='round'
-          color='secondary'
-          onClick={() => setShowSidebar(false)}
-        >
-          <X />
-        </Button>
-      </Container>
-    </div>
+      <Button
+        className='md:hidden'
+        aria-label='Open menu'
+        variant='round'
+        color='secondary'
+        onClick={() => setShowSidebar(false)}
+      >
+        <X />
+      </Button>
+    </Nav>
+  )
+}
+
+type ChatChipDropdownProps = {
+  selected: boolean
+  chat?: Chat
+}
+
+const ChatChipDropdown: React.FC<ChatChipDropdownProps> = ({
+  selected,
+  chat
+}: ChatChipDropdownProps): React.ReactNode => {
+  const [showDeleteChatDialog, setShowDeleteChatDialog] = useState<boolean>(false)
+  const [showOptionsDialog, setShowOptionsDialog] = useState<boolean>(false)
+
+  const { refreshChats } = use(SidebarContext)
+
+  const t = useTranslations()
+
+  return (
+    <>
+      {chat && (
+        <>
+          <DeleteChatDialog
+            id={chat.id}
+            redirect={selected}
+            onDelete={() => {
+              refreshChats()
+            }}
+            open={showDeleteChatDialog}
+            onClose={() => setShowDeleteChatDialog(false)}
+          />
+
+          <ChatOptionsDialog
+            chat={chat}
+            onUpdate={() => {
+              refreshChats()
+            }}
+            open={showOptionsDialog}
+            onClose={() => setShowOptionsDialog(false)}
+          />
+        </>
+      )}
+
+      <Dropdown
+        options={[
+          {
+            children: (
+              <button
+                className='w-full flex items-center gap-2'
+                onClick={() => chat && setShowDeleteChatDialog(true)}
+                type='button'
+              >
+                <Trash size={16} />
+
+                <span>{t('chat.delete')}</span>
+              </button>
+            )
+          },
+          {
+            children: (
+              <button
+                className='w-full flex items-center gap-2'
+                onClick={() => chat && setShowOptionsDialog(true)}
+                type='button'
+              >
+                <Cog size={16} />
+
+                <span>Options</span>
+              </button>
+            )
+          }
+        ]}
+        button={
+          <Button
+            className={cn(
+              'invisible opacity-0 transition-all duration-300',
+              chat && 'group-hover:opacity-100 group-hover:visible'
+            )}
+            variant='round'
+            color='secondary'
+          >
+            <MoreVertical size={16} />
+          </Button>
+        }
+        padding={6}
+        position='top'
+      />
+    </>
   )
 }
 
@@ -201,64 +299,36 @@ const ChatChip: React.FC<ChatChipProps> = ({
   selected = false,
   chat
 }: ChatChipProps): React.ReactNode => {
-  const [showDeleteChatDialog, setShowDeleteChatDialog] = useState<boolean>(false)
-
-  const { refreshChats } = use(SidebarContext)
-
   return (
-    <>
-      {chat && (
-        <DeleteChatDialog
-          id={chat.id}
-          redirect={selected}
-          onDelete={() => {
-            refreshChats()
-          }}
-          open={showDeleteChatDialog}
-          onClose={() => setShowDeleteChatDialog(false)}
-        />
+    <Box
+      padding='small'
+      variant='primary'
+      aria-label={chat?.title}
+      className={cn(
+        'group flex items-center justify-between gap-2 relative',
+        selected && 'bg-background-secondary',
+        !chat && 'animate-pulse'
       )}
-
-      <Box
-        padding='small'
-        variant='primary'
-        aria-label={chat?.title}
-        className={cn(
-          'group flex items-center justify-between gap-2',
-          selected && 'bg-background-secondary',
-          !chat && 'animate-pulse'
-        )}
-      >
-        <Link className='size-full flex items-center' href={`/chat/${chat ? chat.id : ''}`}>
-          <span
-            className={cn(
-              'transition-all ms-2 duration-300 group-hover:font-bold text-ellipsis',
-              selected
-                ? 'text-text-accent-primary font-bold'
-                : 'text-text-tertiary font-medium group-hover:text-text-primary'
-            )}
-          >
-            {chat ? (
-              chat.title
-            ) : (
-              <div className='bg-background-tertiary h-2 w-full animate-pulse rounded-sm' />
-            )}
-          </span>
-        </Link>
-
-        <Button
-          onClick={() => chat && setShowDeleteChatDialog(true)}
-          variant='round'
+    >
+      <Link className='size-full flex items-center' href={`/chat/${chat ? chat.id : ''}`}>
+        <span
           className={cn(
-            'invisible opacity-0 transition-all duration-300',
-            chat && 'group-hover:opacity-100 group-hover:visible'
+            'transition-all ms-2 duration-300 group-hover:font-bold text-ellipsis',
+            selected
+              ? 'text-text-accent-primary font-bold'
+              : 'text-text-tertiary font-medium group-hover:text-text-primary'
           )}
-          type='button'
         >
-          <Trash size={16} />
-        </Button>
-      </Box>
-    </>
+          {chat ? (
+            chat.title
+          ) : (
+            <div className='bg-background-tertiary h-2 w-full animate-pulse rounded-sm' />
+          )}
+        </span>
+      </Link>
+
+      <ChatChipDropdown selected={selected} chat={chat} />
+    </Box>
   )
 }
 
@@ -316,7 +386,7 @@ const SidebarContent: React.FC = (): React.ReactNode => {
   }, [pathname])
 
   return (
-    <Container className='grid gap-2 h-full overflow-y-auto py-4'>
+    <div className='grid gap-2 h-full overflow-y-auto p-4'>
       <NewChatButton />
 
       <div className='flex flex-col-reverse w-full gap-2 min-w-0'>
@@ -338,7 +408,7 @@ const SidebarContent: React.FC = (): React.ReactNode => {
               return <ChatChip key={index} />
             })}
       </div>
-    </Container>
+    </div>
   )
 }
 
