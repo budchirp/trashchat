@@ -35,7 +35,7 @@ const Layout: React.FC<DynamicLayoutProps> = async ({ children, params }: Dynami
           <h1 className='font-bold text-xl flex gap-2 items-center'>
             {user?.subscription && <Crown size={16} className='text-text-accent-primary' />}
 
-            <span>{user?.profile?.name}</span>
+            <span className='text-center'>{user?.profile?.name}</span>
           </h1>
 
           {!user.subscription && (

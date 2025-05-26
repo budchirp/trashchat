@@ -39,7 +39,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   onChange
 }: DropdownProps): React.ReactNode => {
   return (
-    <Menu as='div' className='relative w-fit'>
+    <Menu as='div' className='relative z-100 w-fit'>
       <MenuButton as='div'>{button}</MenuButton>
 
       <MenuItems
