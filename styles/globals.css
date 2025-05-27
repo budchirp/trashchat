@@ -135,3 +135,7 @@ pre .line::before {
 
   @apply text-gray-500;
 }
+
+button {
+  cursor: pointer;
+}
