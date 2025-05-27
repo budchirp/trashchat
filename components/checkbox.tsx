@@ -27,7 +27,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     {({ checked }) => (
       <Check
         className={cn(
-          'size-4 text-text-primary transition-all duration-150 opacity-0 invisible',
+          'size-4 text-gray-50 transition-all duration-150 opacity-0 invisible',
           checked && 'opacity-100 visible'
         )}
       />

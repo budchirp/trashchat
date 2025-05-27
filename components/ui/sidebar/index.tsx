@@ -55,7 +55,7 @@ const ProfileMenuItemContent: React.FC<ProfileMenuItemContentProps> = ({
       as='div'
       className={cn(
         'flex cursor-pointer h-min w-full items-center px-4 py-2 transition duration-300',
-        'bg-background-primary hover:bg-background-secondary'
+        'bg-transparent hover:bg-background-secondary'
       )}
     >
       <div
@@ -245,30 +245,14 @@ const ChatChipDropdown: React.FC<ChatChipDropdownProps> = ({
       <Dropdown
         options={[
           {
-            children: (
-              <button
-                className='w-full flex items-center gap-2'
-                onClick={() => chat && setShowDeleteChatDialog(true)}
-                type='button'
-              >
-                <Trash size={16} />
-
-                <span>{t('chat.delete')}</span>
-              </button>
-            )
+            icon: Trash,
+            children: t('chat.delete'),
+            onClick: () => chat && setShowDeleteChatDialog(true)
           },
           {
-            children: (
-              <button
-                className='w-full flex items-center gap-2'
-                onClick={() => chat && setShowOptionsDialog(true)}
-                type='button'
-              >
-                <Cog size={16} />
-
-                <span>Options</span>
-              </button>
-            )
+            icon: Cog,
+            children: t('chat.options'),
+            onClick: () => chat && setShowOptionsDialog(true)
           }
         ]}
         button={
@@ -283,7 +267,8 @@ const ChatChipDropdown: React.FC<ChatChipDropdownProps> = ({
             <MoreVertical size={16} />
           </Button>
         }
-        padding={4}
+        padding={6}
+        relative={false}
         position='top'
       />
     </>
@@ -386,7 +371,7 @@ const SidebarContent: React.FC = (): React.ReactNode => {
   }, [pathname])
 
   return (
-    <div className='grid gap-2 h-full overflow-y-auto p-4'>
+    <div className='grid gap-2 h-full px-4 my-4'>
       <NewChatButton />
 
       <div className='flex flex-col-reverse w-full gap-2 min-w-0'>
@@ -424,9 +409,11 @@ export const Sidebar: React.FC = (props): React.ReactNode => {
         'data-leave:ease-in data-leave:duration-300'
       )}
     >
-      <SidebarHeader />
+      <div className='h-full flex flex-col overflow-y-auto'>
+        <SidebarHeader />
 
-      <SidebarContent />
+        <SidebarContent />
+      </div>
 
       <ProfileMenu />
     </div>

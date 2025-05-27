@@ -18,7 +18,7 @@ import { useChat } from '@ai-sdk/react'
 import { Env } from '@/lib/env'
 
 import type { AIModelID, AIModelReasoningOption } from '@/lib/ai/models'
-import type { File as PrismaFile } from '@prisma/client'
+import type { Message, File as PrismaFile } from '@prisma/client'
 import type { Chat } from '@/types/chat'
 
 type ChatClientPageProps = {
@@ -58,6 +58,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
 
   const { messages, setMessages, input, status, stop, handleInputChange, handleSubmit } = useChat({
     api: `/api/chat/${chat.id}/message`,
+    id: chat.id,
     initialMessages: (chat.messages as any) || [],
     headers: {
       Authorization: `Bearer ${token}`,
@@ -124,7 +125,7 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
   return (
     <div className='size-full mt-4'>
       <Container className='grid gap-2 mb-2'>
-        {(messages as (UIMessage & { files: PrismaFile[] })[]).map((message, index) => {
+        {(messages as (Message & UIMessage & { files: PrismaFile[] })[]).map((message, index) => {
           const text =
             message.content ||
             (message.parts.find((part: any) => part.type === 'text') as any)?.text ||
@@ -133,9 +134,13 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
           return (
             <MessageBox
               key={index}
+              chatId={chat.id}
+              messages={messages as any}
+              handleMessagesChange={setMessages}
               message={
                 {
                   ...message,
+                  model: message.model || model,
                   files:
                     message.files && message.files.length > 0
                       ? message.files
@@ -154,20 +159,9 @@ export const ChatClientPage: React.FC<ChatClientPageProps> = ({
         })}
 
         {messages.length > 0 && status === 'submitted' && (
-          <MessageBox
-            message={
-              {
-                role: 'assistant',
-                files: [],
-                parts: [
-                  {
-                    type: 'text',
-                    text: t('common.loading')
-                  }
-                ]
-              } as any
-            }
-          />
+          <div>
+            <h2 className='font-medium text-text-tertiary animate-pulse'>{t('common.loading')}</h2>
+          </div>
         )}
 
         {messages.length < 1 && (

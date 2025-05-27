@@ -14,9 +14,13 @@ type DropdownProps = {
         icon?: LucideIcon
       }
     | {
+        icon?: LucideIcon
         children: React.ReactNode
+        onClick?: () => void
       }
   )[]
+
+  relative?: boolean
 
   button: React.ReactNode
 
@@ -30,6 +34,8 @@ type DropdownProps = {
 export const Dropdown: React.FC<DropdownProps> = ({
   options,
 
+  relative = true,
+
   button,
 
   position = 'bottom',
@@ -39,18 +45,23 @@ export const Dropdown: React.FC<DropdownProps> = ({
   onChange
 }: DropdownProps): React.ReactNode => {
   return (
-    <Menu as='div' className='relative z-100 w-fit'>
+    <Menu as='div' className={cn(relative && 'relative')}>
       <MenuButton as='div'>{button}</MenuButton>
 
       <MenuItems
         as={Box}
         transition
-        className='absolute z-100 max-h-64 max-w-196 overflow-y-auto w-fit shadow-2xl origin-top transition-all duration-150 ease-out data-closed:ease-in data-closed:scale-95 data-closed:opacity-0'
+        className='absolute z-10 w-fit max-h-64 overflow-x-hidden overflow-y-auto shadow-2xl transition-all duration-150 ease-out data-closed:ease-in data-closed:scale-95 data-closed:opacity-0'
         style={
           position === 'top'
-            ? { bottom: `calc(var(--spacing) * ${padding + 8})`, right: 0 }
-            : { top: `calc(var(--spacing) * ${padding + 8})`, left: 0 }
+            ? {
+                bottom: `calc(var(--spacing) * ${padding + 8})`,
+                right: 0,
+                transformOrigin: 'bottom'
+              }
+            : { top: `calc(var(--spacing) * ${padding + 8})`, left: 0, transformOrigin: 'top' }
         }
+        variant='blurry'
         padding='none'
       >
         {options.map((option, index) => {
@@ -60,17 +71,22 @@ export const Dropdown: React.FC<DropdownProps> = ({
             <MenuItem
               as='div'
               className={cn(
-                'border-b border-border min-w-0 first:rounded-t-3xl last:rounded-b-3xl last:border-none bg-background-primary px-4 py-2 items-center flex gap-2 transition-all duration-300 hover:bg-background-secondary',
+                'border-b border-border last:border-none bg-transparent px-4 py-3 items-center flex gap-2 transition-all duration-300 hover:bg-background-secondary',
                 'value' in option && option.value === selected
                   ? 'bg-background-secondary text-text-accent-primary font-medium'
-                  : 'text-text-tertiary hover:text-text-primary hover:font-medium'
+                  : 'text-text-tertiary hover:text-text-primary'
               )}
               key={'value' in option ? option.value : index}
-              onClick={() => ('value' in option && onChange ? onChange(option.value) : undefined)}
+              onClick={() =>
+                ('value' in option && onChange && onChange(option.value)) ||
+                ('onClick' in option && option.onClick && option.onClick())
+              }
             >
-              {Icon && <Icon size={16} />}
+              <div className='aspect-square size-6 flex items-center justify-center'>
+                {Icon && <Icon size={16} />}
+              </div>
 
-              {'title' in option ? option.title : option.children}
+              <span>{'title' in option ? option.title : option.children}</span>
             </MenuItem>
           )
         })}

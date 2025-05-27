@@ -2,8 +2,11 @@ import type React from 'react'
 
 import { CopyButton } from '@/components/markdown/code/copy-button'
 import { AIModels, type AIModelID } from '@/lib/ai/models'
-import { useTranslations } from 'next-intl'
-import { FileIcon } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
+import { CookieMonster } from '@/lib/cookie-monster'
+import { ChatAPIManager } from '@/lib/api/chat'
+import { FileIcon, Trash } from 'lucide-react'
+import { CONSTANTS } from '@/lib/constants'
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
 import Image from 'next/image'
@@ -12,15 +15,32 @@ import type { File, Message } from '@prisma/client'
 import type { UIMessage } from 'ai'
 
 type FileItemProps = {
-  file: File
+  children?: React.ReactNode
+  className?: string
+
+  file: {
+    name: string
+    url: string
+    contentType: string
+  }
 }
 
-const FileItem: React.FC<FileItemProps> = ({ file }: FileItemProps): React.ReactNode => {
+export const FileItem: React.FC<FileItemProps> = ({
+  children,
+  className,
+  file
+}: FileItemProps): React.ReactNode => {
   return (
     <Box
-      className='size-24 flex shrink-0 items-center aspect-square overflow-hidden justify-center rounded-2xl p-1'
+      className={cn(
+        'size-24 flex shrink-0 items-center aspect-square overflow-hidden justify-center rounded-2xl p-1',
+        className
+      )}
+      variant='blurry'
       padding='none'
     >
+      {children}
+
       {file.contentType.startsWith('image/') ? (
         <Image
           height={256}
@@ -36,22 +56,40 @@ const FileItem: React.FC<FileItemProps> = ({ file }: FileItemProps): React.React
   )
 }
 
+type MessageBoxMessage = Partial<UIMessage> &
+  Message & {
+    content?: any
+    files?: File[]
+  }
+
 type MessageBoxProps = {
   className?: string
-  message: Partial<UIMessage> &
-    Message & {
-      content?: any
-      files?: File[]
-    }
+
+  chatId: string
+
+  message: MessageBoxMessage
+
+  messages: MessageBoxMessage[]
+  handleMessagesChange: (message: MessageBoxMessage[]) => void
+
   ref?: React.Ref<HTMLDivElement>
 }
 
 export const MessageBox: React.FC<MessageBoxProps> = ({
   className,
+  chatId,
+
   message,
+
+  messages,
+  handleMessagesChange,
+
   ref
 }: MessageBoxProps): React.ReactNode => {
-  const t = useTranslations('chat')
+  const locale = useLocale()
+  const t = useTranslations()
+
+  const cookieMonster = new CookieMonster()
 
   return (
     <div
@@ -105,9 +143,11 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                 if (part.type === 'reasoning') {
                   return (
                     <details key={index}>
-                      <summary className='text-text-primary font-medium'>{t('reasoning')}</summary>
+                      <summary className='text-text-primary font-medium'>
+                        {t('chat.reasoning')}
+                      </summary>
 
-                      <p>{part.reasoning}</p>
+                      <p className='text-text-tertiary'>{part.reasoning}</p>
                     </details>
                   )
                 }
@@ -142,7 +182,7 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
 
           {message.parts.filter((part) => part.type === 'source').length > 0 && (
             <div className='grid gap-1'>
-              <h2 className='text-text-primary font-medium'>{t('sources')}</h2>
+              <h2 className='text-text-primary font-medium'>{t('chat.sources')}</h2>
 
               <div className='flex gap-2 min-w-0 w-full rounded-full overflow-x-auto'>
                 {message.parts
@@ -162,6 +202,27 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
 
       <div className='pe-2 invisible opacity-0 transition-all duration-300 gap-2 flex group-hover:opacity-100 group-hover:visible'>
         <CopyButton variant='small' content={message.content} />
+
+        <button
+          type='button'
+          onClick={async () => {
+            const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+            if (token) {
+              await ChatAPIManager.deleteMessage(
+                {
+                  locale,
+                  token
+                },
+                chatId,
+                message.id
+              )
+
+              handleMessagesChange(messages.filter((m) => m.id !== message.id))
+            }
+          }}
+        >
+          <Trash size={16} />
+        </button>
 
         {message.role === 'assistant' && (
           <p>{AIModels.getSafe(message.model as AIModelID)?.name || ''}</p>

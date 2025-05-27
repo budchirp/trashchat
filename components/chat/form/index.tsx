@@ -21,6 +21,7 @@ import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
 import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
+import { FileItem } from '../message-box'
 
 export type ChatFormProps = {
   isSkeleton?: boolean
@@ -128,10 +129,14 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                 {supportsAttachments &&
                   (files || []).map((file, index) => {
                     return (
-                      <Box
-                        className='size-16 relative flex group shrink-0 items-center aspect-square overflow-hidden justify-center rounded-xl p-1'
+                      <FileItem
+                        className='size-16 group'
+                        file={{
+                          name: file.name,
+                          contentType: file.type,
+                          url: URL.createObjectURL(file)
+                        }}
                         key={index}
-                        padding='none'
                       >
                         <div
                           className='invisible opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:visible absolute size-16 aspect-square rounded-xl bg-black/75 flex inset-0 items-center justify-center'
@@ -147,17 +152,7 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                             <Loader2 className='animate-spin' />
                           </div>
                         )}
-
-                        {file.type.startsWith('image/') ? (
-                          <img
-                            className='size-full rounded-lg object-cover'
-                            aria-label={file.name}
-                            src={URL.createObjectURL(file)}
-                          />
-                        ) : (
-                          <FileIcon size={16} />
-                        )}
-                      </Box>
+                      </FileItem>
                     )
                   })}
               </div>
