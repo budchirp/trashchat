@@ -29,7 +29,7 @@ export const POST = async (
     params
   }: {
     params: Promise<{
-      id: string
+      chatId: string
     }>
   }
 ) => {
@@ -72,11 +72,11 @@ export const POST = async (
       }
     }
 
-    const { id } = await params
+    const { chatId } = await params
 
     const chat = await prisma.chat.findUnique({
       where: {
-        id,
+        id: chatId,
 
         userId: user.id
       },
@@ -92,7 +92,7 @@ export const POST = async (
     const message = messages[messages.length - 1]
     messages.pop()
 
-    const { id: messageId } = await prisma.message.create({
+    await prisma.message.create({
       data: {
         role: message.role as 'user',
 
@@ -111,24 +111,22 @@ export const POST = async (
               text: message.content
             }
           ]
+        },
+
+        files: {
+          create: await Promise.all(
+            (model.imageUpload || model.fileUpload ? files : []).map(async (file) => {
+              return {
+                name: file.name,
+                url: file.url,
+
+                contentType: file.contentType
+              }
+            })
+          )
         }
       }
     })
-
-    await Promise.all(
-      (model.imageUpload || model.fileUpload ? files : []).map(async (file) => {
-        await prisma.file.create({
-          data: {
-            name: file.name,
-            url: file.url,
-
-            contentType: file.contentType,
-
-            messageId
-          }
-        })
-      })
-    )
 
     let title = chat.title
     if (chat.messages.length < 2) {
@@ -138,8 +136,14 @@ export const POST = async (
           schema: z.object({
             title: z.string().max(75)
           }),
-          system:
-            "Generate a concise and relevant title (max 75 characters) based on the user's query or conversation",
+          system: [
+            'Generate a concise and relevant title (max 75 characters) for this chat based on the following rules:',
+            '1. If the query is clear and specific, create a descriptive title that captures the main topic',
+            "2. If the query is a question, use a title that reflects the question's subject",
+            `3. If the query is unclear, ambiguous, or too short, use 'New Chat' (or its equivalent in ${locale})`,
+            "4. Avoid generic terms like 'Chat' or 'Conversation' unless necessary",
+            '5. Keep the title professional and focused on the main topic'
+          ].join('\n'),
           prompt: message.content
         })
 
@@ -147,17 +151,19 @@ export const POST = async (
       } catch {}
     }
 
-    await prisma.chat.update({
-      where: {
-        id: chat.id,
+    if (title !== chat.title || model.id !== chat.model) {
+      await prisma.chat.update({
+        where: {
+          id: chat.id,
 
-        userId: user.id
-      },
-      data: {
-        model: model.id,
-        title
-      }
-    })
+          userId: user.id
+        },
+        data: {
+          model: model.id,
+          title
+        }
+      })
+    }
 
     await prisma.usages.update({
       where: {
@@ -233,7 +239,7 @@ export const POST = async (
         } satisfies GoogleGenerativeAIProviderOptions
       },
       messages: [
-        ...(chat.messages as any),
+        ...(messages as any),
         {
           role: 'user',
           content: [

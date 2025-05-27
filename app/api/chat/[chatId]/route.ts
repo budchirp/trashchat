@@ -11,7 +11,7 @@ export const DELETE = async (
     params
   }: {
     params: Promise<{
-      id: string
+      chatId: string
     }>
   }
 ) => {
@@ -22,11 +22,11 @@ export const DELETE = async (
     const [response, user] = await authenticate(request, locale)
     if (response) return response
 
-    const { id } = await params
+    const { chatId } = await params
 
     await prisma.chat.delete({
       where: {
-        id,
+        id: chatId,
 
         userId: user.id
       }
@@ -55,7 +55,7 @@ export const GET = async (
     params
   }: {
     params: Promise<{
-      id: string
+      chatId: string
     }>
   }
 ) => {
@@ -66,8 +66,8 @@ export const GET = async (
     const [response, user] = await authenticate(request, locale)
     if (response) return response
 
-    const { id } = await params
-    if (id === '-1') {
+    const { chatId } = await params
+    if (chatId === '-1') {
       const chats = await prisma.chat.findMany({
         take: 1,
         orderBy: {
@@ -134,7 +134,7 @@ export const GET = async (
 
     const chat = await prisma.chat.findUnique({
       where: {
-        id,
+        id: chatId,
 
         userId: user.id
       },
@@ -178,7 +178,7 @@ export const PATCH = async (
     params
   }: {
     params: Promise<{
-      id: string
+      chatId: string
     }>
   }
 ) => {
@@ -189,13 +189,13 @@ export const PATCH = async (
     const [response, user] = await authenticate(request, locale)
     if (response) return response
 
-    const { id } = await params
+    const { chatId } = await params
 
     const { title, shared } = await request.json()
 
     await prisma.chat.update({
       where: {
-        id,
+        id: chatId,
         userId: user.id
       },
       data: {

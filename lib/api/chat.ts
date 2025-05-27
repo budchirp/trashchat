@@ -57,6 +57,25 @@ export class ChatAPIManager {
     }
   }
 
+  public static deleteMessage = async (
+    headers: APIHeaders,
+    chatId: string,
+    messageId: number
+  ): Promise<boolean> => {
+    try {
+      const response = await Fetch.delete(`${Env.appUrl}/api/chat/${chatId}/message/${messageId}`, {
+        authorization: `Bearer ${headers.token}`,
+        'accept-language': headers.locale || 'en'
+      })
+
+      if (response.ok) return true
+
+      return false
+    } catch (error) {
+      return false
+    }
+  }
+
   public static new = async (headers: APIHeaders): Promise<Chat | null> => {
     try {
       const response = await Fetch.post<APIResponse<Chat>>(
