@@ -13,8 +13,11 @@ const Loading: React.FC = () => {
       <Container className='flex flex-col gap-2 h-full'>
         {[...Array(4)].map((_, index) => (
           <MessageBox
-            className={index % 2 === 0 ? 'w-2/4' : 'w-full'}
             key={index}
+            skeleton
+            chatId={''}
+            messages={[]}
+            handleMessagesChange={() => {}}
             message={
               {
                 role: index % 2 === 0 ? 'user' : 'assistant',
@@ -40,7 +43,7 @@ const Loading: React.FC = () => {
       </Container>
 
       <ChatForm
-        isSkeleton
+        skeleton
         loading={true}
         isUploading={false}
         stop={() => {}}

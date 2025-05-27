@@ -14,17 +14,16 @@ import { ReasoningEffortSelector } from '@/components/chat/form/reasoning-effort
 import { ModelSelector } from '@/components/chat/form/model-selector'
 import { Button, buttonVariants } from '@/components/button'
 import { SidebarContext } from '@/providers/context/sidebar'
+import { FileItem } from '@/components/chat/message-box'
 import { UserContext } from '@/providers/context/user'
 import { Container } from '@/components/container'
 import { useTranslations } from 'next-intl'
 import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
-import { Box } from '@/components/box'
 import { cn } from '@/lib/cn'
-import { FileItem } from '../message-box'
 
 export type ChatFormProps = {
-  isSkeleton?: boolean
+  skeleton?: boolean
 
   loading: boolean
   isUploading: boolean
@@ -55,7 +54,7 @@ export type ChatFormProps = {
 }
 
 export const ChatForm: React.FC<ChatFormProps> = ({
-  isSkeleton = false,
+  skeleton = false,
 
   loading,
   isUploading,
@@ -172,7 +171,8 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                   buttonVariants({
                     variant: 'round',
                     color: 'secondary',
-                    className: !supportsAttachments ? '!opacity-50 pointer-events-none' : ''
+                    className:
+                      !supportsAttachments || skeleton ? '!opacity-50 pointer-events-none' : ''
                   })
                 )}
                 htmlFor='upload'
@@ -180,8 +180,8 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                 <Paperclip size={16} />
 
                 <input
-                  readOnly={!supportsAttachments}
-                  disabled={!supportsAttachments}
+                  readOnly={!supportsAttachments || skeleton}
+                  disabled={!supportsAttachments || skeleton}
                   id='upload'
                   className='sr-only'
                   type='file'
@@ -218,50 +218,56 @@ export const ChatForm: React.FC<ChatFormProps> = ({
                   }
                 }}
               >
-                {loading && !isSkeleton ? <Square size={16} /> : <Send size={16} />}
+                {loading && !skeleton ? <Square size={16} /> : <Send size={16} />}
               </Button>
             </div>
 
             <div className='flex items-center gap-2'>
-              {model?.reasoning && (
-                <Button
-                  disabled={!subscribed}
-                  aria-label='Toggle reasoning'
-                  variant='round'
-                  color={useReasoning || model?.company === 'deepseek' ? 'primary' : 'secondary'}
-                  onClick={() => {
-                    handleUseReasoningChange(!useReasoning)
-
-                    if (!useReasoning) {
-                      if (!reasoningEffort) {
-                        handleReasoningEffortChange('low')
+              {!skeleton && (
+                <>
+                  {model?.reasoning && (
+                    <Button
+                      disabled={!subscribed}
+                      aria-label='Toggle reasoning'
+                      variant='round'
+                      color={
+                        useReasoning || model?.company === 'deepseek' ? 'primary' : 'secondary'
                       }
-                    } else {
-                      handleReasoningEffortChange(null)
-                    }
-                  }}
-                >
-                  <Brain size={16} />
-                </Button>
-              )}
+                      onClick={() => {
+                        handleUseReasoningChange(!useReasoning)
 
-              {model?.reasoning && useReasoning && subscribed && (
-                <ReasoningEffortSelector
-                  height={height}
-                  reasoningEffort={reasoningEffort}
-                  onReasoningEffortChange={handleReasoningEffortChange}
-                />
-              )}
+                        if (!useReasoning) {
+                          if (!reasoningEffort) {
+                            handleReasoningEffortChange('low')
+                          }
+                        } else {
+                          handleReasoningEffortChange(null)
+                        }
+                      }}
+                    >
+                      <Brain size={16} />
+                    </Button>
+                  )}
 
-              {model?.search && (
-                <Button
-                  disabled={!subscribed}
-                  variant='round'
-                  color={useSearch ? 'primary' : 'secondary'}
-                  onClick={() => handleUseSearchChange(!useSearch)}
-                >
-                  <Search size={16} />
-                </Button>
+                  {model?.reasoning && useReasoning && subscribed && (
+                    <ReasoningEffortSelector
+                      height={height}
+                      reasoningEffort={reasoningEffort}
+                      onReasoningEffortChange={handleReasoningEffortChange}
+                    />
+                  )}
+
+                  {model?.search && (
+                    <Button
+                      disabled={!subscribed}
+                      variant='round'
+                      color={useSearch ? 'primary' : 'secondary'}
+                      onClick={() => handleUseSearchChange(!useSearch)}
+                    >
+                      <Search size={16} />
+                    </Button>
+                  )}
+                </>
               )}
 
               <ModelSelector

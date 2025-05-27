@@ -63,6 +63,8 @@ type MessageBoxMessage = Partial<UIMessage> &
   }
 
 type MessageBoxProps = {
+  skeleton?: boolean
+
   className?: string
 
   chatId: string
@@ -76,6 +78,8 @@ type MessageBoxProps = {
 }
 
 export const MessageBox: React.FC<MessageBoxProps> = ({
+  skeleton = false,
+
   className,
   chatId,
 
@@ -201,28 +205,32 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
       )}
 
       <div className='pe-2 invisible opacity-0 transition-all duration-300 gap-2 flex group-hover:opacity-100 group-hover:visible'>
-        <CopyButton variant='small' content={message.content} />
+        {!skeleton && (
+          <>
+            <CopyButton variant='small' content={message.content} />
 
-        <button
-          type='button'
-          onClick={async () => {
-            const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-            if (token) {
-              await ChatAPIManager.deleteMessage(
-                {
-                  locale,
-                  token
-                },
-                chatId,
-                message.id
-              )
+            <button
+              type='button'
+              onClick={async () => {
+                const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+                if (token) {
+                  await ChatAPIManager.deleteMessage(
+                    {
+                      locale,
+                      token
+                    },
+                    chatId,
+                    message.id
+                  )
 
-              handleMessagesChange(messages.filter((m) => m.id !== message.id))
-            }
-          }}
-        >
-          <Trash size={16} />
-        </button>
+                  handleMessagesChange(messages.filter((m) => m.id !== message.id))
+                }
+              }}
+            >
+              <Trash size={16} />
+            </button>
+          </>
+        )}
 
         {message.role === 'assistant' && (
           <p>{AIModels.getSafe(message.model as AIModelID)?.name || ''}</p>
