@@ -51,7 +51,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <MenuItems
         as={Box}
         transition
-        className='absolute z-10 w-fit max-h-64 overflow-x-hidden overflow-y-auto shadow-2xl transition-all duration-150 ease-out data-closed:ease-in data-closed:scale-95 data-closed:opacity-0'
+        className='absolute z-10 w-fit max-h-64 overflow-x-hidden overflow-y-auto shadow-lg transition-all duration-150 ease-out data-closed:ease-in data-closed:scale-95 data-closed:opacity-0'
         style={
           position === 'top'
             ? {
@@ -82,9 +82,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 ('onClick' in option && option.onClick && option.onClick())
               }
             >
-              <div className='aspect-square size-6 flex items-center justify-center'>
-                {Icon && <Icon size={16} />}
-              </div>
+              {Icon && (
+                <div className='aspect-square size-6 flex items-center justify-center'>
+                  <Icon size={16} />
+                </div>
+              )}
 
               <span>{'title' in option ? option.title : option.children}</span>
             </MenuItem>

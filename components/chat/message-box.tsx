@@ -130,12 +130,12 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
           )}
         >
           <Box
-            variant='primary'
+            variant={message.role === 'user' ? 'blurry' : 'primary'}
             padding='none'
             className={cn(
               'grid gap-2 min-w-0',
               message.role === 'user'
-                ? 'md:max-w-3/4 py-2 px-4 bg-background-primary/50 backdrop-blur-sm w-fit'
+                ? 'md:max-w-3/4 py-2 px-4 w-fit'
                 : 'w-full bg-transparent rounded-none border-none',
               className
             )}

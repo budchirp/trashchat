@@ -73,11 +73,11 @@ export const SettingsProfilePicture: React.FC<SettingsProfilePictureProps> = ({
   }
 
   return (
-    <div className='relative group size-32 overflow-hidden'>
+    <div className='relative group size-32'>
       <Image
         height={128}
         width={128}
-        className='size-full object-cover p-1 border border-border rounded-full'
+        className='size-full shadow-2xl object-cover p-1 border border-border rounded-full'
         alt={t('settings.account.profile-picture')}
         src={user?.profile?.profilePicture || '/images/placeholder.png'}
       />
