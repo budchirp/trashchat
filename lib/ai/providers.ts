@@ -131,7 +131,7 @@ export class AIProviders {
       },
       'openai-o3-mini': {
         ...models['openai-o3-mini'],
-        provider: (options) => azure('o3-mini1', options)
+        provider: (options) => azure('o3-mini', options)
       }
     }
   }
