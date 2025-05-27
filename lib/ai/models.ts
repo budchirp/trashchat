@@ -8,8 +8,8 @@ export type AIModelID =
   | 'openai-gpt-4o-mini'
   | 'openai-o3-mini'
   | 'openai-o4-mini'
-  | 'claude-3-7-sonnet'
-  | 'claude-3-5-sonnet'
+  // | 'claude-3-7-sonnet'
+  // | 'claude-3-5-sonnet'
   | 'gemini-2.0-flash'
   | 'gemini-2.5-flash'
   | 'gemini-2.5-pro'
@@ -218,49 +218,49 @@ export class AIModels {
         reasoning: false,
 
         reasoningOptions: []
-      },
-      'claude-3-7-sonnet': {
-        id: 'claude-3-7-sonnet',
-
-        company: 'anthropic',
-
-        name: 'Claude 3.7 Sonnet',
-
-        plus: true,
-        premium: true,
-
-        experimental: false,
-        recommended: false,
-
-        imageUpload: true,
-        fileUpload: true,
-
-        search: false,
-        reasoning: true,
-
-        reasoningOptions: ['low', 'medium', 'high']
-      },
-      'claude-3-5-sonnet': {
-        id: 'claude-3-5-sonnet',
-
-        company: 'anthropic',
-
-        name: 'Claude 3.5 Sonnet',
-
-        plus: true,
-        premium: true,
-
-        experimental: false,
-        recommended: false,
-
-        imageUpload: true,
-        fileUpload: true,
-
-        search: false,
-        reasoning: true,
-
-        reasoningOptions: ['low', 'medium', 'high']
       }
+      // 'claude-3-7-sonnet': {
+      //   id: 'claude-3-7-sonnet',
+
+      //   company: 'anthropic',
+
+      //   name: 'Claude 3.7 Sonnet',
+
+      //   plus: true,
+      //   premium: true,
+
+      //   experimental: false,
+      //   recommended: false,
+
+      //   imageUpload: true,
+      //   fileUpload: true,
+
+      //   search: false,
+      //   reasoning: true,
+
+      //   reasoningOptions: ['low', 'medium', 'high']
+      // },
+      // 'claude-3-5-sonnet': {
+      //   id: 'claude-3-5-sonnet',
+
+      //   company: 'anthropic',
+
+      //   name: 'Claude 3.5 Sonnet',
+
+      //   plus: true,
+      //   premium: true,
+
+      //   experimental: false,
+      //   recommended: false,
+
+      //   imageUpload: true,
+      //   fileUpload: true,
+
+      //   search: false,
+      //   reasoning: true,
+
+      //   reasoningOptions: ['low', 'medium', 'high']
+      // }
     }
   }
 

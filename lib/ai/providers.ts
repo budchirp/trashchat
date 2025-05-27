@@ -83,14 +83,14 @@ export class AIProviders {
     })
 
     return {
-      'claude-3-7-sonnet': {
-        ...models['claude-3-7-sonnet'],
-        provider: (options) => googleAnthropic('claude-3-7-sonnet@20250219', options)
-      },
-      'claude-3-5-sonnet': {
-        ...models['claude-3-5-sonnet'],
-        provider: (options) => googleAnthropic('claude-3-5-sonnet-v2@20241022', options)
-      },
+      // 'claude-3-7-sonnet': {
+      //   ...models['claude-3-7-sonnet'],
+      //   provider: (options) => googleAnthropic('claude-3-7-sonnet@20250219', options)
+      // },
+      // 'claude-3-5-sonnet': {
+      //   ...models['claude-3-5-sonnet'],
+      //   provider: (options) => googleAnthropic('claude-3-5-sonnet-v2@20241022', options)
+      // },
       'gemini-2.5-pro': {
         ...models['gemini-2.5-pro'],
         provider: (options) => google('gemini-2.5-pro-preview-05-06', options)
