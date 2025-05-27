@@ -298,7 +298,7 @@ const ChatChip: React.FC<ChatChipProps> = ({
       <Link className='size-full flex items-center' href={`/chat/${chat ? chat.id : ''}`}>
         <span
           className={cn(
-            'transition-all ms-2 duration-300 min-w-0 group-hover:font-bold break-all',
+            'transition-all ms-2 duration-300 min-w-0 break-all',
             selected
               ? 'text-text-accent-primary font-bold'
               : 'text-text-tertiary font-medium group-hover:text-text-primary'
