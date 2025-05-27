@@ -363,7 +363,7 @@ const NewChatButton: React.FC = (): React.ReactNode => {
 }
 
 const SidebarContent: React.FC = (): React.ReactNode => {
-  const { chats, setChats, setShowSidebar, refreshChats } = use(SidebarContext)
+  const { chats, refreshChats } = use(SidebarContext)
 
   const pathname = usePathname()
   useEffect(() => {
@@ -371,10 +371,10 @@ const SidebarContent: React.FC = (): React.ReactNode => {
   }, [pathname])
 
   return (
-    <div className='grid gap-2 h-full px-4 my-4'>
+    <div className='grid gap-2 h-full px-4 pt-4'>
       <NewChatButton />
 
-      <div className='flex flex-col-reverse w-full gap-2 min-w-0'>
+      <div className='flex flex-col-reverse w-full gap-2 min-w-0 pb-4'>
         {chats
           ? chats.map((chat, index) => {
               return (

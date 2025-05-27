@@ -214,6 +214,8 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
               onClick={async () => {
                 const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
                 if (token) {
+                  handleMessagesChange(messages.filter((m) => m.id !== message.id))
+
                   await ChatAPIManager.deleteMessage(
                     {
                       locale,
@@ -222,8 +224,6 @@ export const MessageBox: React.FC<MessageBoxProps> = ({
                     chatId,
                     message.id
                   )
-
-                  handleMessagesChange(messages.filter((m) => m.id !== message.id))
                 }
               }}
             >
