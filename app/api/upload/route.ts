@@ -1,11 +1,11 @@
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { NextResponse, type NextRequest } from 'next/server'
+import { getTranslations } from 'next-intl/server'
 import { authenticate } from '@/lib/auth/server'
 import { S3Client } from '@aws-sdk/client-s3'
 import { Secrets } from '@/lib/secrets'
 import { randomUUID } from 'crypto'
 import slugify from 'slugify'
-import { getTranslations } from 'next-intl/server'
 
 const client = new S3Client({
   region: 'eu-north-1',

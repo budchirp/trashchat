@@ -30,7 +30,6 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
   const router = useRouter()
 
   const locale = useLocale()
-
   const t = useTranslations()
 
   const captchaRef = useRef(null)

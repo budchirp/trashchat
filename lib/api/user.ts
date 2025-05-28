@@ -4,7 +4,7 @@ import { Env } from '@/lib/env'
 
 import type { User } from '@/types/user'
 import type { APIResponse } from '@/types/api'
-import type { APIHeaders } from '@/types/api-headers'
+import type { APIHeaders, UnprotectedAPIHeaders } from '@/types/api-headers'
 
 export class UserAPIManager {
   public static verifyPassword = async (
@@ -17,7 +17,7 @@ export class UserAPIManager {
           verificationToken: string
         }>
       >(
-        `${Env.appUrl}/api/user/verify`,
+        `${Env.appUrl}/api/user/password/verify`,
         {
           password
         },
@@ -145,11 +145,11 @@ export class UserAPIManager {
     }
   }
 
-  public static sendEmail = async (
+  public static sendVerifyEmail = async (
     headers: APIHeaders
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.get<APIResponse>(`${Env.appUrl}/api/user/verify/email`, {
+      const response = await Fetch.get<APIResponse>(`${Env.appUrl}/api/user/email/verify`, {
         authorization: `Bearer ${headers.token}`,
         'accept-language': headers.locale || 'en'
       })
@@ -171,12 +171,66 @@ export class UserAPIManager {
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.post<APIResponse>(
-        `${Env.appUrl}/api/user/verify/email`,
+        `${Env.appUrl}/api/user/email/verify`,
         {
           token: verificationToken
         },
         {
           authorization: `Bearer ${headers.token}`,
+          'accept-language': headers.locale || 'en'
+        }
+      )
+
+      if (response.ok) {
+        return [true, undefined]
+      }
+
+      const json = await response.json()
+      return [false, json?.message]
+    } catch {
+      return [false, null]
+    }
+  }
+
+  public static sendResetPasswordEmail = async (
+    headers: UnprotectedAPIHeaders,
+    email: string
+  ): Promise<[true, undefined] | [false, string | null]> => {
+    try {
+      const response = await Fetch.post<APIResponse>(
+        `${Env.appUrl}/api/user/password/reset`,
+        {
+          email
+        },
+        {
+          'accept-language': headers.locale || 'en'
+        }
+      )
+
+      if (response.ok) {
+        return [true, undefined]
+      }
+
+      const json = await response.json()
+      return [false, json?.message]
+    } catch {
+      return [false, null]
+    }
+  }
+
+  public static resetPassword = async (
+    headers: UnprotectedAPIHeaders,
+    verificationToken: string,
+    password: string
+  ): Promise<[true, undefined] | [false, string | null]> => {
+    try {
+      const response = await Fetch.post<APIResponse>(
+        `${Env.appUrl}/api/user/password/reset/verify`,
+        {
+          token: verificationToken,
+          password
+        },
+        {
           'accept-language': headers.locale || 'en'
         }
       )

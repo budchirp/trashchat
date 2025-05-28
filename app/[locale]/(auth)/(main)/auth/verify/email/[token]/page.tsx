@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { ResendVerificationEmailButton } from './resend-button'
+import { MetadataManager } from '@/lib/metadata-manager'
 import { authenticatedRoute } from '@/lib/auth/client'
 import { Link, redirect } from '@/lib/i18n/routing'
 import { UserAPIManager } from '@/lib/api/user'
@@ -9,6 +10,7 @@ import { Button } from '@/components/button'
 import { cookies } from 'next/headers'
 
 import type { DynamicPageProps } from '@/types/page'
+import type { Metadata } from 'next'
 
 const VerifyEmailPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale, token: verificationToken } = await params
@@ -46,6 +48,16 @@ const VerifyEmailPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPa
       </div>
     </div>
   )
+}
+
+export const generateMetadata = async ({ params }: DynamicPageProps): Promise<Metadata> => {
+  const { locale } = await params
+
+  const t = await getTranslations({
+    namespace: 'auth.verify',
+    locale
+  })
+  return MetadataManager.generate(t('text'), t('description'))
 }
 
 export default VerifyEmailPage

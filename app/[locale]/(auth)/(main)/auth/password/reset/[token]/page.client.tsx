@@ -1,60 +1,57 @@
 'use client'
 
 import type React from 'react'
-import { use, useState } from 'react'
+import { useState } from 'react'
 
+import { resetPasswordValidator } from '@/lib/validators/reset-password'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
-import { signInValidator } from '@/lib/validators/signin'
-import { UserContext } from '@/providers/context/user'
 import { useLocale, useTranslations } from 'next-intl'
-import { SessionAPIManager } from '@/lib/api/session'
 import { UserAPIManager } from '@/lib/api/user'
+import { useRouter } from '@/lib/i18n/routing'
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { toast } from '@/components/toast'
 import { Field } from '@headlessui/react'
-import { Lock, Mail } from 'lucide-react'
-import { Link } from '@/lib/i18n/routing'
 import { Box } from '@/components/box'
+import { Lock } from 'lucide-react'
 import { useFormik } from 'formik'
 
-export const SignInClientPage: React.FC = (): React.ReactNode => {
+type ResetPasswordClientPageProps = {
+  verificationToken: string
+}
+
+export const ResetPasswordClientPage: React.FC<ResetPasswordClientPageProps> = ({
+  verificationToken
+}: ResetPasswordClientPageProps): React.ReactNode => {
+  const router = useRouter()
+
   const t = useTranslations()
   const locale = useLocale()
-
-  const { setUser } = use(UserContext)
 
   const [error, setError] = useState<string | null>(null)
   const formik = useFormik({
     initialValues: {
-      email: '',
       password: ''
     },
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
-      const [ok, message, token] = await SessionAPIManager.new({ locale }, values)
+      const [ok, message] = await UserAPIManager.resetPassword(
+        { locale },
+        verificationToken,
+        values.password
+      )
       if (ok) {
-        const user = await UserAPIManager.get({ token: token!, locale })
-        if (!user) {
-          setError(t('errors.error'))
-          return
-        }
+        toast(t('auth.reset-password.changed'))
 
-        setUser(user)
-
-        toast(t('common.success'))
-
-        window?.location?.replace(`/${locale}/chat`)
+        router.push('/auth/signin')
       } else {
-        setUser(null)
-
         setError(message || t('errors.error'))
       }
 
       setSubmitting(false)
     },
-    validationSchema: toFormikValidationSchema(signInValidator)
+    validationSchema: toFormikValidationSchema(resetPasswordValidator)
   })
 
   return (
@@ -66,24 +63,6 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
       )}
 
       <div className='grid gap-2 w-full'>
-        <Field>
-          <Input
-            id='email'
-            name='email'
-            type='email'
-            autoComplete='email'
-            icon={<Mail size={16} />}
-            placeholder={t('auth.email')}
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-
-          {formik.errors.email && formik.touched.email && (
-            <p className='text-red-500 ms-2'>{formik.errors.email}</p>
-          )}
-        </Field>
-
         <Field>
           <Input
             id='password'
@@ -103,9 +82,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
         </Field>
       </div>
 
-      <div className='flex items-center gap-2 justify-between'>
-        <Link href='/auth/password/reset'>{t('auth.signin.forgot-password')}</Link>
-
+      <div className='flex justify-end'>
         <Button loading={formik.isSubmitting} type='submit'>
           {t('common.submit')}
         </Button>

@@ -121,7 +121,7 @@ export const POST = async (request: NextRequest) => {
       }
     )
 
-    if (!user.isEmailVerified) await UserAPIManager.sendEmail({ token, locale })
+    if (!user.isEmailVerified) await UserAPIManager.sendVerifyEmail({ token, locale })
 
     const cookieMonster = new CookieMonster(await cookies())
     cookieMonster.set(CONSTANTS.COOKIES.TOKEN_NAME, token, {

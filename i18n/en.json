@@ -18,6 +18,11 @@
       "title": "Welcome to Trash Chat",
       "description": "Please verify your e-mail to continue",
       "button": "Verify e-mail"
+    },
+    "password-reset": {
+      "title": "Password reset",
+      "description": "You requested a password reset. Please click the button below to reset your password.",
+      "button": "Reset password"
     }
   },
   "landing": {
@@ -83,11 +88,14 @@
     "email": "E-Mail",
     "password": "Password",
     "new-password": "New password",
+    "email-sent": "E-Mail is successfully sent",
+    "invalid-token": "Invalid verification token",
     "logout": "Log out",
     "signin": {
       "text": "Sign in",
       "description": "Sign in",
-      "signup": "Click here to sign up"
+      "signup": "Click here to sign up",
+      "forgot-password": "Forgot password?"
     },
     "signup": {
       "text": "Sign up",
@@ -97,10 +105,17 @@
       "tos": "I accept the terms of service"
     },
     "verify": {
-      "sent": "E-Mail is successfully sent",
+      "text": "Verify e-mail",
+      "description": "Verify e-mail",
       "verified": "E-Mail is successfully verified 🥳",
-      "invalid-token": "Invalid verification token",
       "resend": "Resend verification e-mail"
+    },
+    "reset-password": {
+      "text": "Reset password",
+      "description": "Reset password",
+      "changed": "Password is successfully changed",
+      "step-1": "You will receive an e-mail to reset your password",
+      "step-2": "Enter your new password"
     }
   },
   "settings": {

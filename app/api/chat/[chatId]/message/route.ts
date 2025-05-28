@@ -79,9 +79,6 @@ export const POST = async (
         id: chatId,
 
         userId: user.id
-      },
-      include: {
-        messages: true
       }
     })
 
@@ -129,7 +126,13 @@ export const POST = async (
     })
 
     let title = chat.title
-    if (chat.messages.length < 2) {
+    if (
+      (await prisma.message.count({
+        where: {
+          chatId: chat.id
+        }
+      })) < 2
+    ) {
       try {
         const { object } = await generateObject({
           model: AIProviders.get('gemini-2.0-flash').provider(),
@@ -165,7 +168,7 @@ export const POST = async (
       })
     }
 
-    await prisma.usages.update({
+    await prisma.usage.update({
       where: {
         userId: user.id
       },

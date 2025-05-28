@@ -49,7 +49,9 @@ export const verifyToken = async (
 
         subscription: true,
 
-        sessions: true
+        sessions: true,
+
+        passwordResets: false
       }
     })) as User
 

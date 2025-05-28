@@ -1,6 +1,6 @@
 import { VerifyEmailTemplate } from '@/components/email/verify'
 import { NextResponse, type NextRequest } from 'next/server'
-import { authenticate, verifyToken } from '@/lib/auth/server'
+import { authenticate } from '@/lib/auth/server'
 import { CONSTANTS } from '@/lib/constants'
 import { Secrets } from '@/lib/secrets'
 import { prisma } from '@/lib/prisma'
@@ -36,19 +36,17 @@ export const POST = async (request: NextRequest) => {
         id: user.id
       },
       data: {
-        isEmailVerified: true
+        isEmailVerified: true,
+
+        usages: {
+          update: {
+            credits: CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].CREDITS,
+            premiumCredits: CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
+          }
+        }
       }
     })
 
-    await prisma.usages.update({
-      where: {
-        userId: user.id
-      },
-      data: {
-        credits: CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].CREDITS,
-        premiumCredits: CONSTANTS.USAGES[user.subscription ? 'PLUS' : 'NORMAL'].PREMIUM_CREDITS
-      }
-    })
     return NextResponse.json({
       message: t('common.success'),
       data: {}

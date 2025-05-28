@@ -21,9 +21,9 @@ export const ResendVerificationEmailButton: React.FC = (): React.ReactNode => {
       onClick={async () => {
         const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
         if (token) {
-          const [ok, message] = await UserAPIManager.sendEmail({ token, locale })
+          const [ok, message] = await UserAPIManager.sendVerifyEmail({ token, locale })
           if (ok) {
-            toast(t('auth.verify.sent'))
+            toast(t('auth.email-sent'))
           } else {
             toast(message || t('errors.error'))
           }

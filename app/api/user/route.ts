@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { getTranslations } from 'next-intl/server'
-import { authenticate, verifyToken } from '@/lib/auth/server'
+import { authenticate } from '@/lib/auth/server'
 import { CONSTANTS } from '@/lib/constants'
 import { Secrets } from '@/lib/secrets'
 import { Encrypt } from '@/lib/encrypt'
