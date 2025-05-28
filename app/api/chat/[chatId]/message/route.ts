@@ -168,7 +168,7 @@ export const POST = async (
       })
     }
 
-    await prisma.usage.update({
+    await prisma.usages.update({
       where: {
         userId: user.id
       },

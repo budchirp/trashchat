@@ -15,11 +15,13 @@
   },
   "email": {
     "verify": {
+      "subject": "Email Verification",
       "title": "Welcome to Trash Chat",
       "description": "Please verify your e-mail to continue",
       "button": "Verify e-mail"
     },
     "password-reset": {
+      "subject": "Password Reset",
       "title": "Password reset",
       "description": "You requested a password reset. Please click the button below to reset your password.",
       "button": "Reset password"

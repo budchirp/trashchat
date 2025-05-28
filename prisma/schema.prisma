@@ -13,23 +13,22 @@ model User {
   id Int @id @unique @default(autoincrement())
 
   email    String  @unique
-    
+  profile Profile?
+
   isEmailVerified Boolean @default(false) @map("is_email_verified")
 
   emailVerificationToken String @default(uuid()) @map("email_verification_token")
   lastEmailSentAt        DateTime? @map("last_email_sent_at")
 
   password String
-
   passwordResets PasswordReset[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
 
-  profile Profile?
   customization AICustomization?
 
-  usages Usage?
+  usages Usages?
 
   subscription Subscription?
 
@@ -55,7 +54,7 @@ model PasswordReset {
   @@map("password_resets")
 }
 
-model Usage {
+model Usages {
   id Int @id @unique @default(autoincrement())
 
   credits        Int     @default(10) @map("credits")

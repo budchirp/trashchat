@@ -15,9 +15,16 @@
   },
   "email": {
     "verify": {
+      "subject": "E-Posta Doğrulama",
       "title": "Trash Chat'e Hoş Geldiniz",
       "description": "Devam etmek için lütfen e-postanızı doğrulayın",
       "button": "E-postayı doğrula"
+    },
+    "password-reset": {
+      "subject": "Şifre Sıfırlama",
+      "title": "Şifre sıfırlama",
+      "description": "Şifre sıfırlama talebinde bulundunuz. Lütfen şifrenizi sıfırlamak için aşağıdaki düğmeye tıklayın.",
+      "button": "Şifreyi sıfırla"
     }
   },
   "landing": {
@@ -88,7 +95,8 @@
     "signin": {
       "text": "Giriş yap",
       "description": "Giriş yap",
-      "signup": "Kayıt olmak için buraya tıklayın"
+      "signup": "Kayıt olmak için buraya tıklayın",
+      "forgot-password": "Şifremi unuttum?"
     },
     "signup": {
       "text": "Kayıt ol",
@@ -102,6 +110,13 @@
       "verified": "E-Posta adresiniz başarıyla doğrulandı 🥳",
       "invalid-token": "Geçersiz doğrulama anahtarı",
       "resend": "Doğrulama e-postasını yeniden gönder"
+    },
+    "reset-password": {
+      "text": "Şifre sıfırlama",
+      "description": "Şifre sıfırlama",
+      "changed": "Şifre başarıyla değiştirildi",
+      "step-1": "Şifrenizi sıfırlamak için bir e-posta alacaksınız",
+      "step-2": "Yeni şifrenizi girin"
     }
   },
   "settings": {

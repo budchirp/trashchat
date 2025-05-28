@@ -89,7 +89,7 @@ export const GET = async (request: NextRequest) => {
     const { error } = await resend.emails.send({
       from: 'Trash Chat <verify@mail.trashchat.live>',
       to: user.email,
-      subject: 'Verify email',
+      subject: t('email.verify.subject'),
       react: VerifyEmailTemplate({
         token: user.emailVerificationToken,
         t

@@ -50,7 +50,7 @@ export const POST = async (request: NextRequest) => {
     const { error } = await resend.emails.send({
       from: 'Trash Chat <password-reset@mail.trashchat.live>',
       to: user.email,
-      subject: 'Password reset',
+      subject: t('email.password-reset.subject'),
       react: PasswordResetTemplate({
         token: id,
         t
