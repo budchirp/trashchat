@@ -149,7 +149,7 @@ export class UserAPIManager {
     headers: APIHeaders
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.get<APIResponse>(`${Env.appUrl}/api/user/email/verify`, {
+      const response = await Fetch.post<APIResponse>(`${Env.appUrl}/api/user/email/verify/send`, {
         authorization: `Bearer ${headers.token}`,
         'accept-language': headers.locale || 'en'
       })
@@ -198,7 +198,7 @@ export class UserAPIManager {
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.post<APIResponse>(
-        `${Env.appUrl}/api/user/password/reset`,
+        `${Env.appUrl}/api/user/password/reset/send`,
         {
           email
         },
@@ -225,7 +225,7 @@ export class UserAPIManager {
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
       const response = await Fetch.post<APIResponse>(
-        `${Env.appUrl}/api/user/password/reset/verify`,
+        `${Env.appUrl}/api/user/password/reset`,
         {
           token: verificationToken,
           password
