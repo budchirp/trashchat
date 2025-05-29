@@ -3,7 +3,9 @@ import type React from 'react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { ResetPasswordSendMailClientPage } from './page.client'
 import { MetadataManager } from '@/lib/metadata-manager'
+import { unauthenticatedRoute } from '@/lib/auth/client'
 import { routing } from '@/lib/i18n/routing'
+import { cookies } from 'next/headers'
 
 import type { DynamicPageProps } from '@/types/page'
 import type { Metadata } from 'next'
@@ -13,6 +15,8 @@ const ResetPasswordSendMailPage: React.FC<DynamicPageProps> = async ({
 }: DynamicPageProps) => {
   const { locale } = await params
   setRequestLocale(locale)
+
+  unauthenticatedRoute(await cookies(), locale)
 
   const t = await getTranslations({
     namespace: 'auth.reset-password',
