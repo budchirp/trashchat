@@ -40,25 +40,22 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
         if (token) {
           toast(t('common.loading'))
 
-          try {
-            const ok = await ChatAPIManager.delete({ token, locale }, id)
-            if (!ok) {
-              toast(t('errors.error'))
-              return
-            }
+          const ok = await ChatAPIManager.delete({ token, locale }, id)
+          if (!ok) {
+            toast(t('errors.error'))
+            return
+          }
 
-            if (redirect) {
-              const chat = await ChatAPIManager.get({ token, locale }, '-1')
+          onDelete()
 
-              if (chat) {
-                router.push(`/chat/${chat.id}`)
-              } else {
-                router.push('/')
-              }
+          if (redirect) {
+            const chat = await ChatAPIManager.get({ token, locale }, '-1')
+
+            if (chat) {
+              router.push(`/chat/${chat.id}`)
+            } else {
+              router.push('/')
             }
-          } catch {
-          } finally {
-            onDelete()
           }
         }
       }}

@@ -94,6 +94,7 @@ export const ChatOptionsDialog: React.FC<ChatOptionsDialogProps> = ({
         <div className='grid gap-2 w-full'>
           <div>
             <Input
+              textarea
               id='title'
               name='title'
               type='text'

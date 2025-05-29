@@ -152,9 +152,10 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
                   <h2 className='font-medium'>
                     {session.browser} - {session.os}
                   </h2>
+
                   <h3 className='text-text-tertiary flex gap-1 items-center'>
                     <Clock size={16} />
-                    <span>{new Date(session.expiresAt).toLocaleDateString()}</span>
+                    <span>{new Date(session.createdAt).toLocaleDateString()}</span>
                   </h3>
                 </div>
               </div>

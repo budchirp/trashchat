@@ -26,6 +26,7 @@ import Image from 'next/image'
 import { cn } from '@/lib/cn'
 
 import type { Chat } from '@/types/chat'
+import { Container } from '@/components/container'
 
 type ProfileMenuItemProps = {
   children: React.ReactNode
@@ -79,7 +80,6 @@ const SidebarFooter: React.FC = (): React.ReactNode => {
     <Nav
       position='bottom'
       variant='default'
-      container={false}
       className='transition-all duration-300 hover:bg-background-secondary cursor-pointer'
     >
       <div className='flex items-center gap-3'>
@@ -141,37 +141,39 @@ const ProfileMenu = () => {
                   'data-leave:ease-in data-leave:duration-200'
                 )}
               >
-                <MenuItems
-                  static
-                  as={Box}
-                  variant='primary'
-                  padding='none'
-                  className='w-full overflow-hidden mx-4'
-                >
-                  <ProfileMenuItem>
-                    <Link href='/settings'>
-                      <ProfileMenuItemContent icon={<User size={16} />}>
-                        {t('settings.account.profile')}
-                      </ProfileMenuItemContent>
-                    </Link>
-                  </ProfileMenuItem>
+                <Container>
+                  <MenuItems
+                    static
+                    as={Box}
+                    variant='primary'
+                    padding='none'
+                    className='w-full overflow-hidden'
+                  >
+                    <ProfileMenuItem>
+                      <Link href='/settings'>
+                        <ProfileMenuItemContent icon={<User size={16} />}>
+                          {t('settings.account.profile')}
+                        </ProfileMenuItemContent>
+                      </Link>
+                    </ProfileMenuItem>
 
-                  <ProfileMenuItem>
-                    <button
-                      className='w-full'
-                      type='button'
-                      onClick={async () => {
-                        if (token) {
-                          await logout(token)
-                        }
-                      }}
-                    >
-                      <ProfileMenuItemContent icon={<LogOut size={16} />}>
-                        {t('auth.logout')}
-                      </ProfileMenuItemContent>
-                    </button>
-                  </ProfileMenuItem>
-                </MenuItems>
+                    <ProfileMenuItem>
+                      <button
+                        className='w-full'
+                        type='button'
+                        onClick={async () => {
+                          if (token) {
+                            await logout(token)
+                          }
+                        }}
+                      >
+                        <ProfileMenuItemContent icon={<LogOut size={16} />}>
+                          {t('auth.logout')}
+                        </ProfileMenuItemContent>
+                      </button>
+                    </ProfileMenuItem>
+                  </MenuItems>
+                </Container>
               </Transition>
             </div>
           )
@@ -185,7 +187,7 @@ const SidebarHeader: React.FC = (): React.ReactNode => {
   const { setShowSidebar } = use(SidebarContext)
 
   return (
-    <Nav variant='default' container={false}>
+    <Nav variant='default'>
       <h1 className='font-bold text-2xl'>Chats</h1>
 
       <Button
@@ -258,7 +260,7 @@ const ChatChipDropdown: React.FC<ChatChipDropdownProps> = ({
         button={
           <Button
             className={cn(
-              'invisible opacity-0 transition-all duration-300',
+              'invisible absolute right-4 top-1/2 -translate-y-1/2 opacity-0 transition-all duration-300',
               chat && 'group-hover:opacity-100 group-hover:visible'
             )}
             variant='round'
@@ -290,7 +292,7 @@ const ChatChip: React.FC<ChatChipProps> = ({
       variant='primary'
       aria-label={chat?.title}
       className={cn(
-        'group flex items-center justify-between gap-2 relative',
+        'group flex items-center h-16 justify-between gap-2 relative',
         selected && 'bg-background-secondary',
         !chat && 'animate-pulse'
       )}
@@ -298,7 +300,7 @@ const ChatChip: React.FC<ChatChipProps> = ({
       <Link className='size-full flex items-center' href={`/chat/${chat ? chat.id : ''}`}>
         <span
           className={cn(
-            'transition-all ms-2 duration-300 min-w-0 break-words',
+            'transition-all ms-2 duration-300 min-w-0 break-words line-clamp-2 text-ellipsis',
             selected
               ? 'text-text-accent-primary font-bold'
               : 'text-text-tertiary font-medium group-hover:text-text-primary'
@@ -345,7 +347,7 @@ const NewChatButton: React.FC = (): React.ReactNode => {
       aria-label={t('chat.new-chat')}
       hover
       variant='primary'
-      className='h-min group'
+      className='group'
       onClick={() => newChat()}
       padding='small'
     >
@@ -354,7 +356,7 @@ const NewChatButton: React.FC = (): React.ReactNode => {
           <Plus size={16} />
         </div>
 
-        <span className='transition-all duration-300 w-full group-hover:font-bold text-ellipsis text-text-tertiary font-medium group-hover:text-text-primary'>
+        <span className='transition-all duration-300 w-full group-hover:font-bold text-text-tertiary font-medium group-hover:text-text-primary'>
           {t('chat.new-chat')}
         </span>
       </div>
@@ -371,10 +373,10 @@ const SidebarContent: React.FC = (): React.ReactNode => {
   }, [pathname])
 
   return (
-    <div className='grid gap-2 h-full px-4 pt-4'>
+    <Container className='size-full flex flex-col justify-between gap-2 pt-4'>
       <NewChatButton />
 
-      <div className='flex flex-col-reverse w-full gap-2 min-w-0 pb-4'>
+      <div className='flex flex-col-reverse w-full gap-2 pb-4'>
         {chats
           ? chats.map((chat, index) => {
               return (
@@ -393,7 +395,7 @@ const SidebarContent: React.FC = (): React.ReactNode => {
               return <ChatChip key={index} />
             })}
       </div>
-    </div>
+    </Container>
   )
 }
 
@@ -402,14 +404,14 @@ export const Sidebar: React.FC = (props): React.ReactNode => {
     <div
       {...props}
       className={cn(
-        'w-3/4 md:w-1/4 bg-background-primary select-none fixed z-30 top-0 left-0 flex flex-col h-screen border-r border-border',
+        'w-3/4 md:w-1/4 bg-background-primary select-none fixed z-30 top-0 left-0 flex flex-col h-full border-r border-border',
         'transition-all opacity-100',
         'data-closed:-translate-x-full data-closed:opacity-75',
         'data-enter:ease-out data-enter:duration-300',
         'data-leave:ease-in data-leave:duration-300'
       )}
     >
-      <div className='h-full flex flex-col overflow-y-auto'>
+      <div className='size-full flex flex-col overflow-y-auto'>
         <SidebarHeader />
 
         <SidebarContent />
