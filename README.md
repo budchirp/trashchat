@@ -31,7 +31,7 @@
 - [x] Copy message feature
 - [x] Translate API routes
 - [x] Add an option to select a model for new chats
+- [x] Forgot password feature
 - [ ] Landing page
-- [ ] Forgot password feature
 - [ ] SEO
 - [ ] Share feature
