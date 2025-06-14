@@ -9,6 +9,7 @@ import { AreYouSureDialog } from '@/components/r-u-sure'
 import { ChatAPIManager } from '@/lib/api/chat'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/components/toast'
+import { useState } from 'react'
 
 type DeleteChatDialogProps = {
   id: string
@@ -30,18 +31,23 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
 
   const cookieMonster = new CookieMonster()
 
+  const [loading, setLoading] = useState<boolean>(false)
+
   const router = useRouter()
   return (
     <AreYouSureDialog
       open={open}
+      loading={loading}
       onClose={onClose}
       onSubmit={async () => {
         const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
         if (token) {
-          toast(t('common.loading'))
+          setLoading(true)
 
           const ok = await ChatAPIManager.delete({ token, locale }, id)
           if (!ok) {
+            setLoading(false)
+
             toast(t('errors.error'))
             return
           }
@@ -57,6 +63,8 @@ export const DeleteChatDialog: React.FC<DeleteChatDialogProps> = ({
               router.push('/')
             }
           }
+
+          setLoading(false)
         }
       }}
       title={t('chat.delete')}

@@ -46,7 +46,7 @@ export const Dialog: React.FC<DialogProps> = ({
             variant='primary'
             padding='none'
             className={cn(
-              'top-0 w-full max-h-3/4 absolute md:max-w-96 sm:max-w-(--breakpoint-xs)',
+              'top-0 w-full max-h-3/4 absolute md:max-w-96 sm:max-w-(--breakpoint-xs) overflow-y-auto',
               'transition-all scale-100 opacity-100',
               'data-closed:scale-90 data-closed:opacity-0',
               'data-enter:ease-out data-enter:duration-400',

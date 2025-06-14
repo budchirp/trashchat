@@ -35,6 +35,8 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
 
       const [ok, message, token] = await SessionAPIManager.new({ locale }, values)
       if (ok) {
+        setError(null)
+
         const user = await UserAPIManager.get({ token: token!, locale })
         if (!user) {
           setError(t('errors.error'))

@@ -24,7 +24,7 @@ export const Nav: React.FC<NavProps> = ({
   const Component: any = container ? Container : 'div'
 
   return (
-    <div
+    <nav
       className={cn(
         'flex items-center sticky z-10 justify-center h-16 border-border',
         rounded && 'rounded-t-3xl',
@@ -41,6 +41,6 @@ export const Nav: React.FC<NavProps> = ({
       >
         {children}
       </Component>
-    </div>
+    </nav>
   )
 }

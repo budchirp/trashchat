@@ -10,12 +10,16 @@ import { cookies } from 'next/headers'
 
 import type { Metadata } from 'next'
 import type { DynamicPageProps } from '@/types/page'
+import { UserAPIManager } from '@/lib/api/user'
+import { ResendVerificationEmailButton } from '../../auth/verify/email/[token]/resend-button'
 
 const AccountPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPageProps) => {
   const { locale } = await params
   setRequestLocale(locale)
 
-  authenticatedRoute(await cookies())
+  const token = authenticatedRoute(await cookies())
+
+  const user = await UserAPIManager.get({ token, locale })
 
   const t = await getTranslations({
     namespace: 'settings.account',
@@ -24,7 +28,22 @@ const AccountPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPagePr
 
   return (
     <div className='flex size-full flex-col mt-4'>
-      <Heading className='max-md:mt-0'>{t('text')}</Heading>
+      <Heading
+        description={
+          !user?.isEmailVerified && (
+            <div className='grid gap-2'>
+              <p>{t('verify-warning')}</p>
+
+              <div>
+                <ResendVerificationEmailButton />
+              </div>
+            </div>
+          )
+        }
+        className='max-md:mt-0'
+      >
+        {t('text')}
+      </Heading>
 
       <AccountClientPage />
     </div>

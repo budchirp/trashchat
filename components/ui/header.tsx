@@ -52,44 +52,40 @@ export const Header: React.FC<HeaderProps> = ({
   const pathname = usePathname()
 
   return (
-    <>
-      <header
-        className={cn(
-          'select-none bg-background-primary/50 border-b right-0 border-border transition-all duration-300 fixed top-0 z-20 flex h-16 items-center justify-center backdrop-blur-sm',
-          showSidebar ? 'w-full md:w-3/4 ease-out' : 'w-full ease-in'
-        )}
-      >
-        <Container className='flex items-center h-16 justify-between gap-2'>
-          <Logo />
+    <header
+      className={cn(
+        'select-none bg-background-primary/50 border-b right-0 w-full border-border transition-all duration-300 sticky top-0 z-20 flex h-16 items-center justify-center backdrop-blur-sm',
+        showSidebar ? 'ease-out' : 'ease-in'
+      )}
+    >
+      <Container className='flex items-center h-16 justify-between gap-2'>
+        <Logo />
 
-          <div className='flex h-full items-center gap-2'>
-            {routes.map((route) => {
-              return (
-                <HeaderLink
-                  href={route.location}
-                  selected={pathname === route.location}
-                  key={route.location}
-                >
-                  {route.title}
-                </HeaderLink>
-              )
-            })}
-
-            {isSidebarLayout && (
-              <Button
-                aria-label='Toggle sidebar'
-                variant='round'
-                color='secondary'
-                onClick={() => setShowSidebar(!showSidebar)}
+        <div className='flex h-full items-center gap-2'>
+          {routes.map((route) => {
+            return (
+              <HeaderLink
+                href={route.location}
+                selected={pathname === route.location}
+                key={route.location}
               >
-                <MenuIcon />
-              </Button>
-            )}
-          </div>
-        </Container>
-      </header>
+                {route.title}
+              </HeaderLink>
+            )
+          })}
 
-      <div className='h-16' />
-    </>
+          {isSidebarLayout && (
+            <Button
+              aria-label='Toggle sidebar'
+              variant='round'
+              color='secondary'
+              onClick={() => setShowSidebar(!showSidebar)}
+            >
+              <MenuIcon />
+            </Button>
+          )}
+        </div>
+      </Container>
+    </header>
   )
 }

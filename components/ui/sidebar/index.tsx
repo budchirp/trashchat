@@ -104,14 +104,6 @@ const ProfileMenu = () => {
 
   const cookieMonster = new CookieMonster()
 
-  const [token, setToken] = useState<string | null>(null)
-  useEffect(() => {
-    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-    if (token) {
-      setToken(token)
-    }
-  }, [])
-
   const logout = useLogout()
 
   return (
@@ -162,6 +154,7 @@ const ProfileMenu = () => {
                         className='w-full'
                         type='button'
                         onClick={async () => {
+                          const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
                           if (token) {
                             await logout(token)
                           }
@@ -320,27 +313,14 @@ const ChatChip: React.FC<ChatChipProps> = ({
 }
 
 const NewChatButton: React.FC = (): React.ReactNode => {
-  const router = useRouter()
-
-  const locale = useLocale()
   const t = useTranslations()
+  const locale = useLocale()
+
+  const router = useRouter()
 
   const { refreshChats } = use(SidebarContext)
 
   const cookieMonster = new CookieMonster()
-
-  const newChat = async () => {
-    const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
-    if (token) {
-      const created = await ChatAPIManager.new({ token, locale })
-      if (created) {
-        router.push(`/chat/${created.id}`)
-        refreshChats()
-      } else {
-        toast(t('errors.error'))
-      }
-    }
-  }
 
   return (
     <Box
@@ -348,7 +328,18 @@ const NewChatButton: React.FC = (): React.ReactNode => {
       hover
       variant='primary'
       className='group'
-      onClick={() => newChat()}
+      onClick={async () => {
+        const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
+        if (token) {
+          const created = await ChatAPIManager.new({ token, locale })
+          if (created) {
+            router.push(`/chat/${created.id}`)
+            refreshChats()
+          } else {
+            toast(t('errors.error'))
+          }
+        }
+      }}
       padding='small'
     >
       <div className='text-text-primary items-center gap-2 font-medium flex hover:text-text-secondary'>

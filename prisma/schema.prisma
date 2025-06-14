@@ -145,7 +145,7 @@ model Chat {
 
   model String
 
-  shared Boolean @default(false)
+  isPublic Boolean @default(false) @map("is_public")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

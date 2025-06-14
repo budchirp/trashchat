@@ -41,8 +41,6 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        toast(t('common.loading'))
-
         const [verifyOk, verifyMessage, verificationToken] = await UserAPIManager.verifyPassword(
           { token, locale },
           values.password
@@ -51,6 +49,8 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
         if (verifyOk) {
           const [ok, message] = await UserAPIManager.delete({ token, locale }, verificationToken)
           if (ok) {
+            setError(null)
+
             toast(t('common.success'))
 
             onClose()
@@ -72,6 +72,7 @@ export const DeleteAccountDialog: React.FC<DeleteAccountDialogProps> = ({
   return (
     <AreYouSureDialog
       open={open}
+      loading={formik.isSubmitting}
       onClose={onClose}
       onSubmit={formik.handleSubmit}
       title={t('settings.account.delete')}

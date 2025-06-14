@@ -32,6 +32,8 @@ export const ResetPasswordSendMailClientPage: React.FC = (): React.ReactNode => 
 
       const [ok, message] = await UserAPIManager.sendResetPasswordEmail({ locale }, values.email)
       if (ok) {
+        setError(null)
+
         toast(t('auth.email-sent'))
 
         router.push('/')

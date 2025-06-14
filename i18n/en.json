@@ -51,12 +51,12 @@
     "reasoning": "Reasoning",
     "sources": "Sources",
     "title": "Title",
-    "shared": "Share chat",
+    "is-public": "Public",
     "delete": "Delete chat",
     "options": "Options",
     "are-you-sure": "Are you sure?",
     "say-something": "Say something",
-    "start": "Don't be shy. Start a conversation.",
+    "start": "Don't be shy, start a conversation",
     "system": "System",
     "new-chat": "New chat"
   },
@@ -168,7 +168,7 @@
     "text": "Subscribe",
     "description": "Subscribe to Trash Chat",
     "subscribe": "Subscribe for {price}",
-    "price": "${price} + tax / month",
+    "price": "${price}",
     "free": "Free",
     "plus": "Plus",
     "month": "month",
@@ -178,7 +178,8 @@
       "description": "Payment",
       "pay-with-crypto": "Pay with Crypto",
       "pay-with-card": "Pay with Card",
-      "success": "Payment successful 🥳"
+      "success": "Payment successful 🥳",
+      "coming-soon": "Coming soon"
     },
     "features": {
       "basic-models": "Basic models",

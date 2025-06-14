@@ -149,10 +149,14 @@ export class UserAPIManager {
     headers: APIHeaders
   ): Promise<[true, undefined] | [false, string | null]> => {
     try {
-      const response = await Fetch.post<APIResponse>(`${Env.appUrl}/api/user/email/verify/send`, {
-        authorization: `Bearer ${headers.token}`,
-        'accept-language': headers.locale || 'en'
-      })
+      const response = await Fetch.post<APIResponse>(
+        `${Env.appUrl}/api/user/email/verify/send`,
+        {},
+        {
+          authorization: `Bearer ${headers.token}`,
+          'accept-language': headers.locale || 'en'
+        }
+      )
 
       if (response.ok) {
         return [true, undefined]

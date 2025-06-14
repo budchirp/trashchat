@@ -8,13 +8,13 @@ import { signUpValidator } from '@/lib/validators/signup'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter, Link } from '@/lib/i18n/routing'
 import { Checkbox } from '@/components/checkbox'
+import { Field, Label } from '@headlessui/react'
 import { UserAPIManager } from '@/lib/api/user'
 import { Lock, Mail, User } from 'lucide-react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { Button } from '@/components/button'
 import { toast } from '@/components/toast'
 import { Input } from '@/components/input'
-import { Field, Label } from '@headlessui/react'
 import { Box } from '@/components/box'
 import { Fetch } from '@/lib/fetch'
 import { useFormik } from 'formik'
@@ -81,6 +81,8 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
 
       const [ok, message] = await UserAPIManager.new({ locale }, values)
       if (ok) {
+        setError(null)
+
         toast(t('common.success'))
 
         router.push('/auth/signin')
@@ -168,7 +170,9 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             />
 
             <Label>
-              <Link href='/legal/privacy-policy'>{t('auth.signup.privacy-policy')}</Link>
+              <Link className='underline' href='/legal/privacy-policy'>
+                {t('auth.signup.privacy-policy')}
+              </Link>
             </Label>
           </Field>
 
@@ -187,7 +191,9 @@ export const SignUpClientPage: React.FC<SignUpClientPageProps> = ({
             />
 
             <Label>
-              <Link href='/legal/terms-of-service'>{t('auth.signup.tos')}</Link>
+              <Link className='underline' href='/legal/terms-of-service'>
+                {t('auth.signup.tos')}
+              </Link>
             </Label>
           </Field>
 

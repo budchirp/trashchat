@@ -53,6 +53,8 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
       if (token) {
         const [ok, message] = await UserAPIManager.update({ token, locale }, values)
         if (ok) {
+          setError(null)
+
           toast(t('common.success'))
 
           router.refresh()
@@ -98,7 +100,7 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
             )}
           </Field>
 
-          <Field className='grid gap-2'>
+          <Field>
             <Input
               readOnly
               id='email'
@@ -114,16 +116,6 @@ export const AccountClientPage: React.FC = (): React.ReactNode => {
 
             {formik.errors.email && formik.touched.email && (
               <p className='text-red-500 ms-2'>{formik.errors.email}</p>
-            )}
-
-            {!user?.isEmailVerified && (
-              <div className='border-b-4 border-border-hover mb-2 pb-4 grid gap-2'>
-                <p>{t('settings.account.verify-warning')}</p>
-
-                <div>
-                  <ResendVerificationEmailButton />
-                </div>
-              </div>
             )}
           </Field>
         </div>

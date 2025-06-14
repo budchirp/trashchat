@@ -42,6 +42,8 @@ export const ResetPasswordClientPage: React.FC<ResetPasswordClientPageProps> = (
         values.password
       )
       if (ok) {
+        setError(null)
+
         toast(t('auth.reset-password.changed'))
 
         router.push('/auth/signin')

@@ -22,7 +22,7 @@ export const Footer: React.FC = async () => {
   ]
 
   return (
-    <footer className='bg-background-primary/50 backdrop-blur-xs border-t border-border flex w-full items-center relative justify-center'>
+    <footer className='bg-background-primary/50 backdrop-blur-sm border-t border-border flex w-full items-center relative justify-center'>
       <Container>
         <div className='flex border-b border-border min-h-16 py-4 flex-col md:flex-row md:items-center md:justify-between gap-1'>
           <Logo />

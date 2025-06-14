@@ -51,12 +51,12 @@
     "reasoning": "Düşünceler",
     "sources": "Kaynaklar",
     "title": "Başlık",
-    "shared": "Sohbeti paylaş",
+    "is-public": "Herkese açık",
     "options": "Seçenekler",
     "delete": "Sohbeti sil",
     "are-you-sure": "Emin misin?",
     "say-something": "Bir şeyler yaz",
-    "start": "Çekinme. Bir sohbet başlat.",
+    "start": "Çekinme, bir sohbet başlat",
     "system": "Sistem",
     "new-chat": "Yeni sohbet"
   },
@@ -167,7 +167,7 @@
     "text": "Abone Ol",
     "description": "Trash Chat'e Abone Ol",
     "subscribe": "{price} karşılığında abone ol",
-    "price": "${price} + vergi / ay",
+    "price": "${price}",
     "free": "Ücretsiz",
     "plus": "Plus",
     "normal": "Normal",
@@ -177,7 +177,8 @@
       "description": "Ödeme",
       "pay-with-crypto": "Kripto ile Öde",
       "pay-with-card": "Kart ile Öde",
-      "success": "Ödeme başarılı 🥳"
+      "success": "Ödeme başarılı 🥳",
+      "coming-soon": "Yakında"
     },
     "features": {
       "basic-models": "Temel modeller",

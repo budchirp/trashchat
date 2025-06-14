@@ -3,7 +3,7 @@
 import type React from 'react'
 import { useRef, useState } from 'react'
 
-import { buttonVariants } from '@/components/button'
+import { Button, buttonVariants } from '@/components/button'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { useUpload } from '@/lib/helpers/use-upload'
 import { UserAPIManager } from '@/lib/api/user'
@@ -11,7 +11,7 @@ import { useRouter } from '@/lib/i18n/routing'
 import { useLocale, useTranslations } from 'next-intl'
 import { CONSTANTS } from '@/lib/constants'
 import { toast } from '@/components/toast'
-import { Plus } from 'lucide-react'
+import { Crown, Plus } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import Image from 'next/image'
 
@@ -24,12 +24,12 @@ type SettingsProfilePictureProps = {
 export const SettingsProfilePicture: React.FC<SettingsProfilePictureProps> = ({
   user
 }: SettingsProfilePictureProps): React.ReactNode => {
+  const t = useTranslations()
+  const locale = useLocale()
+
   const router = useRouter()
 
-  const locale = useLocale()
-  const t = useTranslations()
-
-  const [uploading, setUploading] = useState(false)
+  const [uploading, setUploading] = useState<boolean>(false)
 
   const cookieMonster = new CookieMonster()
 
@@ -81,36 +81,47 @@ export const SettingsProfilePicture: React.FC<SettingsProfilePictureProps> = ({
         alt={t('settings.account.profile-picture')}
         src={user?.profile?.profilePicture || '/images/placeholder.png'}
       />
+      {user?.subscription && (
+        <Button
+          variant='round'
+          color='secondary'
+          className='absolute pointer-events-none top-0 right-0'
+        >
+          <Crown size={16} className='text-text-accent-primary' />
+        </Button>
+      )}
 
-      <label
-        className={cn(
-          buttonVariants({
-            variant: 'round',
-            color: 'secondary',
-            className: cn(
-              'absolute invisible opacity-0 group-hover:opacity-100 group-hover:visible bottom-0 right-0 transition-all duration-300',
-              uploading && 'opacity-50 pointer-events-none'
-            )
-          })
-        )}
-        htmlFor='upload'
-      >
-        <Plus size={16} />
+      {user?.isEmailVerified && (
+        <label
+          className={cn(
+            buttonVariants({
+              variant: 'round',
+              color: 'secondary',
+              className: cn(
+                'absolute invisible opacity-0 group-hover:opacity-100 group-hover:visible bottom-0 right-0 transition-all duration-300',
+                uploading && 'opacity-50 pointer-events-none'
+              )
+            })
+          )}
+          htmlFor='upload'
+        >
+          <Plus size={16} />
 
-        <input
-          ref={ref}
-          readOnly={uploading}
-          disabled={uploading}
-          id='upload'
-          className='sr-only'
-          type='file'
-          onChange={async (e) => {
-            e.preventDefault()
+          <input
+            ref={ref}
+            readOnly={uploading}
+            disabled={uploading}
+            id='upload'
+            className='sr-only'
+            type='file'
+            onChange={async (e) => {
+              e.preventDefault()
 
-            await upload()
-          }}
-        />
-      </label>
+              await upload()
+            }}
+          />
+        </label>
+      )}
     </div>
   )
 }

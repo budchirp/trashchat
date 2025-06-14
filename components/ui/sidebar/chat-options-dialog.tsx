@@ -47,28 +47,25 @@ export const ChatOptionsDialog: React.FC<ChatOptionsDialogProps> = ({
   const formik = useFormik({
     initialValues: {
       title: chat.title,
-      shared: chat.shared
+      isPublic: chat.isPublic
     },
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true)
 
       const token = cookieMonster.get(CONSTANTS.COOKIES.TOKEN_NAME)
       if (token) {
-        toast(t('common.loading'))
+        const [ok, message] = await ChatAPIManager.update({ token, locale }, chat.id, values)
+        if (ok) {
+          setError(null)
 
-        try {
-          const [ok, message] = await ChatAPIManager.update({ token, locale }, chat.id, values)
-          if (ok) {
-            toast(t('common.success'))
+          toast(t('common.success'))
 
-            onClose()
-          } else {
-            setError(message || t('errors.error'))
-          }
-        } catch {
-        } finally {
-          onUpdate()
+          onClose()
+        } else {
+          setError(message || t('errors.error'))
         }
+
+        onUpdate()
       }
 
       setSubmitting(false)
@@ -79,6 +76,7 @@ export const ChatOptionsDialog: React.FC<ChatOptionsDialogProps> = ({
   return (
     <AreYouSureDialog
       style='default'
+      loading={formik.isSubmitting}
       open={open}
       onClose={onClose}
       onSubmit={formik.handleSubmit}
@@ -114,13 +112,13 @@ export const ChatOptionsDialog: React.FC<ChatOptionsDialogProps> = ({
           <div>
             <Field className='flex items-center gap-2'>
               <Checkbox
-                id='shared'
-                name='shared'
-                checked={formik.values.shared}
-                onChange={(checked) => formik.setFieldValue('shared', checked)}
+                id='isPublic'
+                name='isPublic'
+                checked={formik.values.isPublic}
+                onChange={(checked) => formik.setFieldValue('isPublic', checked)}
               />
 
-              <Label htmlFor='shareInfoWithAI'>{t('chat.shared')}</Label>
+              <Label htmlFor='isPublic'>{t('chat.is-public')}</Label>
             </Field>
           </div>
         </div>

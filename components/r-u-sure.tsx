@@ -8,6 +8,8 @@ type AreYouSureDialogProps = {
   title: React.ReactNode
   children: React.ReactNode
 
+  loading?: boolean
+
   style?: 'default' | 'danger'
 
   open: boolean
@@ -19,6 +21,8 @@ type AreYouSureDialogProps = {
 export const AreYouSureDialog: React.FC<AreYouSureDialogProps> = ({
   title,
   children,
+
+  loading = false,
 
   style = 'danger',
 
@@ -47,6 +51,7 @@ export const AreYouSureDialog: React.FC<AreYouSureDialogProps> = ({
               color={style === 'danger' ? 'danger' : 'primary'}
               onClick={onSubmit}
               type='submit'
+              loading={loading}
             >
               {t('submit')}
             </Button>

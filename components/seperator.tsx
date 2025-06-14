@@ -12,13 +12,13 @@ export const Seperator: React.FC<SeperatorProps> = ({
   ...props
 }: SeperatorProps): React.ReactNode => {
   return (
-    <div className='relative flex py-2 items-center'>
+    <div className='relative flex items-center'>
       {text ? (
         <>
           <div className='flex-grow border-t-4 border-border' />
           <span
             {...props}
-            className={cn('flex-shrink font-medium mx-4 text-text-tertiary', className)}
+            className={cn('flex-shrink font-medium mx-4 my-2 text-text-tertiary', className)}
           >
             {text}
           </span>

@@ -93,11 +93,11 @@ export class AIProviders {
       // },
       'gemini-2.5-pro': {
         ...models['gemini-2.5-pro'],
-        provider: (options) => google('gemini-2.5-pro-preview-05-06', options)
+        provider: (options) => google('gemini-2.5-pro-preview-06-05', options)
       },
       'gemini-2.5-flash': {
         ...models['gemini-2.5-flash'],
-        provider: (options) => google('gemini-2.5-flash-preview-04-17', options)
+        provider: (options) => google('gemini-2.5-flash-preview-05-20', options)
       },
       'gemini-2.0-flash': {
         ...models['gemini-2.0-flash'],

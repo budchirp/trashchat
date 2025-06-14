@@ -3,14 +3,9 @@
 import type React from 'react'
 import { use, useEffect, useRef, useState, type ChangeEvent } from 'react'
 
-import { Brain, FileIcon, Loader2, Paperclip, Search, Send, Square, Trash } from 'lucide-react'
-import {
-  AIModels,
-  type AIModelID,
-  type AIModelMap,
-  type AIModelReasoningOption
-} from '@/lib/ai/models'
 import { ReasoningEffortSelector } from '@/components/chat/form/reasoning-effort-selector'
+import { AIModels, type AIModelID, type AIModelReasoningOption } from '@/lib/ai/models'
+import { Brain, Loader2, Paperclip, Search, Send, Square, Trash } from 'lucide-react'
 import { ModelSelector } from '@/components/chat/form/model-selector'
 import { Button, buttonVariants } from '@/components/button'
 import { SidebarContext } from '@/providers/context/sidebar'

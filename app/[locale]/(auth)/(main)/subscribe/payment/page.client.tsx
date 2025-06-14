@@ -2,13 +2,12 @@
 
 import type React from 'react'
 
-import { Button } from '@/components/button'
 import { useLocale, useTranslations } from 'next-intl'
-import { Fetch } from '@/lib/fetch'
 import { CookieMonster } from '@/lib/cookie-monster'
 import { Seperator } from '@/components/seperator'
-import { CheckoutForm } from './checkout-form'
+import { Button } from '@/components/button'
 import { toast } from '@/components/toast'
+import { Fetch } from '@/lib/fetch'
 
 import type { APIResponse } from '@/types/api'
 
@@ -47,16 +46,16 @@ export const PaymentPageClient: React.FC = (): React.ReactNode => {
 
   return (
     <div className='max-w-96 w-full'>
-      <div className='w-full flex items-center justify-center'>
+      <div className='w-full flex flex-col gap-2 items-center text-center justify-center'>
         <Button onClick={payWithCrypto}>{t('subscribe.payment.pay-with-crypto')}</Button>
       </div>
 
       <Seperator text={t('common.or')} />
 
-      <div className='w-full flex flex-col gap-4 items-center justify-center'>
+      <div className='w-full flex flex-col gap-2 text-center items-center justify-center'>
         <h2 className='font-medium'>{t('subscribe.payment.pay-with-card')}</h2>
 
-        <CheckoutForm />
+        <h3 className='text-text-tertiary font-medium'>{t('subscribe.payment.coming-soon')}</h3>
       </div>
     </div>
   )

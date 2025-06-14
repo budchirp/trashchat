@@ -61,7 +61,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
               }
             : { top: `calc(var(--spacing) * ${padding + 8})`, left: 0, transformOrigin: 'top' }
         }
-        variant='blurry'
+        variant='primary'
         padding='none'
       >
         {options.map((option, index) => {

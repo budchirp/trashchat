@@ -209,7 +209,7 @@ export default {
               color: theme('colors.gray.900')
             },
             td: {
-              padding: '0.75rem',
+              padding: '0.75rem 1.5rem',
               color: theme('colors.gray.900')
             },
             'tbody tr': {

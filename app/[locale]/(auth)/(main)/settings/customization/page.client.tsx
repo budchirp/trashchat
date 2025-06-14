@@ -50,6 +50,8 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
       if (token) {
         const [ok, message] = await UserAPIManager.update({ token, locale }, values)
         if (ok) {
+          setError(null)
+
           toast(t_common('success'))
           router.refresh()
         } else {

@@ -191,7 +191,7 @@ export const PATCH = async (
 
     const { chatId } = await params
 
-    const { title, shared } = await request.json()
+    const { title, isPublic } = await request.json()
 
     await prisma.chat.update({
       where: {
@@ -200,7 +200,7 @@ export const PATCH = async (
       },
       data: {
         title,
-        shared
+        isPublic
       }
     })
 

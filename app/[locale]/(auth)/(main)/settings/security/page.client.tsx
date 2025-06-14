@@ -58,6 +58,8 @@ export const CustomizationClientPage: React.FC = (): React.ReactNode => {
       if (token) {
         const [ok, message] = await UserAPIManager.updatePassword({ token, locale }, values)
         if (ok) {
+          setError(null)
+
           toast(t('common.success'))
 
           formik.resetForm()
