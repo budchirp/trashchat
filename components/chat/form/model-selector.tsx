@@ -96,7 +96,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     as={Box}
                     variant='primary'
                     padding='none'
-                    className='min-w-32 w-fit max-w-128 max-h-96 overflow-y-auto'
+                    className='min-w-32 w-fit max-w-128 max-h-96 overflow-x-hidden overflow-y-auto'
                   >
                     <div className='grid grid-cols-2 md:grid-cols-3 gap-4 p-4'>
                       {(Object.keys(models) as AIModelID[]).map((modelId: AIModelID) => {

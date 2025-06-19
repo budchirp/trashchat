@@ -16,7 +16,10 @@ const VerifyEmailPage: React.FC<DynamicPageProps> = async ({ params }: DynamicPa
   const { locale, token: verificationToken } = await params
   setRequestLocale(locale)
 
-  const token = authenticatedRoute(await cookies())!
+  const token = authenticatedRoute(await cookies(), {
+    href: `/auth/signin?redirect=/auth/verify/email/${verificationToken}`,
+    locale
+  })!
 
   const t = await getTranslations({
     locale

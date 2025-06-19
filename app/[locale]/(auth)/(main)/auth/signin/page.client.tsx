@@ -17,10 +17,14 @@ import { Lock, Mail } from 'lucide-react'
 import { Link } from '@/lib/i18n/routing'
 import { Box } from '@/components/box'
 import { useFormik } from 'formik'
+import { useSearchParams } from 'next/navigation'
 
 export const SignInClientPage: React.FC = (): React.ReactNode => {
   const t = useTranslations()
   const locale = useLocale()
+
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect')
 
   const { setUser } = use(UserContext)
 
@@ -47,7 +51,7 @@ export const SignInClientPage: React.FC = (): React.ReactNode => {
 
         toast(t('common.success'))
 
-        window?.location?.replace(`/${locale}/chat`)
+        window?.location?.replace(`/${locale}${redirect ? redirect : '/chat'}`)
       } else {
         setUser(null)
 

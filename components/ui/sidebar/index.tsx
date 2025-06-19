@@ -133,7 +133,7 @@ const ProfileMenu = () => {
                   'data-leave:ease-in data-leave:duration-200'
                 )}
               >
-                <Container>
+                <Container className='w-full'>
                   <MenuItems
                     static
                     as={Box}

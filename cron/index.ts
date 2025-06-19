@@ -41,6 +41,20 @@ const deleteExpiredSubscriptions = async (): Promise<void> => {
   console.log(`Deleted ${result.count} expired subscriptions`)
 }
 
+const deleteExpiredSessions = async (): Promise<void> => {
+  console.log('Deleting expired sessions...')
+
+  const result = await prisma.session.deleteMany({
+    where: {
+      expiresAt: {
+        lt: new Date()
+      }
+    }
+  })
+
+  console.log(`Deleted ${result.count} expired sessions`)
+}
+
 const increaseLimits = async (): Promise<void> => {
   console.log('Increasing limits...')
 
@@ -88,7 +102,8 @@ const runCronJobs = async (): Promise<void> => {
   try {
     await deleteUnverifiedUsers()
     await deleteExpiredSubscriptions()
-
+    await deleteExpiredSessions()
+    
     await increaseLimits()
 
     console.log(`Cron jobs completed successfully at ${new Date().toISOString()}`)
